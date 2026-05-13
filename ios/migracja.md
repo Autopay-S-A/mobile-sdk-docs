@@ -1,9 +1,7 @@
 # Migracja z poprzednich wersji
 
-
-W pierwszym kroku usuwamy stary framework z sekcji **Framework, Libraries and Embedded Content**. Dodanbie nowej wersji biblioteki jest możliwe za pomocą SPM lub Cocoapods opisane szczegółowo w sekcji:\
-[1.1 Instalacja przez Swift Package Manager (SPM)](/broken/pages/b3972cfa58f93d3d018234bcf403b6c0378c3fdc) lub\
-[1.2 Instalacja przez CocoaPods](/broken/pages/34ceea016fb37b5fc38c10352437f95f6b78c875)
+W pierwszym kroku usuwamy stary framework z sekcji **Framework, Libraries and Embedded Content**. Dodanie nowej wersji biblioteki jest możliwe za pomocą SPM lub Cocoapods opisane szczegółowo w sekcji:\
+[#swift-package-manager-spm](./#swift-package-manager-spm "mention") lub [#cocoapods](./#cocoapods "mention")<br>
 
 Najważniejsze aspekty migracji:
 
