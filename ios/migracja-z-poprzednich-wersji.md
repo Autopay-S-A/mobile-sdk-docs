@@ -1,0 +1,2 @@
+# Migracja z poprzednich wersji
+
