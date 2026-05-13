@@ -19,7 +19,7 @@ layout:
 
 # IOS
 
-## 1. Przygotowanie projektu - wymagana konfiguracja
+## Przygotowanie projektu - wymagana konfiguracja
 
 SDK dystrybuowane jest w formie xcframework za pomocą SPM lub cocoa pods. Wspiera projekty napisane w Swift oraz Objective-C, dla systemu iOS 15.0 lub wyższego. SDK jest kompatybilne z projektami budowanymi w Xcode wersji 16 lub wyższej.
 

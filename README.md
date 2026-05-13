@@ -1,4 +1,8 @@
-# doc pl
+---
+coverY: 0
+---
+
+# Autopay mobile SDK
 
 ### Czym jest Autopay SDK?
 
@@ -22,7 +26,9 @@ Realizacja płatności może odbywać się w trzech wariantach:
 
     * Większe zaangażowanie zespołu backendowego
 
-{.no-gallery}
+<figure><img src=".gitbook/assets/diagram_variant_I.png" alt=""><figcaption></figcaption></figure>
+
+***
 
 *   **Wariant II** - wykorzystujący token transakcyjny otrzymany z backendu.
 
@@ -37,7 +43,9 @@ Realizacja płatności może odbywać się w trzech wariantach:
 
     * Konieczność synchronizacji danych o wykonanych płatnościach z backendem partnera
 
-{.no-gallery}
+<figure><img src=".gitbook/assets/diagram_variant_II.png" alt=""><figcaption></figcaption></figure>
+
+***
 
 *   **Wariant III** - całość procesu po stronie backendu, gdzie tworzona jest transakcja (SDK otrzymuje tylko link do kontynuacji transakcji)
 
@@ -54,7 +62,7 @@ Realizacja płatności może odbywać się w trzech wariantach:
     * Brak stylowania konkretnych kontrolek
     * Wyświetlanie paywalla Autopay w webview
 
-{.no-gallery}
+<figure><img src=".gitbook/assets/diagram_variant_II.png" alt=""><figcaption></figcaption></figure>
 
 ### Natywnie czy WebView?
 
