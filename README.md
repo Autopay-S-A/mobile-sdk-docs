@@ -79,12 +79,6 @@ W aplikacji mobilnej ekrany **SDK** mogą być wywoływane na dwa sposoby:
 * **Transakcja oraz dane użytkownika są bezpieczne** - wszelkie dane trzymane są w naszym centrum danych.
 * **Prostota implementacji w każdej aplikacji** - ułatwiamy pracę developerowi dostarczając proste do integracji narzędzie.
 
-| .             | .             |
-| ------------- | ------------- |
-| {.no-gallery} | {.no-gallery} |
-| {.no-gallery} | {.no-gallery} |
-| {.no-gallery} | {.no-gallery} |
-
 ### Sposoby wykorzystania Autopay SDK
 
 * Wybór metody płatności za towar w koszyku.

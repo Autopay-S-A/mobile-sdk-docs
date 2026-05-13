@@ -140,7 +140,7 @@ Poniższy tutorial opisuje sposób integracji biblioteki w wariancie z wykorzyst
 
 Wykonaj poniższe czynności, aby zintegrować Twoją aplikację na Androida z **Autopay SDK**:
 
-{.no-gallery}
+<figure><img src="../.gitbook/assets/diagram_numbers_variant_II.png" alt=""><figcaption></figcaption></figure>
 
 {% stepper %}
 {% step %}
@@ -356,7 +356,7 @@ Wykonaj poniższe czynności, aby zintegrować Twoją aplikację w trybie kontyn
 
 #### Wariant I (mieszany)
 
-{.no-gallery}
+<figure><img src="../.gitbook/assets/diagram_numbers_variant_I.png" alt=""><figcaption></figcaption></figure>
 
 {% stepper %}
 {% step %}
@@ -364,7 +364,7 @@ Aplikacja odpytuje swój backend o token transakcyjny (akcja dzieje się bez udz
 {% endstep %}
 
 {% step %}
-Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokena**](/broken/pages/048f1e0a97b8095e790d176a3d86e8027b4c8374)).
+Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [token.md](../token.md "mention"))
 {% endstep %}
 
 {% step %}
@@ -376,7 +376,11 @@ Backend aplikacji przekazuje token transakcyjny do aplikacji mobilnej.
 {% endstep %}
 
 {% step %}
-Aplikacja za pośrednictwem SDK wyświetla listę z kanałami płatności, lub indywidalny kanał.
+Aplikacja za pośrednictwem SDK wyświetla listę z kanałami płatności, lub indywidualny kanał.
+{% endstep %}
+
+{% step %}
+SDK odbiera listę kanałów płatności i ładuje ją do natywnych widoków.
 {% endstep %}
 
 {% step %}
@@ -411,7 +415,7 @@ Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**5. 
 
 #### Wariant III
 
-{.no-gallery}
+<figure><img src="../.gitbook/assets/diagram_numbers_variant_III.png" alt=""><figcaption></figcaption></figure>
 
 {% stepper %}
 {% step %}
@@ -435,7 +439,7 @@ Aplikacja uruchamia link do kontynuacji transakcji poprzez załadowanie go do SD
 {% endstep %}
 
 {% step %}
-Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej**](https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-\(itn\))**{.external-link}** w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
+Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej**](https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-\(itn\)) w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
 {% endstep %}
 {% endstepper %}
 
