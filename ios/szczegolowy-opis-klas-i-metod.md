@@ -25,7 +25,7 @@ Główna klasa SDK. Obiekt pozwala na startowanie transakcji, pobieranie listy k
 | `getTransactionStatus(orderId: String)`                | Odpytuje serwis o status transakcji kryjący się pod identyfikatorem _orderId_. Zwraca dane o statusie transakcji.                |
 | `class getSdkVersion()`                                | Zwraca wersję SDK.                                                                                                               |
 
-#### APConfig
+### APConfig
 
 Główna klasa konfiguracyjna SDK. Bez tej klasy nie można wykonać żadnych operacji. Posiada cztery wymagane parametry:
 
@@ -71,7 +71,7 @@ init(
 
 📌 Ważne: W przypadku przekazania do `setRegulationsHidden` typu `.card` np `[.card]` sekcja regulaminów nie zostanie wyświetlona zarówno na kanale płatności kartą płatniczą jak i aktywacji karty płatniczej.
 
-#### APGatewayBaseViewModelData
+### APGatewayBaseViewModelData
 
 Główna klasa konfiguracyjna dla widoków. Posiada dwa wymagane parametry:
 
@@ -110,7 +110,7 @@ init(
     )
 ```
 
-#### APStyleManager
+### APStyleManager
 
 Klasa odpowiedzialna za sylizacje widoków, przekazywana jako `enviromentObject` w przypadku implementacji SwiftUI oraz atrybut `styleManager: APStyleManager` w inicjalizatorach w przypadku implementacji UIKit. Obiekt ten zawiera style domyślne oraz kolorystykę przedstawioną w aplikacji demonstracyjnej, tak by użytkownik mógł podmienić tylko to czego potrzebuje.
 
@@ -160,7 +160,7 @@ init(
 | `errorColor: APColor`                                | Kolor błędów                                                                                                 |
 | `footerIconsColor: APColor`                          | Kolor ikon partnerów wystepujący na dole listy kanałów płatności                                             |
 
-#### APColor
+### APColor
 
 Reprezentuje wartość koloru w dwóch trybach - jasny ciemny.
 
@@ -176,7 +176,7 @@ Reprezentuje wartość koloru w dwóch trybach - jasny ciemny.
 | `light: Color` | Kolor w trybie jasnym  |
 | `dark: Color`  | Kolor w trybie ciemnym |
 
-#### APTextStyle
+### APTextStyle
 
 Reprezentuje styl tekstu, zawierający czcionkę oraz jej kolor.
 
@@ -192,7 +192,7 @@ Reprezentuje styl tekstu, zawierający czcionkę oraz jej kolor.
 | `font: UIFont`   | Czcionka                                  |
 | `color: APColor` | Para kolorów dla trybu jasnego i ciemnego |
 
-#### APTypography
+### APTypography
 
 Reprezentuje zestaw styli tekstów wraz z kolorem domyślnym dla każdego stylu. System zakłada użycie biblioteki w 4 rozmiarach - 12, 14, 16, 18, o wadze standardowej (400). Jedynie czcionka o rozmiarze 12 ma swój pogrubiony odpowiednik o wadze 500. Każdy styl tekstu przekazywany jest w postaci parametrów.
 
@@ -207,7 +207,7 @@ Reprezentuje zestaw styli tekstów wraz z kolorem domyślnym dla każdego stylu.
 | `labelSmallBoldFont: UIFont` | Czcionka w treściach o rozmiarze 12 (500)             |
 | `defaultTextColor: APColor`  | Domyślny kolor tekstu dla wyżej wymienionych czcionek |
 
-#### APButtonStyle
+### APButtonStyle
 
 Reprezentuje styl przycisków
 
@@ -231,7 +231,7 @@ Reprezentuje styl przycisków
 | `borderWidth: CGFloat`            | Grubość obramowania przycisku                                |
 | `minHeight: CGFloat`              | Minimalna wysokość przycisku, domyślnie 48                   |
 
-#### APBankGridStyle
+### APBankGridStyle
 
 Reprezentuje zestaw parametrów stylizujacych siatkę banków na grupie Przelewy bankowe
 
@@ -246,7 +246,7 @@ Reprezentuje zestaw parametrów stylizujacych siatkę banków na grupie Przelewy
 | `checkedBorderColor: APColor`   | Kolor obramowania zaznaczonej komórki |
 | `uncheckedBorderColor: APColor` | Kolor obramowania odznaczonej komórki |
 
-#### APCheckboxStyle
+### APCheckboxStyle
 
 Reprezentuje zestaw parametrów stylizujacych widoki typu checkbox
 
@@ -258,7 +258,7 @@ Reprezentuje zestaw parametrów stylizujacych widoki typu checkbox
 | `uncheckedColor: APColor` | Kolor obramowania w stanie domyślnym niezaznaczonym                         |
 | `errorColor: APColor`     | Kolor obramowania w przypadku błędu spowodowanego niezaznaczeniem checkboxa |
 
-#### APDCCPaymentFormStyle
+### APDCCPaymentFormStyle
 
 Reprezentuje zestaw parametrów stylizujących okno z formularzem przewalutowania przy płatności kartą
 
@@ -271,7 +271,7 @@ Reprezentuje zestaw parametrów stylizujących okno z formularzem przewalutowani
 | `cellBackgroundColor: APColor`   | Kolor tła komórki z walutą                     |
 | `cellRadius: CGFloat`            | Zaokrąglenie komórki z walutą, domyślnie 16    |
 
-#### APDialogStyle
+### APDialogStyle
 
 Reprezentuje zestaw parametrów stylizujących wyświetlane okna w SDK
 
@@ -282,7 +282,7 @@ Reprezentuje zestaw parametrów stylizujących wyświetlane okna w SDK
 | `dialogRadius: CGFloat`          | Zaokrąglenie okna, domyślnie 16 |
 | `dialogBackgroundColor: APColor` | Kolor tła okna                  |
 
-#### APLoaderStyle
+### APLoaderStyle
 
 Reprezentuje zestaw parametrów stylizujących element sygnalizujący ładowanie danych.
 
@@ -293,7 +293,7 @@ Reprezentuje zestaw parametrów stylizujących element sygnalizujący ładowanie
 | `size: CGFloat`  | Rozmiar elementu ładowania, domyślnie 60 |
 | `color: APColor` | Kolor elementu ładowania                 |
 
-#### APPaymentMethodTitleStyle
+### APPaymentMethodTitleStyle
 
 Reprezentuje zestaw parametrów stylizujących tytuł kanału płatności, po wybraniu danej formy i rozwinięciu jej szczegółów
 
@@ -306,7 +306,7 @@ Reprezentuje zestaw parametrów stylizujących tytuł kanału płatności, po wy
 | `textStyle: APTextStyle`   | Czcionka oraz kolor tekstu tytułu                                                                                                                            |
 | `radius: CGFloat`          | Zaokrąglenie tła, domyślnie 16                                                                                                                               |
 
-#### APPaymentSummaryStyle
+### APPaymentSummaryStyle
 
 Reprezentuje zestaw parametrów stylizujących komponent z podsumowaniem płatności
 
@@ -321,7 +321,7 @@ Reprezentuje zestaw parametrów stylizujących komponent z podsumowaniem płatno
 | `dividerHeight: CGFloat`   | Wysokość lini rozdzielającej, domyślnie 1  |
 | `radius: CGFloat`          | Zaokrąglenie tła, domyślnie 16             |
 
-#### APRadioButtonStyle
+### APRadioButtonStyle
 
 Reprezentuje zestaw parametrów stylizujacych widoki typu radio button
 
@@ -332,7 +332,7 @@ Reprezentuje zestaw parametrów stylizujacych widoki typu radio button
 | `checkedColor: APColor`   | Kolor w stanie zaznaczonym |
 | `uncheckedColor: APColor` | Kolor w stanie odznaczonym |
 
-#### APSwitchStyle
+### APSwitchStyle
 
 Reprezentuje zestaw parametrów stylizujacych widoki typu radio button
 
@@ -347,7 +347,7 @@ Reprezentuje zestaw parametrów stylizujacych widoki typu radio button
 | `checkedBorderColor: APColor`   | Kolor obramowania w stanie zaznaczonym     |
 | `uncheckedBorderColor: APColor` | Kolor obramowania w stanie niezaznaczonym  |
 
-#### APTextInputStyle
+### APTextInputStyle
 
 Reprezentuje zestaw parametrów stylizujacych widoki wprowadzania danych tekstowych
 
@@ -367,7 +367,7 @@ Reprezentuje zestaw parametrów stylizujacych widoki wprowadzania danych tekstow
 | `strokeWidth: CGFloat`         | Grubość obramowania pola wprowadzania danych tekstowych, domyślnie 1 |
 | `radius: CGFloat`              | Zaokrąglenie tła, domyślnie .infinity                                |
 
-#### APTransactionData
+### APTransactionData
 
 Obiekt zawierający wszystkie dane potrzebne do realizacji transakcji.
 
@@ -392,7 +392,7 @@ Obiekt zawierający wszystkie dane potrzebne do realizacji transakcji.
 | `setBlikCode(_ blikCode: String)`                          | Dodaje kod blik do płatności Blik.                             |
 | `setRegulations(regulations: [RegulationModel])`           | Dodaje regulaminy do transakcji.                               |
 
-#### APProductList
+### APProductList
 
 Obiekt listy produktów w koszyku transakcji.
 
@@ -407,7 +407,7 @@ Obiekt listy produktów w koszyku transakcji.
 | -------------------------------- | ------------------------ |
 | `addProduct(product: APProduct)` | Dodaje produkt do listy. |
 
-#### APProduct
+### APProduct
 
 Obiekt produktu w koszyku transakcji. Posiada parametry wymagane: `subAmount` (kwota, jaką trzeba zapłacić za dany produkt) oraz parametr `params` (lista dodatkowych parametrów produktu), lub `param` pojedynczy parametr produktu.
 
@@ -422,7 +422,7 @@ Obiekt produktu w koszyku transakcji. Posiada parametry wymagane: `subAmount` (k
 | ----------------------------------- | ---- |
 | `APProduct addParam(APParam param)` |      |
 
-#### APParam
+### APParam
 
 Obiekt parametrów produktu.
 
@@ -437,7 +437,7 @@ Obiekt parametrów produktu.
 | ---------------------------------------------------- | ------------------------------------- |
 | `addAdditionalAttribute(key: String, value: String)` | Ustawia dodatkowy atrybut parametrowi |
 
-#### APTransaction
+### APTransaction
 
 Obiekt zwracany podczas wykononywania płatności przy pomocy `APGatewayListView` lub aktywacji karty (`APCardActivationGatewayView`) zawarty w callbacku `APPPaymentViewCallback`.
 
@@ -454,7 +454,7 @@ Obiekt zwracany podczas wykononywania płatności przy pomocy `APGatewayListView
 | `status: APPaymentStatus?`        | Status transakcji.                                                                                                                                   |
 | `redirectUrl: String?`            | Url strony do przekierowania w celu dokończenia transakcji. Może być pusty, wtedy transakcja jest w trakcie realizacji i można sprawdzić jej status. |
 
-#### APCustomerFee
+### APCustomerFee
 
 Obiekt opłaty konsumenckiej
 
@@ -467,7 +467,7 @@ Obiekt opłaty konsumenckiej
 | `customerFee: Double`  | Kwota opłata konsumenckiej.    |
 | `receiverName: String` | Odbiorca opłaty konsumenckiej. |
 
-#### APGateway
+### APGateway
 
 Obiekt opisujący kanał płatności.
 
@@ -484,7 +484,7 @@ Obiekt opisujący kanał płatności.
 | `currencyList: [APCurrency]` | Zwaraca listę obsługiwanych walut przez kanał płatności.                                                                            |
 | `isInvalid() -> Bool`        | Zwraca informację, czy kanał płatności jest niepoprawny, tj. zawiera nieprawidłowe dane (niepoprawny - `true`, poprawny - `false`). |
 
-#### APResult
+### APResult
 
 Obiekt zwracany w przypadku otrzymania rezultatu transakcji podczas wykorzystania `WebView` - callback `APPWebViewCallback`.
 
@@ -494,7 +494,7 @@ Obiekt zwracany w przypadku otrzymania rezultatu transakcji podczas wykorzystani
 | ------------------------- | -------------------------------------------------- |
 | `status: APPaymentStatus` | Rezultat transakcji (enum typu `APPaymentStatus`). |
 
-#### APError
+### APError
 
 Obiekt zwracany w przypadku wystąpienia błędu w bibliotece w metodach `throws` lub `async throws` oraz callbackach `APPPaymentViewCallback`, `APPWebViewCallback`.
 
@@ -505,7 +505,7 @@ Obiekt zwracany w przypadku wystąpienia błędu w bibliotece w metodach `throws
 | `status: APErrorEnum` | Zwraca błąd, który wystąpił (enum typu `APErrorEnum`). |
 | `message: String?`    | Zwraca informację tekstową o błędzie.                  |
 
-#### APLog
+### APLog
 
 Klasa służąca do logowania zdarzeń do konsoli.
 
@@ -515,9 +515,9 @@ Klasa służąca do logowania zdarzeń do konsoli.
 | ----------------------- | ---------------------------------------------------------------------- |
 | `static SHOW_LOG: Bool` | Ustawia logowanie informacji (włączone - `true`, wyłączone - `false`). |
 
-### Widoki
+## Widoki
 
-#### APGatewayListView / APGatewayListContainerView
+### APGatewayListView / APGatewayListContainerView
 
 Widok listy kanałów płatności jest rozbudowanym widokiem obsługującym zarówno załadowanie listy kanałów płatności, ich wyświetlanie oraz rozwinięcie szczegółów wybranego kanału płatności wraz z załadowaniem regulaminów, opłaty konsumenckiej oraz dokonaniem płatności. Po dokonaniu płatności widok wraca do stanu załadowanej listy.
 
@@ -566,7 +566,7 @@ init(
 | `selectedPaymentGroupHandler: @escaping (APGatewayPaymentGroup) -> Void` | Callback zwracający informacje o wybranym kanale płatności, moze zostać wykorzystane do aktualizacji nagłówka w navigation bar                                                                                                 |
 | `deselectedPaymentGroupHandler: @escaping (?) -> Void`                   | Callback wykorzystywany w implementacji UIKit zwracający informacje o powrocie do listy kanałów płatności                                                                                                                      |
 
-#### APApplePayGatewayView / APApplePayGatewayContainerView
+### APApplePayGatewayView / APApplePayGatewayContainerView
 
 Widok rozwiniętego kanału płatności typu _ApplePay_. Nie zawiera podsumowania płatności.
 
@@ -596,7 +596,7 @@ init(
 | `data: APGatewayBaseViewModelData` | Obiekt konfiguracyjny widoku [APGatewayBaseViewModelData](szczegolowy-opis-klas-i-metod.md#apgatewaybaseviewmodeldata)                                                                                                             |
 | `styleManager: APStyleManager`     | W przypadku użycia **APApplePayGatewayContainerView** manager styli domyślnie przyjmuje style zadeklarowane w SDK, w przypadku użycia przy pomocy SwiftUI konieczne jest przekazanie go jako `.enviromentObject(APStyleManager())` |
 
-#### APBankTransferGatewayView / APBankTransferGatewayContainerView
+### APBankTransferGatewayView / APBankTransferGatewayContainerView
 
 Widok rozwiniętego kanału płatności typu _Bank_. Nie zawiera podsumowania płatności.
 
@@ -624,7 +624,7 @@ init(
 | `data: APGatewayBaseViewModelData` | Obiekt konfiguracyjny widoku [APGatewayBaseViewModelData](szczegolowy-opis-klas-i-metod.md#apgatewaybaseviewmodeldata)                                                                                                                 |
 | `styleManager: APStyleManager`     | W przypadku użycia **APBankTransferGatewayContainerView** manager styli domyślnie przyjmuje style zadeklarowane w SDK, w przypadku użycia przy pomocy SwiftUI konieczne jest przekazanie go jako `.enviromentObject(APStyleManager())` |
 
-#### APBlikGatewayView / APBlikGatewayContainerView
+### APBlikGatewayView / APBlikGatewayContainerView
 
 Widok rozwiniętego kanału płatności typu _Blik_. Nie zawiera podsumowania płatności.
 
@@ -654,7 +654,7 @@ init(
 | `data: APGatewayBaseViewModelData` | Obiekt konfiguracyjny widoku [APGatewayBaseViewModelData](szczegolowy-opis-klas-i-metod.md#apgatewaybaseviewmodeldata)                                                                                                         |
 | `styleManager: APStyleManager`     | W przypadku użycia **APBlikGatewayContainerView** manager styli domyślnie przyjmuje style zadeklarowane w SDK, w przypadku użycia przy pomocy SwiftUI konieczne jest przekazanie go jako `.enviromentObject(APStyleManager())` |
 
-#### APCardGatewayView / APCardGatewayContainerView
+### APCardGatewayView / APCardGatewayContainerView
 
 Widok rozwiniętego kanału płatności typu _Card_. Nie zawiera podsumowania płatności.
 
@@ -684,7 +684,7 @@ init(
 | `data: APGatewayBaseViewModelData` | Obiekt konfiguracyjny widoku [APGatewayBaseViewModelData](szczegolowy-opis-klas-i-metod.md#apgatewaybaseviewmodeldata)                                                                                                         |
 | `styleManager: APStyleManager`     | W przypadku użycia **APCardGatewayContainerView** manager styli domyślnie przyjmuje style zadeklarowane w SDK, w przypadku użycia przy pomocy SwiftUI konieczne jest przekazanie go jako `.enviromentObject(APStyleManager())` |
 
-#### APVisaGatewayView / APVisaGatewayContainerView
+### APVisaGatewayView / APVisaGatewayContainerView
 
 Widok rozwiniętego kanału płatności typu _Visa_. Nie zawiera podsumowania płatności.
 
@@ -714,7 +714,7 @@ init(
 | `data: APGatewayBaseViewModelData` | Obiekt konfiguracyjny widoku [APGatewayBaseViewModelData](szczegolowy-opis-klas-i-metod.md#apgatewaybaseviewmodeldata)                                                                                                         |
 | `styleManager: APStyleManager`     | W przypadku użycia **APVisaGatewayContainerView** manager styli domyślnie przyjmuje style zadeklarowane w SDK, w przypadku użycia przy pomocy SwiftUI konieczne jest przekazanie go jako `.enviromentObject(APStyleManager())` |
 
-#### APCardActivationGatewayView / APCardActivationGatewayContainerView
+### APCardActivationGatewayView / APCardActivationGatewayContainerView
 
 Widok przedstawiający formularz aktywacji karty za pomocą serwisu Autopay. Naliczana w nim jest opłata konsumencka, która będzie zwrócona klientowi.
 
@@ -757,7 +757,7 @@ init(
 
 **UWAGA:** Jeśli token wygaśnie, należy zablokować interfejs użytkownika, pobrać nowy token, zaktualizować go w obiekcie configuracyjnym `APConfig` metodą `setToken(token: String)`, odblokować interfejs i pozwolić użytkownikowi na kontynuowanie płatności.
 
-#### WebView / WebViewContainerView
+### WebView / WebViewContainerView
 
 Widok służący do obsługi strony przekierowania po dokonaniu płatności. Wyposażony jest w dodatkowe interfejsy JavaScript’owe i dodatkową metodę aktualizującą url pozwalając na reagowanie na zdarzenia wynikające z serwisu Autopay w trakcie dokończenia transakcji.
 
@@ -777,9 +777,9 @@ init(
 | `url: URL`                                          | URL który ma zostać otwarty w webView np _redirectUrl_                      |
 | `transactionCallback: @escaping APPWebViewCallback` | Callback wywoływany w momencie zakończenia płatności w komponencie WebView. |
 
-### Callbacki
+## Callbacki
 
-#### APPPaymentViewCallback
+### APPPaymentViewCallback
 
 Callback wywoływany w momencie zakończenia po stronie SDK procesu płatności w komponencie `APGatewayListView`. Możliwa konieczność kontynuowania w WebView w przypadku gdy płatność tego wymaga.
 
@@ -788,7 +788,7 @@ Callback wywoływany w momencie zakończenia po stronie SDK procesu płatności 
 | `result: APTransaction?` | Rezultat płatności. |
 | `error: APError?`        | Błąd płatności.     |
 
-#### APPWebViewCallback
+### APPWebViewCallback
 
 Callback wywoływany w momencie zakończenia płatności w komponencie WebView. Callback może zwrócić zarówno status jak i bład w postaci nil ponieważ jest to wstępna informacja o statusie transakcji. Dla potwierdzenia rezultatu należy skorzystać z metody `getTransactionStatus(orderId: String)` z klasy `Autopay`
 
@@ -797,7 +797,7 @@ Callback wywoływany w momencie zakończenia płatności w komponencie WebView. 
 | `result: APResult?` | Status płatności. |
 | `error: APError?`   | Błąd płatności.   |
 
-#### APPayTappedCallback
+### APPayTappedCallback
 
 Callback wywoływany w momencie kliknięcia przycisku płatności podczas gdy korzystamy z indywidualnych kontrolek, w celu przekazania informacji jaką płatność powinna zeralizować aplikacja.
 
@@ -807,7 +807,7 @@ Callback wywoływany w momencie kliknięcia przycisku płatności podczas gdy ko
 | `gateway: APGateway`                  | Obiekt kanału płatności.                      |
 | `transactionData: APTransactionData`  | Obiekt wymagany do wykonania transakcji.      |
 
-#### APCustomerFeeDidUpdatedCallback
+### APCustomerFeeDidUpdatedCallback
 
 Callback wywoływany w momencie aktualizacji opłaty konsumenckiej.
 
@@ -815,7 +815,7 @@ Callback wywoływany w momencie aktualizacji opłaty konsumenckiej.
 | ---------------------------- | ---------------------------- |
 | `customerFee: APCustomerFee` | Obiekt opłaty konsumenckiej. |
 
-#### APTokenExpiredCallback
+### APTokenExpiredCallback
 
 Callback wywoływany w momencie gdy SDK wykryje wygaśnięty token.
 
@@ -823,9 +823,9 @@ Callback wywoływany w momencie gdy SDK wykryje wygaśnięty token.
 | ----------------- | -------------------------------- |
 | `error: APError?` | Obiekt błędu wygaśniętego tokenu |
 
-### Enumy
+## Enumy
 
-#### APEnvironmentEnum
+### APEnvironmentEnum
 
 Rodzaj środowiska wymagany podczas inicjalizowania `APConfig`.
 
@@ -834,7 +834,7 @@ Rodzaj środowiska wymagany podczas inicjalizowania `APConfig`.
 | `prod`  | Adres środowiska produkcyjnego Systemu Płatności Online BM [https://pay.autopay.eu](https://pay.autopay.eu/){.external-link}.           |
 | `dev`   | Adres środowiska deweloperskiego Systemu Płatności Online BM [https://testpay.autopay.eu](https://testpay.autopay.eu/){.external-link}. |
 
-#### APButtonStyleType
+### APButtonStyleType
 
 Enum reprezentujący styl przycisku wykorzystywany podczas inicjalizowania `APButtonStyle`. Zawiera domyślne wartości dla danego stylu przycisku.
 
@@ -845,7 +845,7 @@ Enum reprezentujący styl przycisku wykorzystywany podczas inicjalizowania `APBu
 | tertiary      | Reprezentuje przycisk pomocniczy (obramowany) w SDK                |
 | paymentMethod | Reprezentuje przycisk kanału płatności na liście kanałów płatności |
 
-#### APErrorEnum
+### APErrorEnum
 
 Błąd zwracany przez SDK. Może dotyczyć transakcji, komunikacji z Systemem Płatności Online BM bądź wewnętrznych błędów SDK.
 
@@ -883,7 +883,7 @@ Błąd zwracany przez SDK. Może dotyczyć transakcji, komunikacji z Systemem P�
 | `invalidUrlError`                 | Błąd wewnętrzny                      | Niepoprwanie skonfigurowany url                                                |
 | `paywayNotFound`                  | `PAYWAY_NOT_FOUND`                   | Wybrany kanał płatności jest nieaktywny.                                       |
 
-#### APRecurringActionEnum
+### APRecurringActionEnum
 
 Pole wymagane dla płatności automatycznych, określające możliwe akcje na płatności automatycznej.
 
@@ -895,7 +895,7 @@ Pole wymagane dla płatności automatycznych, określające możliwe akcje n
 | `deactivate`      | Dezaktywacja płatności automatycznej.                            |
 | `unknown`         | Nieznana wartość.                                                |
 
-#### APGatewayType
+### APGatewayType
 
 Typ kanału płatności. Dostępne typy kanałów płatności są zależne od konfiguracji dla danego serwisu (`serviceId`).
 
@@ -920,7 +920,7 @@ Typ kanału płatności. Dostępne typy kanałów płatności są zależne od ko
 | `autoPaymentDcb`  | Kanał płatności automatycznej DCB.                                                  |
 | `undefined`       | Nieznany typ kanału płatności.                                                      |
 
-#### APPaymentStatus
+### APPaymentStatus
 
 Enum reprezentujący rezultat transakcji.
 
@@ -931,7 +931,7 @@ Enum reprezentujący rezultat transakcji.
 | pending     | Transakcja oczekuje na opłacenie. |
 | failure     | Błąd transakcji.                  |
 
-#### APRequestDataParamKey
+### APRequestDataParamKey
 
 Enum typu String reprezentujący klucze parametrów do stworzenia transakcji `APTransactionData`
 
@@ -960,7 +960,7 @@ Enum typu String reprezentujący klucze parametrów do stworzenia transakcji `AP
 | acceptanceStateSuffix    |
 | acceptanceTimeSuffix     |
 
-#### APGatewayPaymentGroup
+### APGatewayPaymentGroup
 
 Enum wykorzystywany to wykluczenia grup płatności z widoku `APGatewayListView` oraz w callbacku `APPayTappedCallback`
 
@@ -972,9 +972,9 @@ Enum wykorzystywany to wykluczenia grup płatności z widoku `APGatewayListView`
 | visa         | Reprezentuje grupę płatności Visa.               |
 | applePay     | Reprezentuje płatność ApplePay.                  |
 
-### Wyjątki
+## Wyjątki
 
-#### APConfigurationError
+### APConfigurationError
 
 Wyjątek informujący o błędnej konfiguracji klasy `Autopay`. Może zostać rzucony w przypadku **niepoprawnych** bądź **pustych argumentów** przesyłach w inicjalizatorach oraz metodach.
 
