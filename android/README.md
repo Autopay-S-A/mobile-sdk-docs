@@ -42,23 +42,26 @@ Wykonaj poniższe czynności, aby zintegrować Twoją aplikację na Androida z *
 <figure><img src="../.gitbook/assets/diagram_numbers_variant_II.png" alt=""><figcaption></figcaption></figure>
 
 {% stepper %}
- {% step %}
+
+{% step %}
 Aplikacja odpytuje swój backend o token transakcyjny (akcja dzieje się bez udziału SDK).
- {% endstep %} 
- {% step %}
+{% endstep %} 
+{% step %}
 Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja  integracji  Serwisu  Partnera  z  Systemem  Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokenu**](download/System_platnosci_online_obsluga_transakcji_Dodatek_oAuth_1.0.0.pdf)).
- {% endstep %} 
- {% step %}
+{% endstep %} 
+{% step %}
 Backend aplikacji otrzymuje token transakcyjny ważny 1h.
- {% endstep %} 
- {% step %}
+{% endstep %} 
+{% step %}
 Backend aplikacji przekazuje token transakcyjny do aplikacji mobilnej.
- {% endstep %} 
- {% step %}
+{% endstep %} 
+{% step %}
 Aplikacja wykorzystuje token do dokonania transakcji.
- {% endstep %} 
- {% step %}
-Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt **[5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej](https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-(itn)){.external-link}** w dokumencie *Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń*).
+{% endstep %} 
+{% step %}
+Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt **[5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej](https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-(itn))** w dokumencie *Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń*).
+{% endstep %} 
+
 {% endstepper %}
 
 
