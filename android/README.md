@@ -282,31 +282,74 @@ Wykonaj poniższe czynności, aby zintegrować Twoją aplikację w trybie kontyn
 
 <figure><img src="../.gitbook/assets/diagram_numbers_variant_I.png" alt=""><figcaption></figcaption></figure>
 
-1. Aplikacja odpytuje swój backend o token transakcyjny (akcja dzieje się bez udziału SDK).
-2. Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja  integracji  Serwisu  Partnera  z  Systemem  Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokena**](download/System_platnosci_online_obsluga_transakcji_Dodatek_oAuth_1.0.0.pdf)).
-3. Backend aplikacji otrzymuje token transakcyjny ważny 1h.
-4. Backend aplikacji przekazuje token transakcyjny do aplikacji mobilnej.
-5. SDK odpytuje o listę kanałów płatności backend Autopay.
-6. SDK odbiera listę kanałów płatności i ładuje ją do natywnych widoków.
-7. Aplikacja mobilna musi mieć zaimplementowaną metodę `finishBeforePreTransaction` w natywnych widokach, dzięki której SDK nie rozpoczyna transkacji po kliknięciu przycisku **Płacę**, tylko przekazuje do aplikacji mobilnej zestaw parametrów klasy `APTransactionData` (możliwe parametry: PaymentToken, AuthorizationCode, GatewayId, RegulationParams, WalletType), które aplikacja mobilna przesyła do backendu partnera.
-8. Backend partnera wykonuje odpytanie o przedtransakcję do backendu Autopay, dla otrzymanych od aplikacji mobilnej parametrów transakcji.
-9. W rezultacie żądania rozpoczęcia transakcji, backend partnera dostaje w zależności od kanału płatności:
+{% stepper %}
+
+{% step %}
+Aplikacja odpytuje swój backend o token transakcyjny (akcja dzieje się bez udziału SDK).
+{% endstep %} 
+{% step %}
+Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja  integracji  Serwisu  Partnera  z  Systemem  Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokena**](download/System_platnosci_online_obsluga_transakcji_Dodatek_oAuth_1.0.0.pdf)).
+{% endstep %} 
+{% step %}
+Backend aplikacji otrzymuje token transakcyjny ważny 1h.
+{% endstep %} 
+{% step %}
+Backend aplikacji przekazuje token transakcyjny do aplikacji mobilnej.
+{% endstep %} 
+{% step %}
+SDK odpytuje o listę kanałów płatności backend Autopay.
+{% endstep %} 
+{% step %}
+SDK odbiera listę kanałów płatności i ładuje ją do natywnych widoków.
+{% endstep %} 
+{% step %}
+Aplikacja mobilna musi mieć zaimplementowaną metodę `finishBeforePreTransaction` w natywnych widokach, dzięki której SDK nie rozpoczyna transkacji po kliknięciu przycisku **Płacę**, tylko przekazuje do aplikacji mobilnej zestaw parametrów klasy `APTransactionData` (możliwe parametry: PaymentToken, AuthorizationCode, GatewayId, RegulationParams, WalletType), które aplikacja mobilna przesyła do backendu partnera.
+{% endstep %} 
+{% step %}
+Backend partnera wykonuje odpytanie o przedtransakcję do backendu Autopay, dla otrzymanych od aplikacji mobilnej parametrów transakcji.
+{% endstep %} 
+{% step %}
+W rezultacie żądania rozpoczęcia transakcji, backend partnera dostaje w zależności od kanału płatności:
     * Link do kontynuacji transakcji (PBL, Fast Transfer, Google Pay, Aktywacja i płatność kartą)
     * Wstępne informacje o statusie transakcji (Blik, Apple Pay) 
-10. Backend aplikacji przekazuje link do kontynuacji transakcji do aplikacji mobilnej jako odpowiedź na informację o potrzebie rozpoczęcia transakcji.
-11. Aplikacja wykorzystuje link do kontynuacji transakcji poprzez wywołanie metody `loadUrl(url: String, transactionCallback: (APResult?) -> Unit, eventCallback: (APEvent?) -> Unit, errorCallback: (APError?) -> Unit)` z klasy [`APWebView`](#apwebview).
-12. Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt **5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej** w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
+{% endstep %} 
+{% step %}
+Backend aplikacji przekazuje link do kontynuacji transakcji do aplikacji mobilnej jako odpowiedź na informację o potrzebie rozpoczęcia transakcji.
+{% endstep %} 
+{% step %}
+Aplikacja wykorzystuje link do kontynuacji transakcji poprzez wywołanie metody `loadUrl(url: String, transactionCallback: (APResult?) -> Unit, eventCallback: (APEvent?) -> Unit, errorCallback: (APError?) -> Unit)` z klasy [`APWebView`](#apwebview).
+{% endstep %} 
+{% step %}
+Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt **5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej** w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
+{% endstep %} 
+{% endstepper %}
+
 
 #### Wariant III
 
 <figure><img src="../.gitbook/assets/diagram_numbers_variant_III.png" alt=""><figcaption></figcaption></figure>
 
-1. Aplikacja informuje swój backend o potrzebie wystartowania transakcji na skutek np. kliknięcia przycisku **Zapłać** (akcja dzieje się bez udziału SDK).
-2. Backend aplikacji odpytuje backend Autopay o przedtransakcję (punkt **1.1 Przedtransakcja** w dokumencie **Specyfikacja  integracji  Serwisu  Partnera  z  Systemem  Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń – Dodatek**).
-3. Backend aplikacji otrzymuje link do kontynuacji transakcji.
-4. Backend aplikacji przekazuje link do kontynuacji transakcji do aplikacji mobilnej jako odpowiedź na informację o potrzebie rozpoczęcia transakcji.
-5. Aplikacja wykorzystuje link do kontynuacji transakcji poprzez wywołanie metody `loadUrl(url: String, transactionCallback: (APResult?) -> Unit, eventCallback: (APEvent?) -> Unit, errorCallback: (APError?) -> Unit)` z klasy [`APWebView`](#apwebview).
-6. Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt **5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej** w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
+{% stepper %}
+{% step %}
+Aplikacja informuje swój backend o potrzebie wystartowania transakcji na skutek np. kliknięcia przycisku **Zapłać** (akcja dzieje się bez udziału SDK).
+{% endstep %} 
+{% step %}
+Backend aplikacji odpytuje backend Autopay o przedtransakcję (punkt **1.1 Przedtransakcja** w dokumencie **Specyfikacja  integracji  Serwisu  Partnera  z  Systemem  Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń – Dodatek**).
+{% endstep %} 
+{% step %}
+Backend aplikacji otrzymuje link do kontynuacji transakcji.
+{% endstep %} 
+{% step %}
+Backend aplikacji przekazuje link do kontynuacji transakcji do aplikacji mobilnej jako odpowiedź na informację o potrzebie rozpoczęcia transakcji.
+{% endstep %} 
+{% step %}
+Aplikacja wykorzystuje link do kontynuacji transakcji poprzez wywołanie metody `loadUrl(url: String, transactionCallback: (APResult?) -> Unit, eventCallback: (APEvent?) -> Unit, errorCallback: (APError?) -> Unit)` z klasy [`APWebView`](#apwebview).
+{% endstep %} 
+{% step %}
+Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt **5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej** w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
+{% endstep %} 
+{% endstepper %}
+
 
 #### Przykładowa kontynuacja transackji z linku
 
