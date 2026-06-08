@@ -69,7 +69,9 @@ init(
 | `setRegulationsHidden(hidden: [APGatewayPaymentGroup])` | Steruje możliwością wyświetlania regulaminów na kanałach płatności. Podając typ kanału płatności wyłączamy widoczność regulaminów na wybranej grupie płatności.                                     |
 | `setToken(token: String)`                               | Aktualizuje token                                                                                                                                                                                   |
 
-📌 Ważne: W przypadku przekazania do `setRegulationsHidden` typu `.card` np `[.card]` sekcja regulaminów nie zostanie wyświetlona zarówno na kanale płatności kartą płatniczą jak i aktywacji karty płatniczej.
+{% hint style="warning" %}
+**Ważne**: W przypadku przekazania do `setRegulationsHidden` typu `.card` np `[.card]` sekcja regulaminów nie zostanie wyświetlona zarówno na kanale płatności kartą płatniczą jak i aktywacji karty płatniczej.
+{% endhint %}
 
 ### APGatewayBaseViewModelData
 
@@ -90,7 +92,9 @@ Opcjonalne:
 * `customerFeeDidUpdatedCallback` — callback wywoływany w momencie zaktualizowania opłaty konsumenckiej.
 * `tokenExpiredCallback` - callback wywoływany gdy SDK wykryje wygaśnięty token, zwraca obiekt błędu `APError`.
 
-📌 Ważne: W zależnośći od tego czy zostanie przekazany `payTappedCallback` czy `paymentViewCallback` SDK realizuje różne scenariusze, jeśli planujesz przetwarzać płatność po stronie aplikacji nie przekazuj `paymentViewCallback` do modelu danych oraz adekwatnie jeśli chcesz aby SDK przeprowadziło pełny proces transakcji nie przekazuj `payTappedCallback`.
+{% hint style="warning" %}
+**Ważne:** W zależnośći od tego czy zostanie przekazany `payTappedCallback` czy `paymentViewCallback` SDK realizuje różne scenariusze, jeśli planujesz przetwarzać płatność po stronie aplikacji nie przekazuj `paymentViewCallback` do modelu danych oraz adekwatnie jeśli chcesz aby SDK przeprowadziło pełny proces transakcji nie przekazuj `payTappedCallback`.
+{% endhint %}
 
 **UWAGA:** Jeśli token wygaśnie, należy zablokować interfejs użytkownika, pobrać nowy token, zaktualizować go w obiekcie configuracyjnym `APConfig` metodą `setToken(token: String)`, odblokować interfejs i pozwolić użytkownikowi na kontynuowanie płatności.
 
@@ -753,7 +757,9 @@ init(
 | `paymentViewCallback: APPPaymentViewCallback?`  | Callback wywoływany w momencie zakończenia operacji aktywacji karty płatniczej, wykorzystywany w wariancie (II)                                                                                                                          |
 | `tokenExpiredCallback: APTokenExpiredCallback?` | Callback wywoływany gdy SDK wykryje wygaśnięty token, zwraca obiekt błędu `APError`                                                                                                                                                      |
 
-📌 Ważne: W zależnośći od tego czy zostanie przekazany `payTappedCallback` czy `paymentViewCallback` SDK realizuje różne scenariusze, jeśli planujesz przetwarzać transakcje po stronie aplikacji nie przekazuj `paymentViewCallback` do modelu danych oraz adekwatnie jeśli chcesz aby SDK przeprowadziło pełny proces transakcji nie przekazuj `payTappedCallback`.
+{% hint style="warning" %}
+Ważne: W zależnośći od tego czy zostanie przekazany `payTappedCallback` czy `paymentViewCallback` SDK realizuje różne scenariusze, jeśli planujesz przetwarzać transakcje po stronie aplikacji nie przekazuj `paymentViewCallback` do modelu danych oraz adekwatnie jeśli chcesz aby SDK przeprowadziło pełny proces transakcji nie przekazuj `payTappedCallback`.
+{% endhint %}
 
 **UWAGA:** Jeśli token wygaśnie, należy zablokować interfejs użytkownika, pobrać nowy token, zaktualizować go w obiekcie configuracyjnym `APConfig` metodą `setToken(token: String)`, odblokować interfejs i pozwolić użytkownikowi na kontynuowanie płatności.
 
@@ -829,8 +835,8 @@ Callback wywoływany w momencie gdy SDK wykryje wygaśnięty token.
 
 Rodzaj środowiska wymagany podczas inicjalizowania `APConfig`.
 
-| wartość | opis                                                                                                                                    |
-| ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| wartość | opis                                                                                                                    |
+| ------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `prod`  | Adres środowiska produkcyjnego Systemu Płatności Online BM [https://pay.autopay.eu](https://pay.autopay.eu/).           |
 | `dev`   | Adres środowiska deweloperskiego Systemu Płatności Online BM [https://testpay.autopay.eu](https://testpay.autopay.eu/). |
 

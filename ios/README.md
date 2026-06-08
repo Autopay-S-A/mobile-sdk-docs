@@ -15,6 +15,8 @@ layout:
     visible: true
   tags:
     visible: true
+  actions:
+    visible: true
 ---
 
 # IOS
@@ -125,7 +127,9 @@ Jeżeli chcesz użyć któregoś komponentu frameworka, w wykorzystującym go pl
 * **Privacy manifest (`PrivacyInfo.xcprivacy`)** – plik jest dołączony w `.framework` SDK i zostanie wbudowany automatycznie (SPM i CocoaPods).\
   Jeśli aplikacja używa dodatkowych „Required Reason APIs”, dołącz **własny** manifest.
 
-📌 Ważne: Klucz `NSCameraUsageDescription` jest wymagany niezależnie od wariantu integracji SDK. Jego brak może zakłócić działanie zarówno SDK jak i aplikacji mobilnej.
+{% hint style="warning" %}
+Ważne: Klucz `NSCameraUsageDescription` jest wymagany niezależnie od wariantu integracji SDK. Jego brak może zakłócić działanie zarówno SDK jak i aplikacji mobilnej.
+{% endhint %}
 
 ### 1.6 Aktualizacja wersji
 
@@ -136,7 +140,7 @@ Jeżeli chcesz użyć któregoś komponentu frameworka, w wykorzystującym go pl
 
 ## 2. Tutorial - przykładowa implementacja
 
-Poniższy tutorial opisuje sposób integracji biblioteki w wariancie z wykorzystaniem tokenu transakcyjnego uzyskanego z backendu aplikacji (Wariant 2). Zalecany jest wariant mieszany – z użyciem `WebView` i tworzeniem transakcji po stronie backendu. Aplikacja otrzymuje jedynie link do kontynuacji, który następnie jest ładowany w komponencie [WebView](tutorial-przykladowa-implementacja#webview).
+Poniższy tutorial opisuje sposób integracji biblioteki w wariancie z wykorzystaniem tokenu transakcyjnego uzyskanego z backendu aplikacji (Wariant 2). Zalecany jest wariant mieszany – z użyciem `WebView` i tworzeniem transakcji po stronie backendu. Aplikacja otrzymuje jedynie link do kontynuacji, który następnie jest ładowany w komponencie [WebView](tutorial-przykladowa-implementacja/#webview).
 
 Wykonaj poniższe czynności, aby zintegrować Twoją aplikację na Androida z **Autopay SDK**:
 
@@ -195,13 +199,15 @@ Dodatkowo klasa `APConfig` posiada następujące metody aktualizujące:
 * `setRegulationsHidden(hidden: [APGatewayPaymentGroup])` - przyjmuje listę grup płatności na których sekcja ragulaminów zostanie ukryta
 * `setToken(token: String)` - aktualizuje token
 
-📌 Ważne: W przypadku przekazania do `setRegulationsHidden` typu `.card` np `[.card]` sekcja regulaminów nie zostanie wyświetlona zarówno na kanale płatności kartą płatniczą jak i aktywacji karty płatniczej.
+{% hint style="warning" %}
+&#x20;Ważne: W przypadku przekazania do `setRegulationsHidden` typu `.card` np `[.card]` sekcja regulaminów nie zostanie wyświetlona zarówno na kanale płatności kartą płatniczą jak i aktywacji karty płatniczej.
+{% endhint %}
 
 **UWAGA**: Token transakcyjny ma ograniczony czas ważności, tym samym przed każdym użyciem metody z klasy `Autopay` zalecane jest pobranie z backendu aplikacji nowego tokenu transakcyjnego.
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     APConfig(
             token: String,
             serviceId: Int,
@@ -218,7 +224,7 @@ Dodatkowo klasa `APConfig` posiada następujące metody aktualizujące:
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-C
+```objective-c
 APConfig * config = [[APConfig alloc]
     initWithToken:(NSString *)token
     serviceId:(NSInteger)serviceId
@@ -255,7 +261,7 @@ Opcjonalne:
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     APGatewayBaseViewModelData(
             config: APConfig,
             amount: Double,
@@ -271,7 +277,7 @@ Opcjonalne:
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-C
+```objective-c
     APGatewayBaseViewModelData(
             config: APConfig,
             amount: Double,
@@ -289,7 +295,9 @@ Opcjonalne:
 
 **UWAGA:** Jeśli token wygaśnie, należy zablokować interfejs użytkownika, pobrać nowy token, zaktualizować go w obiekcie configuracyjnym `APConfig` metodą `setToken(token: String)`, odblokować interfejs i pozwolić użytkownikowi na kontynuowanie płatności.
 
-📌 Ważne: W zależnośći od tego czy zostanie przekazany `payTappedCallback` czy `paymentViewCallback` SDK realizuje różne scenariusze, jeśli planujesz przetwarzać płatność po stronie aplikacji nie przekazuj `paymentViewCallback` do modelu danych oraz adekwatnie jeśli chcesz aby SDK przeprowadziło pełny proces transakcji nie przekazuj `payTappedCallback`.
+{% hint style="warning" %}
+Ważne: W zależnośći od tego czy zostanie przekazany `payTappedCallback` czy `paymentViewCallback` SDK realizuje różne scenariusze, jeśli planujesz przetwarzać płatność po stronie aplikacji nie przekazuj `paymentViewCallback` do modelu danych oraz adekwatnie jeśli chcesz aby SDK przeprowadziło pełny proces transakcji nie przekazuj `payTappedCallback`.
+{% endhint %}
 
 ### Informacje ogólne
 
@@ -301,10 +309,14 @@ Widoki:
 * nie posiadają marginesów ani paddingów — należy dodać je samodzielnie.
 * nie posiadają navigation bara
 
-📌 **Zalecenie:** opakować widok w scrollowalny komponent, aby uniknąć zasłaniania widoku przez klawiaturę lub brak miejsca na ekranie urządzenia.
+{% hint style="info" %}
+**Zalecenie:** opakować widok w scrollowalny komponent, aby uniknąć zasłaniania widoku przez klawiaturę lub brak miejsca na ekranie urządzenia.
+{% endhint %}
 
-📌 **Ważne:**\
+{% hint style="warning" %}
+**Ważne:**\
 W przypadku osadzenia dowolnego wiodku pochodzącego z SDK przy użyciu SwiftUI należy przekazać obiekt styli `APStyleManager` jako `enviromentObject`.
+{% endhint %}
 
 ### Lista kanałów płatności
 
@@ -313,7 +325,7 @@ Widoki te obsługują pobieranie i wyświetlanie dostępnych kanałów płatnoś
 
 {% tabs %}
 {% tab title="SwiftUI" %}
-```SwiftUI
+```swiftui
     APGatewayListView(
         data: APGatewayBaseViewModelData,
         excludedGatewayPaymentGroups: [APGatewayPaymentGroup] = [],
@@ -323,7 +335,7 @@ Widoki te obsługują pobieranie i wyświetlanie dostępnych kanałów płatnoś
 {% endtab %}
 
 {% tab title="UIKit" %}
-```UIKit
+```uikit
     APGatewayListContainerView(
         data: APGatewayBaseViewModelData,
         styleManager: APStyleManager = .init(),
@@ -347,7 +359,9 @@ Opcjonalne:
 * `styleManager` — W przypadku użycia **APGatewayListContainerView** manager styli domyślnie przyjmuje style zadeklarowane w SDK, w przypadku użycia przy pomocy SwiftUI konieczne jest przekazanie go jako `.enviromentObject(APStyleManager())`
 * `excludedGatewayPaymentGroups` — lista wyłączonych grup kanałów płatności (domyślnie wszystkie są włączone)
 
-📌 **Zalecenie:** opakować widok w scrollowalny komponent, aby uniknąć zasłaniania widoku przez klawiaturę lub brak miejsca na ekranie urządzenia.
+{% hint style="info" %}
+**Zalecenie:** opakować widok w scrollowalny komponent, aby uniknąć zasłaniania widoku przez klawiaturę lub brak miejsca na ekranie urządzenia.
+{% endhint %}
 
 ### Podsumowanie płatności
 
@@ -365,7 +379,9 @@ Dla **Przelewu bankowego** opłata konsumencka i regulaminy ładowane są dopier
 
 W celu ukrycia sekcji regulaminów przekazujemy odpowiednią wartość w polu `regulationsHidden` przy inicjalizacji obiektu konfiguracyjnego `APConfig` lub wywołujemy `setRegulationsHidden` na tym obiekcie. Podając typ kanału płatności wyłączamy widoczność regulaminów na wybranym kanale płatności. Umożliwia to merchantowi wyświetlenie regulaminów w innym miejscu aplikacji.
 
-📌 **Ważne:** W przypadku przekazania w polu `regulationsHidden` lub funkcji `setRegulationsHidden` typu `.card` np `[.card]` sekcja regulaminów nie zostanie wyświetlona zarówno na kanale płatności kartą płatniczą jak i aktywacji karty płatniczej.
+{% hint style="warning" %}
+**Ważne:** W przypadku przekazania w polu `regulationsHidden` lub funkcji `setRegulationsHidden` typu `.card` np `[.card]` sekcja regulaminów nie zostanie wyświetlona zarówno na kanale płatności kartą płatniczą jak i aktywacji karty płatniczej.
+{% endhint %}
 
 ### Grupy kanłów płatności
 
@@ -410,7 +426,7 @@ SDK zawiera własną implementację `WKWebView` w postaci klasy `WebView` oraz `
 
 {% tabs %}
 {% tab title="SwiftUI" %}
-```SwiftUI
+```swiftui
     WebView(
         url: URL,
         transactionCallback: (_ result: APResult?, _ error: APError?) -> Void
@@ -419,7 +435,7 @@ SDK zawiera własną implementację `WKWebView` w postaci klasy `WebView` oraz `
 {% endtab %}
 
 {% tab title="UIKit" %}
-```UIKit
+```uikit
     WebViewContainerView(
         url: URL,
         transactionCallback: (_ result: APResult?, _ error: APError?) -> Void
@@ -441,7 +457,7 @@ Inicjalizacja niezbędnych danych do wyświetlania widoku w viewModelu:
 
 {% tabs %}
 {% tab title="SwiftUI" %}
-```SwiftUI
+```swiftui
 import AutopaySdk
 import Combine
 import SwiftUI
@@ -546,7 +562,7 @@ class PaymentContentViewModel: ObservableObject {
 {% endtab %}
 
 {% tab title="UIKit" %}
-```UIKit
+```uikit
 import Foundation
 import Combine
 import AutopaySdk
@@ -630,7 +646,7 @@ Konfiguracja widoku wraz z obsługą **redirectUrl** w **WebView**:
 
 {% tabs %}
 {% tab title="SwiftUI" %}
-```SwiftUI
+```swiftui
 import AutopaySdk
 import SwiftUI
 
@@ -718,7 +734,7 @@ struct RedirectWebView: View {
 {% endtab %}
 
 {% tab title="UIKit" %}
-```UIKit
+```uikit
 import UIKit
 import Combine
 import AutopaySdk
@@ -919,7 +935,7 @@ Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**5. 
 {% endstep %}
 {% endstepper %}
 
-```Swift
+```swift
 import AutopaySdk
 import SwiftUI
 
@@ -996,7 +1012,7 @@ Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**Nat
 
 Aplikacja ma również możliwość samodzielnie odpytać o status transakcji poprzez wykorzystanie metody `getTransactionStatus()` z klasy `Autopay` (Otrzymany status jest równoznaczny z ITN’ami). Do tego celu potrzebuje `orderId` procesowanej transakcji (może go otrzymać wraz z linkiem do kontynuacji transakcji od swojego backendu).
 
-```Swift
+```swift
 import AutopaySdk
 import SwiftUI
 
@@ -1040,7 +1056,7 @@ class TransactionViewModel: ObservableObject {
 
 {% tabs %}
 {% tab title="SwiftUI" %}
-```SwiftUI
+```swiftui
     APCardActivationGatewayView(
         apConfig: APConfig,
         payTappedCallback: APPayTappedCallback? = nil,
@@ -1051,7 +1067,7 @@ class TransactionViewModel: ObservableObject {
 {% endtab %}
 
 {% tab title="UIKit" %}
-```UIKit
+```uikit
     APCardActivationGatewayContainerView(
         apConfig: APConfig,
         styleManager: APStyleManager = .init(),
@@ -1065,20 +1081,24 @@ class TransactionViewModel: ObservableObject {
 
 **SDK** udostępnia widok pozwalający na dokonanie aktywacji karty płatniczej. Występuje tutaj zarówno wersja dla SwiftUI **APCardActivationGatewayView**, jak i implementacja dla aplikacji wykorzystujących widoki UIKit **APCardActivationGatewayContainerView**.
 
-📌 **Zalecenie:** opakować widok w scrollowalny komponent, aby uniknąć zasłaniania widoku przez klawiaturę lub brak miejsca na ekranie urządzenia.
+{% hint style="info" %}
+**Zalecenie:** opakować widok w scrollowalny komponent, aby uniknąć zasłaniania widoku przez klawiaturę lub brak miejsca na ekranie urządzenia.
+{% endhint %}
 
 * Wszystkie pola formularza są obowiązkowe.
 * Niepoprawne uzupełnienie skutkuje pokazaniem błędu przy danym polu.
 * Jeśli używany wariant SDK zawiera OCR – pojawi się ikona aparatu umożliwiająca odczyt danych karty.
 * Po poprawnym wypełnieniu formularza, przycisk aktywacji staje się aktywny.
 
-📌 Ważne: W zależnośći od tego czy zostanie przekazany `payTappedCallback` czy `paymentViewCallback` SDK realizuje różne scenariusze, jeśli planujesz przetwarzać transakcje po stronie aplikacji nie przekazuj `paymentViewCallback` do modelu danych oraz adekwatnie jeśli chcesz aby SDK przeprowadziło pełny proces transakcji nie przekazuj `payTappedCallback`.
+{% hint style="warning" %}
+**Ważne**: W zależności od tego czy zostanie przekazany `payTappedCallback` czy `paymentViewCallback` SDK realizuje różne scenariusze, jeśli planujesz przetwarzać transakcje po stronie aplikacji nie przekazuj `paymentViewCallback` do modelu danych oraz adekwatnie jeśli chcesz aby SDK przeprowadziło pełny proces transakcji nie przekazuj `payTappedCallback`.
+{% endhint %}
 
 ### Samodzielna komunikacja z serwisem Autopay
 
 **SDK** udostępnia szereg metod pozwalających na samodzielną obsługę płatności z serwisem **Autopay**. Tak samo jak w przypadku korzystania z dedykowanych widoków, na początku trzeba przygotować obiekt konfiguracyjny `APConfig` a następnie przekazać go podczas inicjalizacji klasy `Autopay` lub w przypadku Obj-C `AutopayObjC`.
 
-```Swift
+```swift
     Autopay(
         config: APConfig
     )
@@ -1191,14 +1211,15 @@ Metoda pozwala na sprawdzenie statusu transakcji na podstawie jej identyfikatora
 
 Wszystkie komponenty należy zainicjalizować przy pomocy obiektu `APGatewayBaseViewModelData`:
 
-📌 **Ważne:**\
-W przypadku osadzenia dowolnego wiodku pochodzącego z SDK przy użyciu SwiftUI należy przekazać obiekt styli `APStyleManager` jako `enviromentObject`.
+{% hint style="warning" %}
+**Ważne:** W przypadku osadzenia dowolnego wiodku pochodzącego z SDK przy użyciu SwiftUI należy przekazać obiekt styli `APStyleManager` jako `enviromentObject`.
+{% endhint %}
 
 Przykładowa implementacja dla banków jako grupy kanałów płatności:
 
 {% tabs %}
 {% tab title="SwiftUI" %}
-```SwiftUI
+```swiftui
         APBankTransferGatewayView(
             data: APGatewayBaseViewModelData(
                 config: APConfig,
@@ -1216,7 +1237,7 @@ Przykładowa implementacja dla banków jako grupy kanałów płatności:
 {% endtab %}
 
 {% tab title="UIKit" %}
-```UIKit
+```uikit
         APBankTransferGatewayContainerView(
             data: APGatewayBaseViewModelData(
                 config: APConfig,
@@ -1243,7 +1264,7 @@ Przykładowa implementacja dla banków jako grupy kanałów płatności:
 
 {% tabs %}
 {% tab title="SwiftUI" %}
-```SwiftUI
+```swiftui
 import AutopaySdk
 import SwiftUI
 
@@ -1289,7 +1310,7 @@ struct PaymentView: View {
 {% endtab %}
 
 {% tab title="UIKit" %}
-```UIKit
+```uikit
 import AutopaySdk
 import UIKit
 
@@ -1471,7 +1492,7 @@ Przykład zmiany czcionek na inną wagę oraz rozmiar, wraz ze zmianą koloru cz
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.typography.labelSmallFont = .systemFont(ofSize: 10, weight: .light)
     styleManager.typography.labelMediumFont = .systemFont(ofSize: 13, weight: .light)
@@ -1483,7 +1504,7 @@ Przykład zmiany czcionek na inną wagę oraz rozmiar, wraz ze zmianą koloru cz
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.typography.labelSmallFont = .systemFont(ofSize: 10, weight: .light)
 styleManager.typography.labelMediumFont = .systemFont(ofSize: 13, weight: .light)
@@ -1501,7 +1522,7 @@ Przykład zmiany parametrów głównego przycisku.
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.primaryButtonStyle.containerColor = APColor(light: .orange)
     styleManager.primaryButtonStyle.containerInactiveColor = APColor(light: .orange.opacity(0.4))
@@ -1521,7 +1542,7 @@ Przykład zmiany parametrów głównego przycisku.
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-C
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.primaryButtonStyle.containerColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
 styleManager.primaryButtonStyle.containerInactiveColor = [[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]];
@@ -1541,7 +1562,7 @@ Przykład zmiany parametrów dodatkowego przycisku.
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.secondaryButtonStyle.containerColor = APColor(light: .gray)
     styleManager.secondaryButtonStyle.containerInactiveColor = APColor(light: .gray.opacity(0.4))
@@ -1560,7 +1581,7 @@ Przykład zmiany parametrów dodatkowego przycisku.
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-C
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.secondaryButtonStyle.containerColor = [[APColor alloc] initWithLight:UIColor.grayColor];
 styleManager.secondaryButtonStyle.containerInactiveColor = [[APColor alloc] initWithLight:[UIColor.grayColor colorWithAlphaComponent:0.4]];
@@ -1579,7 +1600,7 @@ Przykład zmiany parametrów pomocniczego przycisku.
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.tertiaryButtonStyle.containerColor = APColor(light: .gray)
     styleManager.tertiaryButtonStyle.containerInactiveColor = APColor(light: .gray.opacity(0.4))
@@ -1598,7 +1619,7 @@ Przykład zmiany parametrów pomocniczego przycisku.
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-C
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.tertiaryButtonStyle.containerColor = [[APColor alloc] initWithLight:UIColor.grayColor];
 styleManager.tertiaryButtonStyle.containerInactiveColor = [[APColor alloc] initWithLight:[UIColor.grayColor colorWithAlphaComponent:0.4]];
@@ -1617,7 +1638,7 @@ Przykład zmiany parametrów siatki banków na grupie Przelewy bankowe
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.bankGridStyle.columns = 1
     styleManager.bankGridStyle.cellHeight = 120
@@ -1629,7 +1650,7 @@ Przykład zmiany parametrów siatki banków na grupie Przelewy bankowe
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-C
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.bankGridStyle.columns = 1;
 styleManager.bankGridStyle.cellHeight = 120;
@@ -1647,7 +1668,7 @@ Przykład zmiany parametrów siatki banków na grupie Przelewy bankowe
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.checkboxStyle.checkedColor = APColor(light: .orange)
     styleManager.checkboxStyle.uncheckedColor = APColor(light: .gray)
@@ -1656,7 +1677,7 @@ Przykład zmiany parametrów siatki banków na grupie Przelewy bankowe
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-C
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.checkboxStyle.checkedColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
 styleManager.checkboxStyle.uncheckedColor = [[APColor alloc] initWithLight:UIColor.grayColor];
@@ -1671,7 +1692,7 @@ Przykład zmiany parametrów okna z formularzem przewalutowania przy płatności
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.dccPaymentFormStyle.cellBackgroundColor = APColor(light: .gray.opacity(0.3))
     styleManager.dccPaymentFormStyle.selectedBorderColor = APColor(light: .orange)
@@ -1681,7 +1702,7 @@ Przykład zmiany parametrów okna z formularzem przewalutowania przy płatności
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.dccPaymentFormStyle.cellBackgroundColor = [[APColor alloc] initWithLight:[UIColor.grayColor colorWithAlphaComponent:0.3]];
 styleManager.dccPaymentFormStyle.selectedBorderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
@@ -1697,7 +1718,7 @@ Przykład zmiany parametrów okna dialogu
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.dialogStyle.dialogBackgroundColor = APColor(light: .white)
     styleManager.dialogStyle.dialogRadius = 5
@@ -1705,7 +1726,7 @@ Przykład zmiany parametrów okna dialogu
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.dialogStyle.dialogBackgroundColor = [[APColor alloc] initWithLight:UIColor.whiteColor];
 styleManager.dialogStyle.dialogRadius = 5;
@@ -1717,13 +1738,13 @@ styleManager.dialogStyle.dialogRadius = 5;
 
 Przykład zmiany parametrów komponentu ładowania danych
 
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.loaderStyle.size = 30
     styleManager.loaderStyle.color = APColor(light: .orange)
 ```
 
-```Sbjective-c
+```sbjective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.loaderStyle.size = 30;
 styleManager.loaderStyle.color = [[APColor alloc] initWithLight:UIColor.orangeColor];
@@ -1735,7 +1756,7 @@ Przykład zmiany parametrów przycisków kanału płatności na liście kanałó
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.paymentMethodButtonStyle.containerColor = APColor(light: .gray)
     styleManager.paymentMethodButtonStyle.borderColor = APColor(light: .orange)
@@ -1749,7 +1770,7 @@ Przykład zmiany parametrów przycisków kanału płatności na liście kanałó
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-C
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.paymentMethodButtonStyle.containerColor = [[APColor alloc] initWithLight:UIColor.grayColor];
 styleManager.paymentMethodButtonStyle.borderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
@@ -1766,7 +1787,7 @@ Przykład zmiany parametrów tytułu kanału płatności po wybraniu danej formy
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.paymentMethodTitleStyle.backgroundColor = APColor(light: .gray)
     styleManager.paymentMethodTitleStyle.iconColor = APColor(light: .orange)
@@ -1779,7 +1800,7 @@ Przykład zmiany parametrów tytułu kanału płatności po wybraniu danej formy
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.paymentMethodTitleStyle.backgroundColor = [[APColor alloc] initWithLight:UIColor.grayColor];
 styleManager.paymentMethodTitleStyle.iconColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
@@ -1795,7 +1816,7 @@ Przykład zmiany parametrów komponentu z podsumowaniem płatności
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.paymentSummaryStyle.backgroundColor = APColor(light: .white)
     styleManager.paymentSummaryStyle.borderColor = APColor(light: .orange)
@@ -1807,7 +1828,7 @@ Przykład zmiany parametrów komponentu z podsumowaniem płatności
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.paymentSummaryStyle.backgroundColor = [[APColor alloc] initWithLight:UIColor.whiteColor];
 styleManager.paymentSummaryStyle.borderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
@@ -1825,7 +1846,7 @@ Przykład zmiany parametrów komponentu typu radio button
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.radioButtonStyle.checkedColor = APColor(light: .orange)
     styleManager.radioButtonStyle.uncheckedColor = APColor(light: .gray)
@@ -1833,7 +1854,7 @@ Przykład zmiany parametrów komponentu typu radio button
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.radioButtonStyle.checkedColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
 styleManager.radioButtonStyle.uncheckedColor = [[APColor alloc] initWithLight:UIColor.grayColor];
@@ -1847,7 +1868,7 @@ Przykład zmiany parametrów komponentu typu switch / toggle
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.switchStyle.checkedThumbColor = APColor(light: .orange)
     styleManager.switchStyle.uncheckedThumbColor = APColor(light: .gray)
@@ -1859,7 +1880,7 @@ Przykład zmiany parametrów komponentu typu switch / toggle
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.switchStyle.checkedThumbColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
 styleManager.switchStyle.uncheckedThumbColor = [[APColor alloc] initWithLight:UIColor.grayColor];
@@ -1877,7 +1898,7 @@ Przykład zmiany parametrów pola tekstowego do wprowadzania danych
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.textInputStyle.inputTextStyle = APTextStyle(
             font: .systemFont(ofSize: 20, weight: .heavy),
@@ -1902,7 +1923,7 @@ Przykład zmiany parametrów pola tekstowego do wprowadzania danych
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.textInputStyle.inputTextStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:20 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.blueColor]];
 styleManager.textInputStyle.labelTextStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:15 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.blueColor]];
@@ -1924,14 +1945,14 @@ Przykład zmiany koloru ikon stopki z logo partnerów
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.footerIconsColor = APColor(light: .orange)
 ```
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.footerIconsColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
 ```
@@ -1944,14 +1965,14 @@ Przykład zmiany koloru ikon błędu
 
 {% tabs %}
 {% tab title="Swift" %}
-```Swift
+```swift
     let styleManager = APStyleManager()
     styleManager.errorColor = APColor(light: .black)
 ```
 {% endtab %}
 
 {% tab title="Objective-C" %}
-```Objective-c
+```objective-c
 APStyleManager *styleManager = [APStyleManager new];
 styleManager.errorColor = [[APColor alloc] initWithLight:UIColor.blackColor];
 ```
