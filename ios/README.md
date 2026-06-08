@@ -164,7 +164,7 @@ Aplikacja wykorzystuje token do dokonania transakcji.
 {% endstep %}
 
 {% step %}
-Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej**](https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-\(itn\))**{.external-link}** w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
+Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej**](https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-\(itn\)) w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
 {% endstep %}
 {% endstepper %}
 
@@ -293,7 +293,7 @@ Opcjonalne:
 
 ### Informacje ogólne
 
-Poniżej przedstawiono podstawowe użycie **SDK Autopay** z wykorzystaniem udostępnionych widoków. Przykładową implementację można znaleźć w aplikacji demonstracyjnej [https://github.com/Autopay-S-A/autopay-sdk-pay-ios](https://github.com/Autopay-S-A/autopay-sdk-pay-ios/tree/main/DemoAutopaySdk){.external-link}.
+Poniżej przedstawiono podstawowe użycie **SDK Autopay** z wykorzystaniem udostępnionych widoków. Przykładową implementację można znaleźć w aplikacji demonstracyjnej [https://github.com/Autopay-S-A/autopay-sdk-pay-ios](https://github.com/Autopay-S-A/autopay-sdk-pay-ios/tree/main/DemoAutopaySdk).
 
 Widoki:
 
@@ -915,7 +915,7 @@ Aplikacja uruchamia link do kontynuacji transakcji poprzez załadowanie go do SD
 {% endstep %}
 
 {% step %}
-Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej**](https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-\(itn\))**{.external-link}** w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
+Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**5. Natychmiastowe powiadomienia o zmianie statusu transakcji wejściowej**](https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-\(itn\)) w dokumencie **Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji i rozliczeń**).
 {% endstep %}
 {% endstepper %}
 

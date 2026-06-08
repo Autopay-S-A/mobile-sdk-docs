@@ -831,8 +831,8 @@ Rodzaj środowiska wymagany podczas inicjalizowania `APConfig`.
 
 | wartość | opis                                                                                                                                    |
 | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `prod`  | Adres środowiska produkcyjnego Systemu Płatności Online BM [https://pay.autopay.eu](https://pay.autopay.eu/){.external-link}.           |
-| `dev`   | Adres środowiska deweloperskiego Systemu Płatności Online BM [https://testpay.autopay.eu](https://testpay.autopay.eu/){.external-link}. |
+| `prod`  | Adres środowiska produkcyjnego Systemu Płatności Online BM [https://pay.autopay.eu](https://pay.autopay.eu/).           |
+| `dev`   | Adres środowiska deweloperskiego Systemu Płatności Online BM [https://testpay.autopay.eu](https://testpay.autopay.eu/). |
 
 ### APButtonStyleType
 

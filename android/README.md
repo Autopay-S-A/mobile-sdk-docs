@@ -105,7 +105,7 @@ Opcjonalne pola:
 - `regulationsFallbackLanguageCode` - kod języka regulaminów, w przypadku gdy w domyślnym języku urządzenia nie są dostępne. Kod w formacie ISO-3166-1 alfa-2 (domyślnie `PL`)
 - `contextPath` - ścieżka endpointu inicjującego transakcję, domyślnie `/payment`
 - `enableLogging` - włącza logowanie danych w **SDK**, domyślnie `false`, **niezalecane** ustawienie na `true` w wersjach produkcyjnych. Wartości numeru karty płatniczej, kodu CVV oraz tokenu karty płatniczej są anonimizowane.
-- `googlePayMerchantId` — [identyfikator merchanta Google Pay](https://developers.autopay.pl/online/dokumentacja#google-pay){.external-link}
+- `googlePayMerchantId` — [identyfikator merchanta Google Pay](https://developers.autopay.pl/online/dokumentacja#google-pay)
 - `merchantCountryCode` — kod kraju w formacie ISO-3166-1 alfa-2 (domyślnie `PL`)
 - `currencies` — lista obsługiwanych walut (domyślnie tylko `PLN`); zaleca się podanie jednej waluty. **Płatność zostanie wykonana w pierwszej walucie podanej do listy currencies!**
 
@@ -241,7 +241,7 @@ Po poprawnym wypełnieniu formularza przycisk rozpoczynania płatności zmieni s
 
 📌 **Dodatkowe opcjonalne zabezpieczenie ekranów z płatnością**
 
-W trakcie płatności użytkownik może wpisywać dane karty płatniczej. Aby ekran z wpisanymi danymi nie wyświetlał tych danych w systemowej sekcji „Ostatnio używane aplikacje” oraz zabezpieczyć aplikację implementującą przed możliwością zrobienia zrzutu tych ekranów, można zabezpieczyć ją za pomocą systemowej flagi [WindowManager.LayoutParams#FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE){.external-link}. Flaga ta wyłącza możliwość robienia zrzutów ekranu, dlatego należy użyć jej tylko na wymaganych ekranach z płatnością, aby nie blokować zrzutów w innych częściach aplikacji.
+W trakcie płatności użytkownik może wpisywać dane karty płatniczej. Aby ekran z wpisanymi danymi nie wyświetlał tych danych w systemowej sekcji „Ostatnio używane aplikacje” oraz zabezpieczyć aplikację implementującą przed możliwością zrobienia zrzutu tych ekranów, można zabezpieczyć ją za pomocą systemowej flagi [WindowManager.LayoutParams#FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE). Flaga ta wyłącza możliwość robienia zrzutów ekranu, dlatego należy użyć jej tylko na wymaganych ekranach z płatnością, aby nie blokować zrzutów w innych częściach aplikacji.
 
 #### Przelew bankowy
 
@@ -264,9 +264,9 @@ W trakcie płatności użytkownik może wpisywać dane karty płatniczej. Aby ek
 
 **UWAGA:** Zaleca się ustawianie wartości `merchantId` (otrzymanej podczas rejestracji aplikacji w konsoli Google Pay) poprzez metodę  `googlePayMerchantId()` w klasie `APConfig.Builder`. Wynika to z planowanego wprowadzenia przez Google tej wartości jako obowiązkowej.
 
-**UWAGA**: Przed wdrożeniem kanału płatności **Google Pay** na środowisko produkcyjne niezbędne jest zweryfikowanie zgodnie z [listą kontrolną](https://developers.google.com/pay/api/android/guides/test-and-deploy/integration-checklist){.external-link} umieszczoną na stronie **Google**, czy wszystkie wymagane kroki z integracji zostały wykonane.
+**UWAGA**: Przed wdrożeniem kanału płatności **Google Pay** na środowisko produkcyjne niezbędne jest zweryfikowanie zgodnie z [listą kontrolną](https://developers.google.com/pay/api/android/guides/test-and-deploy/integration-checklist) umieszczoną na stronie **Google**, czy wszystkie wymagane kroki z integracji zostały wykonane.
 
-**UWAGA**: Wdrożenie na produkcję wymaga odpowiedniego podpisania aplikacji oraz jej włączenia na [profilu programisty](https://developers.google.com/pay/api/android/guides/test-and-deploy/deploy-your-application){.external-link} w **Google Pay**.
+**UWAGA**: Wdrożenie na produkcję wymaga odpowiedniego podpisania aplikacji oraz jej włączenia na [profilu programisty](https://developers.google.com/pay/api/android/guides/test-and-deploy/deploy-your-application) w **Google Pay**.
 
 ### APWebView
 
@@ -343,7 +343,7 @@ AndroidView(
 
 Rezultat transakcji jest otrzymywany w metodach `onPreTransactionDone` i `onActivationDone` i jest taki sam dla wszystkich typów transakcji/kanałów płatności. Rezultat transakcji zwracany przez kanał płatności jest tylko wstępną informacją o statusie transakcji (może być nullem). Jeśli w `APPreTransaction.redirectUrl` znajduje się wartość, dokończenie transakcji należy wykonać w `APWebView`. Jeśli w obiekcie `APPreTransaction` występuje parametr `reason` można spróbować go zmapować na enumerator `APErrorType`, jeśli uda się zmapować, definicje wartości tego enuma są opisane w definicji klasy [APErrorType]( #aperrortype).
 
-[Dla potwierdzenia rezultatu](https://developers.autopay.pl/online/dokumentacja#odpytanie-o-status-transakcji){.external-link} należy skorzystać z metody `checkTransactionStatus()` z klasy `Autopay`.
+[Dla potwierdzenia rezultatu](https://developers.autopay.pl/online/dokumentacja#odpytanie-o-status-transakcji) należy skorzystać z metody `checkTransactionStatus()` z klasy `Autopay`.
 
 Jeśli `onPreTransactionError` zostanie zwrócony błąd, trasnakcja nie powiodła się.
 
@@ -788,9 +788,9 @@ bankGateway.setContentHeader(R.string.example_header);
 
 W przypadku integracji SDK w wariancie I (mieszanym), gdy aplikacja przesyła dane transakcji do swojego backendu, pomocna może okazać się statyczna metoda `extractPaymentTokenFromGooglePayPaymentToken()` z klasy `PreTransactionUtils`. Konwertuje ona `paymentToken` na format obsługiwany przez backend **Autopay**.
 
-**UWAGA**: Przed wdrożeniem kanału płatności **Google Pay** na środowisko produkcyjne niezbędne jest zweryfikowanie zgodnie z [listą kontrolną](https://developers.google.com/pay/api/android/guides/test-and-deploy/integration-checklist){.external-link} umieszczoną na stronie **Google**, czy wszystkie wymagane kroki z integracji zostały wykonane.
+**UWAGA**: Przed wdrożeniem kanału płatności **Google Pay** na środowisko produkcyjne niezbędne jest zweryfikowanie zgodnie z [listą kontrolną](https://developers.google.com/pay/api/android/guides/test-and-deploy/integration-checklist) umieszczoną na stronie **Google**, czy wszystkie wymagane kroki z integracji zostały wykonane.
 
-**UWAGA**: Wdrożenie na produkcję wymaga odpowiedniego podpisania aplikacji oraz jej włączenia na [profilu programisty](https://developers.google.com/pay/api/android/guides/test-and-deploy/deploy-your-application){.external-link} w **Google Pay**.
+**UWAGA**: Wdrożenie na produkcję wymaga odpowiedniego podpisania aplikacji oraz jej włączenia na [profilu programisty](https://developers.google.com/pay/api/android/guides/test-and-deploy/deploy-your-application) w **Google Pay**.
 
 ### Regulaminy
 
