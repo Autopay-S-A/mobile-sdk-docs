@@ -99,7 +99,96 @@ Ustawia własne tłumaczenie nagłówka przy płatności typu Przelew bankowy.
 
 Klasa reprezentująca pełną konfigurację **SDK**. Jej dane są wymagana podczas korzystania z widoków udostępnionych przez **SDK**, a także do prawidłowego korzystania z metod pozwalających na samodzielną komunikację z serwisem **Autopay**. Klasa posiada wewnątrz Buildera pozwalającego na łatwiejsze utworzenie obiektu konfiguracyjnego.
 
-@[AutopayConfig](codes/android/00_config_constructor.md)
+```kotlin
+public class AutopayConfig
+private constructor(
+    public val environmentType: APEnvironmentType,
+    public val token: String,
+    public val serviceId: String,
+    public val acceptorId: String,
+    public val contextPath: String,
+    public val currencies: List<String>,
+    public val regulationsFallbackLanguageCode: String,
+    public val merchantCountryCode: String,
+    public val googlePayMerchantId: String? = null,
+    public val enableLogging: Boolean,
+) {
+
+    /** Builder class to make easier creation [AutopayConfig] object. */
+    public class Builder(
+        private val environmentType: APEnvironmentType,
+        private val token: String,
+        private val serviceId: String,
+        private val acceptorId: String,
+    ) {
+        private var contextPath: String = DEFAULT_CONTEXT_PATH
+        private var currencies: MutableList<String> = mutableListOf(DEFAULT_CURRENCY)
+        private var regulationsFallbackLanguageCode: String =
+            DEFAULT_FALLBACK_REGULATIONS_LANGUAGE_CODE
+        private var merchantCountryCode: String = DEFAULT_COUNTRY_CODE
+        private var googlePayMerchantId: String? = null
+        private var enableLogging: Boolean = false
+
+        init {
+            require(token.isNotEmpty())
+            require(serviceId.isNotEmpty())
+            require(acceptorId.isNotEmpty())
+        }
+
+        public fun contextPath(value: String): Builder = apply {
+            if (!value.isEmpty()) {
+                contextPath = value
+            }
+        }
+
+        public fun currencies(value: List<String>): Builder = apply {
+            if (!value.isEmpty()) {
+                currencies = value.toMutableList()
+            }
+        }
+
+        public fun regulationsFallbackLanguageCode(value: String): Builder = apply {
+            if (!value.isEmpty()) {
+                regulationsFallbackLanguageCode = value
+            }
+        }
+
+        public fun merchantCountryCode(value: String): Builder = apply {
+            if (!value.isEmpty()) {
+                merchantCountryCode = value
+            }
+        }
+
+        public fun googlePayMerchantId(value: String?): Builder = apply {
+            googlePayMerchantId = value
+        }
+
+        public fun enableLogging(value: Boolean): Builder = apply { enableLogging = value }
+
+        public fun build(): AutopayConfig {
+            return AutopayConfig(
+                environmentType = environmentType,
+                token = token,
+                serviceId = serviceId,
+                acceptorId = acceptorId,
+                contextPath = contextPath,
+                currencies = currencies.toList(),
+                regulationsFallbackLanguageCode = regulationsFallbackLanguageCode,
+                merchantCountryCode = merchantCountryCode,
+                googlePayMerchantId = googlePayMerchantId,
+                enableLogging = enableLogging,
+            )
+        }
+    }
+
+    public companion object {
+        private const val DEFAULT_CONTEXT_PATH: String = "/payment"
+        private const val DEFAULT_CURRENCY: String = "PLN"
+        private const val DEFAULT_COUNTRY_CODE: String = "PL"
+        private const val DEFAULT_FALLBACK_REGULATIONS_LANGUAGE_CODE: String = "PL"
+    }
+}
+```
 
 - `environmentType` Definiuje typ środowiska z jakiego chcemy korzystać.
 - `token` Token autoryzacyjny do komunikacji HTTP.
@@ -114,13 +203,33 @@ Klasa reprezentująca pełną konfigurację **SDK**. Jej dane są wymagana podcz
 
 Przykładowe użycie buildera w projektach pisanych w Javie:
 
-@[AutopayConfig - Java](codes/android/00_java_config.md)
+```java
+Autopay.init(new AutopayConfig.Builder(
+    APEnvironmentType.DEV.INSTANCE,
+    "token",
+    "serviceId",
+    "acceptorId"
+)
+.contextPath("/payment")
+.enableLogging(true)
+.googlePayMerchantId("merchantId")
+.build());
+```
 
 ## Modele danych
 
 ### APCardData
 
-@[APCardData](codes/android/00_card_data_constructor.md)
+```kotlin
+public data class APCardData(
+   val cardNumber: String,
+   val expiryMonth: Int,
+   val expiryYear: Int,
+   val cvv: String,
+   val firstName: String? = null,
+   val lastName: String? = null
+)
+```
 
 - `cardNumber` Numer karty. 16-znakowy ciąg cyfr bez spacji.
 - `expiryMonth` Numer miesiąca, zaczynając od 1 - styczeń.
@@ -131,7 +240,118 @@ Przykładowe użycie buildera w projektach pisanych w Javie:
 
 ### AutopayUIStyle
 
-@[AutopayUIStyle](codes/android/00_style_autopay_ui_style.md)
+```kotlin
+public data class AutopayUIStyle(
+    val typography: APTypography = APTypography(),
+    val primaryButtonStyle: APButtonStyle = APButtonStyle.APPrimaryButtonStyle,
+    val secondaryButtonStyle: APButtonStyle = APButtonStyle.APSecondaryButtonStyle,
+    val tertiaryButtonStyle: APButtonStyle = APButtonStyle.APTertiaryButtonStyle,
+    val inputStyle: APTextInputStyle = APTextInputStyle(),
+    val gatewayButtonStyle: APGatewayButtonStyle = APGatewayButtonStyle(),
+    val gatewayTitleStyle: APGatewayTitleStyle = APGatewayTitleStyle(),
+    val checkboxStyle: APCheckboxStyle = APCheckboxStyle(),
+    val switchStyle: APSwitchStyle = APSwitchStyle(),
+    val radioButtonStyle: APRadioButtonStyle = APRadioButtonStyle(),
+    val dialogStyle: APDialogStyle = APDialogStyle(),
+    val loaderStyle: APLoaderStyle = APLoaderStyle(),
+    val bankGridStyle: APBankGridStyle = APBankGridStyle(),
+    val paymentSummaryStyle: APPaymentSummaryStyle = APPaymentSummaryStyle(),
+    val dccPaymentFormStyle: APDCCPaymentFormStyle = APDCCPaymentFormStyle(),
+    val errorColor: APThemeColor = APThemeColor(APColors.errorLight, APColors.errorDark),
+    val footerIconsColor: APThemeColor = APThemeColor(APColors.greyDarkLight, APColors.greyDarkDark),
+) {
+    /** Builder class to make easier creation [AutopayUIStyle] object in Java projects. */
+    public class Builder(private var styleInstance: AutopayUIStyle = AutopayUIStyle()) {
+
+        public fun build(): AutopayUIStyle = styleInstance
+
+        public fun typography(typography: APTypography): Builder {
+            styleInstance = styleInstance.copy(typography = typography)
+            return this
+        }
+
+        public fun primaryButtonStyle(primaryButtonStyle: APButtonStyle): Builder {
+            styleInstance = styleInstance.copy(primaryButtonStyle = primaryButtonStyle)
+            return this
+        }
+
+        public fun secondaryButtonStyle(secondaryButtonStyle: APButtonStyle): Builder {
+            styleInstance = styleInstance.copy(secondaryButtonStyle = secondaryButtonStyle)
+            return this
+        }
+
+        public fun tertiaryButtonStyle(tertiaryButtonStyle: APButtonStyle): Builder {
+            styleInstance = styleInstance.copy(tertiaryButtonStyle = tertiaryButtonStyle)
+            return this
+        }
+
+        public fun inputStyle(inputStyle: APTextInputStyle): Builder {
+            styleInstance = styleInstance.copy(inputStyle = inputStyle)
+            return this
+        }
+
+        public fun gatewayButtonStyle(gatewayButtonStyle: APGatewayButtonStyle): Builder {
+            styleInstance = styleInstance.copy(gatewayButtonStyle = gatewayButtonStyle)
+            return this
+        }
+
+        public fun gatewayTitleStyle(gatewayTitleStyle: APGatewayTitleStyle): Builder {
+            styleInstance = styleInstance.copy(gatewayTitleStyle = gatewayTitleStyle)
+            return this
+        }
+
+        public fun checkboxStyle(checkboxStyle: APCheckboxStyle): Builder {
+            styleInstance = styleInstance.copy(checkboxStyle = checkboxStyle)
+            return this
+        }
+
+        public fun switchStyle(switchStyle: APSwitchStyle): Builder {
+            styleInstance = styleInstance.copy(switchStyle = switchStyle)
+            return this
+        }
+
+        public fun radioButtonStyle(radioButtonStyle: APRadioButtonStyle): Builder {
+            styleInstance = styleInstance.copy(radioButtonStyle = radioButtonStyle)
+            return this
+        }
+
+        public fun dialogStyle(dialogStyle: APDialogStyle): Builder {
+            styleInstance = styleInstance.copy(dialogStyle = dialogStyle)
+            return this
+        }
+
+        public fun loaderStyle(loaderStyle: APLoaderStyle): Builder {
+            styleInstance = styleInstance.copy(loaderStyle = loaderStyle)
+            return this
+        }
+
+        public fun bankGridStyle(bankGridStyle: APBankGridStyle): Builder {
+            styleInstance = styleInstance.copy(bankGridStyle = bankGridStyle)
+            return this
+        }
+
+        public fun paymentSummaryStyle(paymentSummaryStyle: APPaymentSummaryStyle): Builder {
+            styleInstance = styleInstance.copy(paymentSummaryStyle = paymentSummaryStyle)
+            return this
+        }
+
+        public fun dccPaymentFormStyle(dccPaymentFormStyle: APDCCPaymentFormStyle): Builder {
+            styleInstance = styleInstance.copy(dccPaymentFormStyle = dccPaymentFormStyle)
+            return this
+        }
+
+        public fun errorColor(errorColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(errorColor = errorColor)
+            return this
+        }
+
+        public fun footerIconsColor(footerIconsColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(footerIconsColor = footerIconsColor)
+            return this
+        }
+    }
+}
+```
 
 - `errorColor` - kolor błędów
 - `footerIconsColor` - kolor ikon partnerów wystepujący na dole listy kanałów płatności
@@ -153,11 +373,50 @@ Przykładowe użycie buildera w projektach pisanych w Javie:
 
 Przykładowe użycie buildera w projektach pisanych w Javie:
 
-@[AutopayConfig - Java](codes/android/00_java_style.md)
+```java
+AutopayUIStyle currentStyle = Autopay.getCurrentUiStyle();
+    Autopay.setUiStyle(
+        new AutopayUIStyle.Builder(currentStyle)
+            .inputStyle(
+                new APTextInputStyle.Builder()
+                    .labelTextStyle(
+                        new APTextStyleWrapper.Builder()
+                            .font(Typeface.DEFAULT_BOLD)
+                            .size(20f)
+                            .weight(800)
+                            .getCompose()
+                        )
+                        .errorTextStyle(
+                            new APTextStyleWrapper.Builder()
+                                .size(18f)
+                                .weight(300)
+                                .font(Typeface.SANS_SERIF)
+                                .letterSpacing(1f)
+                                .lineHeight(1f)
+                                .getCompose()
+                        )
+                        .labelTextColor(new APThemeColor(Color.BLUE, Color.GREEN))
+                        .radius(4f)
+                        .build()
+            ).build()
+    );
+```
 
 ### APThemeColor
 
-@[APThemeColor](codes/android/00_style_theme_color.md)
+```kotlin
+public data class APThemeColor(val lightColor: Color, val darkColor: Color? = null) {
+    public constructor(
+        lightColor: android.graphics.Color,
+        darkColor: android.graphics.Color? = null
+    ) : this(Color(lightColor.toArgb()), darkColor?.toArgb()?.let { Color(it) })
+
+    public constructor(
+        @ColorInt lightColor: Int,
+        @ColorInt darkColor: Int? = null
+    ) : this(Color(lightColor), darkColor?.let { Color(it) })
+}
+```
 
 Reprezentuje wartość koloru w dwóch trybach - jasny ciemny
 
@@ -166,13 +425,117 @@ Reprezentuje wartość koloru w dwóch trybach - jasny ciemny
 
 ### APTextStyleWrapper
 
-@[APTextStyleWrapper](codes/android/00_style_text_style_wrapper.md)
+```kotlin
+public class APTextStyleWrapper() {
+    private val textStyle: TextStyle = TextStyle()
+
+    /** @return TextStyle from given parameters in [APTextStyleWrapper]. */
+    public fun getCompose(): TextStyle = textStyle
+
+    /** Builder class to make easier creation [TextStyle] object in Java projects. */
+    public class Builder(private var styleInstance: TextStyle = TextStyle()) {
+
+        public fun getCompose(): TextStyle = styleInstance
+
+        public fun size(size: Float): Builder {
+            styleInstance = styleInstance.copy(fontSize = size.sp)
+            return this
+        }
+
+        public fun weight(weight: Int): Builder {
+            styleInstance = styleInstance.copy(fontWeight = FontWeight(weight))
+            return this
+        }
+
+        public fun font(font: Typeface): Builder {
+            styleInstance = styleInstance.copy(fontFamily = FontFamily(typeface = font))
+            return this
+        }
+
+        public fun letterSpacing(letterSpacing: Float): Builder {
+            styleInstance = styleInstance.copy(letterSpacing = letterSpacing.sp)
+            return this
+        }
+
+        public fun lineHeight(lineHeight: Float): Builder {
+            styleInstance = styleInstance.copy(lineHeight = lineHeight.sp)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów potrzebnych do utworzenia obiektu **androidx.compose.ui.text.TextStyle** w projektach pisanych w Javie.
 
 ### APTypography
 
-@[APTypography](codes/android/00_style_typography.md)
+```kotlin
+public data class APTypography(
+    val defaultTextColor: APThemeColor = APThemeColor(APColors.textLight, APColors.textDark),
+    val labelSmall: TextStyle =
+        TextStyle(fontFamily = FontFamily.Default, fontWeight = FontWeight.W400, fontSize = 12.sp),
+    val labelSmallBold: TextStyle =
+        TextStyle(fontFamily = FontFamily.Default, fontWeight = FontWeight.W500, fontSize = 12.sp),
+    val labelMedium: TextStyle =
+        TextStyle(fontFamily = FontFamily.Default, fontWeight = FontWeight.W400, fontSize = 14.sp),
+    val labelLarge: TextStyle =
+        TextStyle(fontFamily = FontFamily.Default, fontWeight = FontWeight.W400, fontSize = 16.sp),
+    val labelXLarge: TextStyle =
+        TextStyle(fontFamily = FontFamily.Default, fontWeight = FontWeight.W400, fontSize = 18.sp),
+) {
+
+    /** Builder class to make easier creation [APTypography] object in Java projects. */
+    public class Builder(private var styleInstance: APTypography = APTypography()) {
+
+        public fun build(): APTypography = styleInstance
+
+        public fun defaultTextColor(defaultTextColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(defaultTextColor = defaultTextColor)
+            return this
+        }
+
+        public fun labelSmall(labelSmall: TextStyle): Builder {
+            styleInstance = styleInstance.copy(labelSmall = labelSmall)
+            return this
+        }
+
+        public fun labelSmallBold(labelSmallBold: TextStyle): Builder {
+            styleInstance = styleInstance.copy(labelSmallBold = labelSmallBold)
+            return this
+        }
+
+        public fun labelMedium(labelMedium: TextStyle): Builder {
+            styleInstance = styleInstance.copy(labelMedium = labelMedium)
+            return this
+        }
+
+        public fun labelLarge(labelLarge: TextStyle): Builder {
+            styleInstance = styleInstance.copy(labelLarge = labelLarge)
+            return this
+        }
+
+        public fun labelXLarge(labelXLarge: TextStyle): Builder {
+            styleInstance = styleInstance.copy(labelXLarge = labelXLarge)
+            return this
+        }
+    }
+
+    @Composable
+    public fun labelSmall(): TextStyle = labelSmall.copy(color = defaultTextColor.color())
+
+    @Composable
+    public fun labelSmallBold(): TextStyle = labelSmallBold.copy(color = defaultTextColor.color())
+
+    @Composable
+    public fun labelMedium(): TextStyle = labelMedium.copy(color = defaultTextColor.color())
+
+    @Composable
+    public fun labelLarge(): TextStyle = labelLarge.copy(color = defaultTextColor.color())
+
+    @Composable
+    public fun labelXLarge(): TextStyle = labelXLarge.copy(color = defaultTextColor.color())
+}
+```
 
 Zestaw styli tekstów wraz ze wspólnym kolorem domyślnym tekstów. System zakłada użycie biblioteki w 4 rozmiarach - 12, 14, 16, 18, o wadze 400. Jedynie czcionka o rozmiarze 12 ma swój pogrubiony odpowiednik o wadze 500. Każdy styl tekstu przekazywany jest w postaci parametrów **androidx.compose.ui.text.TextStyle**
 
@@ -185,7 +548,126 @@ Zestaw styli tekstów wraz ze wspólnym kolorem domyślnym tekstów. System zak�
 
 ### APButtonStyle
 
-@[APButtonStyle](codes/android/00_style_button.md)
+```kotlin
+public data class APButtonStyle(
+    val containerColor: APThemeColor = APThemeColor(APColors.transparent, APColors.transparent),
+    val inactiveContainerColor: APThemeColor = APThemeColor(
+        APColors.transparent,
+        APColors.transparent
+    ),
+    val contentColor: APThemeColor = APThemeColor(APColors.primaryLight, APColors.primaryDark),
+    val inactiveContentColor: APThemeColor = APThemeColor(
+        APColors.primaryAlpha66Light,
+        APColors.primaryAlpha66Dark
+    ),
+    val borderColor: APThemeColor = APThemeColor(APColors.primaryLight, APColors.primaryDark),
+    val inactiveBorderColor: APThemeColor = APThemeColor(
+        APColors.primaryAlpha66Light,
+        APColors.primaryAlpha66Dark
+    ),
+    val radius: Dp = 28.dp,
+    val borderWidth: Dp = 1.dp,
+    val textStyle: TextStyle = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W400,
+        fontSize = 18.sp
+    ),
+    val minHeight: Dp = 48.dp
+) {
+
+    /** Builder class to make easier creation [APButtonStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APButtonStyle = APButtonStyle()) {
+
+        public fun build(): APButtonStyle = styleInstance
+
+        public fun containerColor(containerColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(containerColor = containerColor)
+            return this
+        }
+
+        public fun inactiveContainerColor(inactiveContainerColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(inactiveContainerColor = inactiveContainerColor)
+            return this
+        }
+
+        public fun contentColor(contentColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(contentColor = contentColor)
+            return this
+        }
+
+        public fun inactiveContentColor(inactiveContentColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(inactiveContentColor = inactiveContentColor)
+            return this
+        }
+
+        public fun borderColor(borderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(borderColor = borderColor)
+            return this
+        }
+
+        public fun inactiveBorderColor(inactiveBorderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(inactiveBorderColor = inactiveBorderColor)
+            return this
+        }
+
+        public fun radius(radius: Dp): Builder {
+            styleInstance = styleInstance.copy(radius = radius)
+            return this
+        }
+
+        public fun borderWidth(borderWidth: Dp): Builder {
+            styleInstance = styleInstance.copy(borderWidth = borderWidth)
+            return this
+        }
+
+        public fun textStyle(textStyle: TextStyle): Builder {
+            styleInstance = styleInstance.copy(textStyle = textStyle)
+            return this
+        }
+
+        public fun minHeight(minHeight: Dp): Builder {
+            styleInstance = styleInstance.copy(minHeight = minHeight)
+            return this
+        }
+
+        public fun radius(radius: Float): Builder {
+            styleInstance = styleInstance.copy(radius = radius.dp)
+            return this
+        }
+
+        public fun borderWidth(borderWidth: Float): Builder {
+            styleInstance = styleInstance.copy(borderWidth = borderWidth.dp)
+            return this
+        }
+
+        public fun textStyle(textStyle: APTextStyleWrapper): Builder {
+            styleInstance = styleInstance.copy(textStyle = textStyle.getCompose())
+            return this
+        }
+
+        public fun minHeight(minHeight: Float): Builder {
+            styleInstance = styleInstance.copy(minHeight = minHeight.dp)
+            return this
+        }
+    }
+
+        public companion object {
+        public val APPrimaryButtonStyle: APButtonStyle =
+            APButtonStyle(
+                containerColor = APThemeColor(APColors.primaryLight, APColors.primaryDark),
+                inactiveContainerColor =
+                    APThemeColor(APColors.primaryAlpha66Light, APColors.primaryAlpha66Dark),
+                contentColor = APThemeColor(APColors.onPrimaryLight, APColors.onPrimaryDark),
+                inactiveContentColor =
+                    APThemeColor(APColors.onPrimaryLight, APColors.onPrimaryDark),
+                borderWidth = Dp.Unspecified,
+            )
+        public val APSecondaryButtonStyle: APButtonStyle = APButtonStyle()
+        public val APTertiaryButtonStyle: APButtonStyle =
+            APButtonStyle(textStyle = TextStyle(fontSize = 12.sp))
+    }
+}
+```
 
 Zestaw parametrów stylizujących przyciski w SDK
 
@@ -204,7 +686,158 @@ Zawiera domyślne wartości dla **primaryButtonStyle**, **secodnaryButtonStyle**
 
 ### APTextInputStyle
 
-@[APTextInputStyle](codes/android/00_style_text_input.md)
+```kotlin
+public data class APTextInputStyle(
+    val inputTextStyle: TextStyle = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W400,
+        fontSize = 16.sp
+    ),
+    val inputTextColor: APThemeColor = APThemeColor(APColors.textLight, APColors.textDark),
+    val placeholderTextColor: APThemeColor = APThemeColor(
+        APColors.greyDarkLight,
+        APColors.greyDarkDark
+    ),
+    val labelTextStyle: TextStyle = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W400,
+        fontSize = 14.sp
+    ),
+    val labelTextColor: APThemeColor = APThemeColor(APColors.textLight, APColors.textDark),
+    val errorTextStyle: TextStyle = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W400,
+        fontSize = 14.sp
+    ),
+    val errorTextColor: APThemeColor = APThemeColor(APColors.errorLight, APColors.errorDark),
+    val borderInactiveColor: APThemeColor = APThemeColor(
+        APColors.greyDarkAlpha66Light,
+        APColors.greyDarkAlpha66Dark
+    ),
+    val borderActiveColor: APThemeColor = APThemeColor(APColors.primaryLight, APColors.primaryDark),
+    val borderErrorColor: APThemeColor = APThemeColor(APColors.errorLight, APColors.errorDark),
+    val backgroundColor: APThemeColor = APThemeColor(
+        APColors.backgroundLight,
+        APColors.backgroundDark
+    ),
+    val trailingIconsColor: APThemeColor = APThemeColor(APColors.textLight, APColors.textDark),
+    val radius: Dp = 28.dp,
+    val strokeWidth: Dp = 1.dp,
+    val spaceBetweenInputs: Dp = 16.dp
+) {
+
+    /** Builder class to make easier creation [APTextInputStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APTextInputStyle = APTextInputStyle()) {
+
+        public fun build(): APTextInputStyle = styleInstance
+
+        public fun inputTextStyle(inputTextStyle: TextStyle): Builder {
+            styleInstance = styleInstance.copy(inputTextStyle = inputTextStyle)
+            return this
+        }
+
+        public fun inputTextStyle(inputTextStyle: APTextStyleWrapper): Builder {
+            styleInstance = styleInstance.copy(inputTextStyle = inputTextStyle.toCompose())
+            return this
+        }
+
+        public fun inputTextColor(inputTextColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(inputTextColor = inputTextColor)
+            return this
+        }
+
+        public fun placeholderTextColor(placeholderTextColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(placeholderTextColor = placeholderTextColor)
+            return this
+        }
+
+        public fun labelTextStyle(labelTextStyle: TextStyle): Builder {
+            styleInstance = styleInstance.copy(labelTextStyle = labelTextStyle)
+            return this
+        }
+
+        public fun labelTextStyle(labelTextStyle: APTextStyleWrapper): Builder {
+            styleInstance = styleInstance.copy(labelTextStyle = labelTextStyle.toCompose())
+            return this
+        }
+
+        public fun labelTextColor(labelTextColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(labelTextColor = labelTextColor)
+            return this
+        }
+
+        public fun errorTextStyle(errorTextStyle: TextStyle): Builder {
+            styleInstance = styleInstance.copy(errorTextStyle = errorTextStyle)
+            return this
+        }
+
+        public fun errorTextStyle(errorTextStyle: APTextStyleWrapper): Builder {
+            styleInstance = styleInstance.copy(errorTextStyle = errorTextStyle.toCompose())
+            return this
+        }
+
+        public fun errorTextColor(errorTextColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(errorTextColor = errorTextColor)
+            return this
+        }
+
+        public fun borderInactiveColor(borderInactiveColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(borderInactiveColor = borderInactiveColor)
+            return this
+        }
+
+        public fun borderActiveColor(borderActiveColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(borderActiveColor = borderActiveColor)
+            return this
+        }
+
+        public fun borderErrorColor(borderErrorColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(borderErrorColor = borderErrorColor)
+            return this
+        }
+
+        public fun backgroundColor(backgroundColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(backgroundColor = backgroundColor)
+            return this
+        }
+
+        public fun trailingIconsColor(trailingIconsColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(trailingIconsColor = trailingIconsColor)
+            return this
+        }
+
+        public fun radius(radius: Dp): Builder {
+            styleInstance = styleInstance.copy(radius = radius)
+            return this
+        }
+
+        public fun strokeWidth(strokeWidth: Dp): Builder {
+            styleInstance = styleInstance.copy(strokeWidth = strokeWidth)
+            return this
+        }
+
+        public fun spaceBetweenInputs(spaceBetweenInputs: Dp): Builder {
+            styleInstance = styleInstance.copy(spaceBetweenInputs = spaceBetweenInputs)
+            return this
+        }
+
+        public fun radius(radius: Float): Builder {
+            styleInstance = styleInstance.copy(radius = radius.dp)
+            return this
+        }
+
+        public fun strokeWidth(strokeWidth: Float): Builder {
+            styleInstance = styleInstance.copy(strokeWidth = strokeWidth.dp)
+            return this
+        }
+
+        public fun spaceBetweenInputs(spaceBetweenInputs: Float): Builder {
+            styleInstance = styleInstance.copy(spaceBetweenInputs = spaceBetweenInputs.dp)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących widoki wprowadzania danych tekstowych
 
@@ -226,7 +859,83 @@ Zestaw parametrów stylizujących widoki wprowadzania danych tekstowych
 
 ### APGatewayButtonStyle
 
-@[APGatewayButtonStyle](codes/android/00_style_gateway_button.md)
+```kotlin
+public data class APGatewayButtonStyle(
+    val backgroundColor: APThemeColor =
+        APThemeColor(APColors.backgroundLight, APColors.backgroundDark),
+    val borderColor: APThemeColor =
+        APThemeColor(APColors.greyDarkAlpha66Light, APColors.greyDarkAlpha66Dark),
+    val iconColor: APThemeColor = APThemeColor(APColors.iconLight, APColors.iconDark),
+    val textColor: APThemeColor = APThemeColor(APColors.textLight, APColors.textDark),
+    val textStyle: TextStyle =
+        TextStyle(fontFamily = FontFamily.Default, fontWeight = FontWeight.W400, fontSize = 16.sp),
+    val borderWidth: Dp = 1.dp,
+    val radius: Dp = 122.dp,
+    val minHeight: Dp = 48.dp,
+) {
+
+    /** Builder class to make easier creation [APGatewayButtonStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APGatewayButtonStyle = APGatewayButtonStyle()) {
+
+        public fun build(): APGatewayButtonStyle = styleInstance
+
+        public fun backgroundColor(backgroundColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(backgroundColor = backgroundColor)
+            return this
+        }
+
+        public fun borderColor(borderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(borderColor = borderColor)
+            return this
+        }
+
+        public fun iconColor(iconColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(iconColor = iconColor)
+            return this
+        }
+
+        public fun textColor(textColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(textColor = textColor)
+            return this
+        }
+
+        public fun textStyle(textStyle: TextStyle): Builder {
+            styleInstance = styleInstance.copy(textStyle = textStyle)
+            return this
+        }
+
+        public fun borderWidth(borderWidth: Dp): Builder {
+            styleInstance = styleInstance.copy(borderWidth = borderWidth)
+            return this
+        }
+
+        public fun radius(radius: Dp): Builder {
+            styleInstance = styleInstance.copy(radius = radius)
+            return this
+        }
+
+        public fun borderWidth(borderWidth: Float): Builder {
+            styleInstance = styleInstance.copy(borderWidth = borderWidth.dp)
+            return this
+        }
+
+        public fun radius(radius: Float): Builder {
+            styleInstance = styleInstance.copy(radius = radius.dp)
+            return this
+        }
+
+        public fun minHeight(minHeight: Dp): Builder {
+            styleInstance = styleInstance.copy(minHeight = minHeight)
+            return this
+        }
+
+        public fun minHeight(minHeight: Float): Builder {
+            styleInstance = styleInstance.copy(minHeight = minHeight.dp)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących przycisk kanału płatności na liście kanałów płatności
 
@@ -241,7 +950,64 @@ Zestaw parametrów stylizujących przycisk kanału płatności na liście kanał
 
 ### APGatewayTitleStyle
 
-@[APGatewayTitleStyle](codes/android/00_style_gateway_title.md)
+```kotlin
+public data class APGatewayTitleStyle(
+    val backgroundColor: APThemeColor = APThemeColor(
+        APColors.backgroundLight,
+        APColors.backgroundDark
+    ),
+    val textStyle: TextStyle = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W400,
+        fontSize = 16.sp
+    ),
+    val textColor: APThemeColor = APThemeColor(APColors.textLight, APColors.textDark),
+    val iconColor: APThemeColor = APThemeColor(APColors.iconLight, APColors.iconDark),
+    val radius: Dp = 16.dp
+) {
+
+    /** Builder class to make easier creation [APGatewayTitleStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APGatewayTitleStyle = APGatewayTitleStyle()) {
+
+        public fun build(): APGatewayTitleStyle = styleInstance
+
+        public fun backgroundColor(backgroundColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(backgroundColor = backgroundColor)
+            return this
+        }
+
+        public fun textStyle(textStyle: TextStyle): Builder {
+            styleInstance = styleInstance.copy(textStyle = textStyle)
+            return this
+        }
+
+        public fun textStyle(textStyle: APTextStyleWrapper): Builder {
+            styleInstance = styleInstance.copy(textStyle = textStyle.toCompose())
+            return this
+        }
+
+        public fun textColor(textColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(textColor = textColor)
+            return this
+        }
+
+        public fun iconColor(iconColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(iconColor = iconColor)
+            return this
+        }
+
+        public fun radius(radius: Dp): Builder {
+            styleInstance = styleInstance.copy(radius = radius)
+            return this
+        }
+
+        public fun radius(radius: Float): Builder {
+            styleInstance = styleInstance.copy(radius = radius.dp)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących tytuł kanału płatności po wybraniu danej formy i rozwinięciu jej szczegółów
 
@@ -253,7 +1019,34 @@ Zestaw parametrów stylizujących tytuł kanału płatności po wybraniu danej f
 
 ### APCheckboxStyle
 
-@[APCheckboxStyle](codes/android/00_style_checkbox.md)
+```kotlin
+public data class APCheckboxStyle(
+    val checkedColor: APThemeColor = APThemeColor(APColors.primaryLight, APColors.primaryDark),
+    val uncheckedColor: APThemeColor = APThemeColor(APColors.greyDarkLight, APColors.greyDarkDark),
+    val errorColor: APThemeColor = APThemeColor(APColors.errorLight, APColors.errorDark),
+) {
+    /** Builder class to make easier creation [APCheckboxStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APCheckboxStyle = APCheckboxStyle()) {
+
+        public fun build(): APCheckboxStyle = styleInstance
+
+        public fun checkedColor(checkedColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(checkedColor = checkedColor)
+            return this
+        }
+
+        public fun uncheckedColor(uncheckedColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(uncheckedColor = uncheckedColor)
+            return this
+        }
+
+        public fun errorColor(errorColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(errorColor = errorColor)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących widoki typu checkbox
 
@@ -263,7 +1056,67 @@ Zestaw parametrów stylizujących widoki typu checkbox
 
 ### APSwitchStyle
 
-@[APSwitchStyle](codes/android/00_style_switch_style.md)
+```kotlin
+public data class APSwitchStyle(
+    val checkedThumbColor: APThemeColor = APThemeColor(
+        APColors.onPrimaryLight,
+        APColors.onPrimaryDark
+    ),
+    val uncheckedThumbColor: APThemeColor = APThemeColor(
+        APColors.greyDarkLight,
+        APColors.greyDarkDark
+    ),
+    val checkedTrackColor: APThemeColor = APThemeColor(APColors.primaryLight, APColors.primaryDark),
+    val uncheckedTrackColor: APThemeColor = APThemeColor(
+        APColors.backgroundLight,
+        APColors.backgroundDark
+    ),
+    val checkedBorderColor: APThemeColor = APThemeColor(
+        APColors.primaryLight,
+        APColors.primaryDark
+    ),
+    val uncheckedBorderColor: APThemeColor = APThemeColor(
+        APColors.greyDarkLight,
+        APColors.greyDarkDark
+    ),
+) {
+    /** Builder class to make easier creation [APSwitchStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APSwitchStyle = APSwitchStyle()) {
+
+        public fun build(): APSwitchStyle = styleInstance
+
+        public fun checkedThumbColor(checkedThumbColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(checkedThumbColor = checkedThumbColor)
+            return this
+        }
+
+        public fun uncheckedThumbColor(uncheckedThumbColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(uncheckedThumbColor = uncheckedThumbColor)
+            return this
+        }
+
+        public fun checkedTrackColor(checkedTrackColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(checkedTrackColor = checkedTrackColor)
+            return this
+        }
+
+        public fun uncheckedTrackColor(uncheckedTrackColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(uncheckedTrackColor = uncheckedTrackColor)
+            return this
+        }
+
+        public fun checkedBorderColor(checkedBorderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(checkedBorderColor = checkedBorderColor)
+            return this
+        }
+
+        public fun uncheckedBorderColor(uncheckedBorderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(uncheckedBorderColor = uncheckedBorderColor)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących widoki typu switch
 
@@ -276,7 +1129,28 @@ Zestaw parametrów stylizujących widoki typu switch
 
 ### APRadioButtonStyle
 
-@[APRadioButtonStyle](codes/android/00_style_radio_button.md)
+```kotlin
+public data class APRadioButtonStyle(
+    val checkedColor: APThemeColor = APThemeColor(APColors.primaryLight, APColors.primaryDark),
+    val uncheckedColor: APThemeColor = APThemeColor(APColors.greyDarkLight, APColors.greyDarkDark),
+) {
+    /** Builder class to make easier creation [APRadioButtonStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APRadioButtonStyle = APRadioButtonStyle()) {
+
+        public fun build(): APRadioButtonStyle = styleInstance
+
+        public fun checkedColor(checkedColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(checkedColor = checkedColor)
+            return this
+        }
+
+        public fun uncheckedColor(uncheckedColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(uncheckedColor = uncheckedColor)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących widoki typu radio button
 
@@ -285,7 +1159,37 @@ Zestaw parametrów stylizujących widoki typu radio button
 
 ### APDialogStyle
 
-@[APDialogStyle](codes/android/00_style_dialog.md)
+```kotlin
+public data class APDialogStyle(
+    val dialogRadius: Dp = 16.dp,
+    val dialogBackgroundColor: APThemeColor = APThemeColor(
+        APColors.greyLightLight,
+        APColors.greyLightDark
+    )
+) {
+
+    /** Builder class to make easier creation [APDialogStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APDialogStyle = APDialogStyle()) {
+
+        public fun build(): APDialogStyle = styleInstance
+
+        public fun dialogRadius(dialogRadius: Dp): Builder {
+            styleInstance = styleInstance.copy(dialogRadius = dialogRadius)
+            return this
+        }
+
+        public fun dialogRadius(dialogRadius: Float): Builder {
+            styleInstance = styleInstance.copy(dialogRadius = dialogRadius.dp)
+            return this
+        }
+
+        public fun dialogBackgroundColor(dialogBackgroundColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(dialogBackgroundColor = dialogBackgroundColor)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących wyświetlane okna w SDK
 
@@ -294,7 +1198,34 @@ Zestaw parametrów stylizujących wyświetlane okna w SDK
 
 ### APLoaderStyle
 
-@[APLoaderStyle](codes/android/00_style_loader.md)
+```kotlin
+public data class APLoaderStyle(
+    val color: APThemeColor = APThemeColor(APColors.primaryLight, APColors.primaryDark),
+    val size: Dp = 32.dp
+) {
+
+    /** Builder class to make easier creation [APLoaderStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APLoaderStyle = APLoaderStyle()) {
+
+        public fun build(): APLoaderStyle = styleInstance
+
+        public fun color(color: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(color = color)
+            return this
+        }
+
+        public fun size(size: Dp): Builder {
+            styleInstance = styleInstance.copy(size = size)
+            return this
+        }
+
+        public fun size(size: Float): Builder {
+            styleInstance = styleInstance.copy(size = size.dp)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących widoki ładowania danych
 
@@ -303,7 +1234,72 @@ Zestaw parametrów stylizujących widoki ładowania danych
 
 ### APBankGridStyle
 
-@[APBankGridStyle](codes/android/00_style_bank_grid.md)
+```kotlin
+public data class APBankGridStyle(
+    val columns: Int = 3,
+    val cellHeight: Dp = 80.dp,
+    val radius: Dp = 12.dp,
+    val backgroundColor: APThemeColor = APThemeColor(
+        APColors.backgroundLight,
+        APColors.backgroundDark
+    ),
+    val checkedBorderColor: APThemeColor = APThemeColor(
+        APColors.primaryLight,
+        APColors.primaryDark
+    ),
+    val uncheckedBorderColor: APThemeColor = APThemeColor(
+        APColors.greyDarkAlpha66Light,
+        APColors.greyDarkAlpha66Dark
+    ),
+) {
+
+    /** Builder class to make easier creation [APBankGridStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APBankGridStyle = APBankGridStyle()) {
+
+        public fun build(): APBankGridStyle = styleInstance
+
+        public fun columns(columns: Int): Builder {
+            styleInstance = styleInstance.copy(columns = columns)
+            return this
+        }
+
+        public fun cellHeight(cellHeight: Dp): Builder {
+            styleInstance = styleInstance.copy(cellHeight = cellHeight)
+            return this
+        }
+
+        public fun radius(radius: Dp): Builder {
+            styleInstance = styleInstance.copy(radius = radius)
+            return this
+        }
+
+        public fun cellHeight(cellHeight: Float): Builder {
+            styleInstance = styleInstance.copy(cellHeight = cellHeight.dp)
+            return this
+        }
+
+        public fun radius(radius: Float): Builder {
+            styleInstance = styleInstance.copy(radius = radius.dp)
+            return this
+        }
+
+        public fun backgroundColor(backgroundColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(backgroundColor = backgroundColor)
+            return this
+        }
+
+        public fun checkedBorderColor(checkedBorderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(checkedBorderColor = checkedBorderColor)
+            return this
+        }
+
+        public fun uncheckedBorderColor(uncheckedBorderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(uncheckedBorderColor = uncheckedBorderColor)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących siatkę banków na grupie "Przelewy bankowe"
 
@@ -316,7 +1312,77 @@ Zestaw parametrów stylizujących siatkę banków na grupie "Przelewy bankowe"
 
 ### APPaymentSummaryStyle
 
-@[APPaymentSummaryStyle](codes/android/00_style_payment_summary.md)
+```kotlin
+public data class APPaymentSummaryStyle(
+    val backgroundColor: APThemeColor = APThemeColor(
+        APColors.backgroundLight,
+        APColors.backgroundDark
+    ),
+    val borderColor: APThemeColor = APThemeColor(
+        APColors.greyDarkAlpha66Light,
+        APColors.greyDarkAlpha66Dark
+    ),
+    val borderWidth: Dp = 1.dp,
+    val dividerColor: APThemeColor = APThemeColor(
+        APColors.greyDarkAlpha66Light,
+        APColors.greyDarkAlpha66Dark
+    ),
+    val dividerHeight: Dp = 1.dp,
+    val radius: Dp = 16.dp
+) {
+
+    /** Builder class to make easier creation [APPaymentSummaryStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APPaymentSummaryStyle = APPaymentSummaryStyle()) {
+
+        public fun build(): APPaymentSummaryStyle = styleInstance
+
+        public fun backgroundColor(backgroundColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(backgroundColor = backgroundColor)
+            return this
+        }
+
+        public fun borderColor(borderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(borderColor = borderColor)
+            return this
+        }
+
+        public fun borderWidth(borderWidth: Dp): Builder {
+            styleInstance = styleInstance.copy(borderWidth = borderWidth)
+            return this
+        }
+
+        public fun borderWidth(borderWidth: Float): Builder {
+            styleInstance = styleInstance.copy(borderWidth = borderWidth.dp)
+            return this
+        }
+
+        public fun dividerColor(dividerColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(dividerColor = dividerColor)
+            return this
+        }
+
+        public fun dividerHeight(dividerHeight: Dp): Builder {
+            styleInstance = styleInstance.copy(dividerHeight = dividerHeight)
+            return this
+        }
+
+        public fun radius(radius: Dp): Builder {
+            styleInstance = styleInstance.copy(radius = radius)
+            return this
+        }
+
+        public fun dividerHeight(dividerHeight: Float): Builder {
+            styleInstance = styleInstance.copy(dividerHeight = dividerHeight.dp)
+            return this
+        }
+
+        public fun radius(radius: Float): Builder {
+            styleInstance = styleInstance.copy(radius = radius.dp)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących etykietę z podsumowaniem płatności
 
@@ -329,7 +1395,55 @@ Zestaw parametrów stylizujących etykietę z podsumowaniem płatności
 
 ### APDCCPaymentFormStyle
 
-@[APDCCPaymentFormStyle](codes/android/00_style_dcc_payment_form.md)
+```kotlin
+public data class APDCCPaymentFormStyle(
+    val selectedBorderColor: APThemeColor = APThemeColor(
+        APColors.primaryLight,
+        APColors.primaryDark
+    ),
+    val unselectedBorderColor: APThemeColor = APThemeColor(
+        APColors.greyLightLight,
+        APColors.greyLightDark
+    ),
+    val cellRadius: Dp = 16.dp,
+    val cellBackgroundColor: APThemeColor = APThemeColor(
+        APColors.backgroundLight,
+        APColors.backgroundDark
+    )
+) {
+
+    /** Builder class to make easier creation [APDCCPaymentFormStyle] object in Java projects. */
+    public class Builder(private var styleInstance: APDCCPaymentFormStyle = APDCCPaymentFormStyle()) {
+
+        public fun build(): APDCCPaymentFormStyle = styleInstance
+
+        public fun selectedBorderColor(selectedBorderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(selectedBorderColor = selectedBorderColor)
+            return this
+        }
+
+        public fun unselectedBorderColor(unselectedBorderColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(unselectedBorderColor = unselectedBorderColor)
+            return this
+        }
+
+        public fun cellRadius(cellRadius: Dp): Builder {
+            styleInstance = styleInstance.copy(cellRadius = cellRadius)
+            return this
+        }
+
+        public fun cellRadius(cellRadius: Float): Builder {
+            styleInstance = styleInstance.copy(cellRadius = cellRadius.dp)
+            return this
+        }
+
+        public fun cellBackgroundColor(cellBackgroundColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(cellBackgroundColor = cellBackgroundColor)
+            return this
+        }
+    }
+}
+```
 
 Zestaw parametrów stylizujących okno z formularzem przewalutowania przy płatności kartą
 
@@ -340,20 +1454,30 @@ Zestaw parametrów stylizujących okno z formularzem przewalutowania przy płatn
 
 ### APCustomerFee
 
-@[APCustomerFee](codes/android/00_customer_fee_constructor.md)
+```kotlin
+public data class APCustomerFee(val customerFee: BigDecimal, val receiverName: String)
+```
 
 - `customerFee` Kwota opłata konsumenckiej.
 - `receiverName` Odbiorca opłaty konsumenckiej.
 
 ### APEnvironmentType
 
-@[APEnvironmentType](codes/android/00_environment_type.md)
+```kotlin
+public sealed class APEnvironmentType {
+   public data object DEV : APEnvironmentType()
+
+   public data object PROD : APEnvironmentType()
+}
+```
 
 Klasa definiująca środowisko, z którym chcemy się komunikować.
 
 ### APError
 
-@[APError](codes/android/00_error_constructor.md)
+```kotlin
+public class APError(public val type: APErrorType, message: String, public val orderId: String? = null) : Throwable(message)
+```
 
 Klasa reprezentująca błędy przychodzące z **SDK**, sama będąca błędem *Throwable*.
 
@@ -409,7 +1533,28 @@ Zdarzenia przychodzące w callbacku *APWebView*.
 
 ### APGateway
 
-@[APGateway](codes/android/00_gateway_constructor.md)
+```kotlin
+data class APGateway(
+   val gatewayId: Long,
+   val gatewayName: String,
+   val gatewayType: APGatewayType,
+   val bankName: String,
+   val iconURL: String,
+   val currencyList: List<String>,
+) {
+   val group: APGatewayPaymentGroup? =
+       when (gatewayType) {
+           APGatewayType.BLIK -> APGatewayPaymentGroup.BLIK
+           APGatewayType.PBL -> APGatewayPaymentGroup.BANK_TRANSFER
+           APGatewayType.FAST_TRANSFER -> APGatewayPaymentGroup.BANK_TRANSFER
+           APGatewayType.CARD -> APGatewayPaymentGroup.CARD
+           APGatewayType.AUTO_PAYMENT_CARD -> APGatewayPaymentGroup.CARD
+           APGatewayType.GOOGLE_PAY -> APGatewayPaymentGroup.GOOGLE_PAY
+           APGatewayType.VISA_MOBILE -> APGatewayPaymentGroup.VISA
+           else -> null
+       }
+}
+```
 
 Klasa opisująca kanał płatności.
 
@@ -458,7 +1603,19 @@ Enum reprezentujący typ kanału płatności.
 
 ### APPreTransaction
 
-@[APPreTransaction](codes/android/00_pre_transaction_constructor.md)
+```kotlin
+public data class APPreTransaction(
+   val orderId: String,
+   val remoteId: String,
+   val hash: String,
+   val serviceId: String,
+   val messageId: String,
+   val status: APResult,
+   val redirectUrl: String?,
+   val reason: String,
+   val confirmation: APConfirmation?,
+)
+```
 
 Klasa reprezentująca dane rozpoczętej transakcji.
 
@@ -471,7 +1628,12 @@ Klasa reprezentująca dane rozpoczętej transakcji.
 
 ### APConfirmation
 
-@[APConfirmation](codes/android/00_confirmation_enum.md)
+```kotlin
+public enum class APConfirmation {
+    CONFIRMED,
+    NOTCONFIRMED,
+}
+```
 
 Status potwierdzenia przyjęcia zlecenia.
 - `CONFIRMED` Operacja powiodła się. **Uwaga!** Nie oznacza to wykonania obciążenia!
@@ -479,7 +1641,9 @@ Status potwierdzenia przyjęcia zlecenia.
 
 ### APProduct
 
-@[APProduct](codes/android/00_product_constructor.md)
+```kotlin
+public data class APProduct(val subAmount: BigDecimal, val params: Map<String, String>)
+```
 
 Informacje o produktach które możemy dodać jako parametry transakcji.
 - `subAmount` Kwota produktu.
@@ -487,7 +1651,31 @@ Informacje o produktach które możemy dodać jako parametry transakcji.
 
 ### APRegulation
 
-@[APRegulation](codes/android/00_regulations_constructor.md)
+```kotlin
+public data class APRegulation(
+   val regulationId: Int,
+   val type: String,
+   val url: String,
+   val labelList: List<Label>,
+) {
+
+
+   public data class Label(
+       val labelId: Int,
+       val inputLabel: String,
+       val placement: Placement,
+       val showCheckbox: Boolean,
+       val checkboxRequired: Boolean,
+   )
+
+
+   public enum class Placement {
+       TOP,
+       MIDDLE,
+       BOTTOM,
+   }
+}
+```
 
 Klasa reprezentująca dane na temat regulaminów przypisanych do kanałów płatności. Klasa `Label` przedstawia treści tych regulaminów.
 - `regulationId` Identyfikator regulaminu.
@@ -520,7 +1708,20 @@ Enum reprezentujący rezultat transakcji.
 
 ### APSdkState
 
-@[APSdkState](codes/android/00_sdk_state.md)
+```kotlin
+public sealed class (public val groups: List<APGatewayPaymentGroup>) {
+   public data object APGatewaysLoading : APSdkState(emptyList())
+
+    public data class APGatewaysList(val data: List<APGateway>) :
+        APSdkState(data.mapNotNull { it.group }.distinct())
+
+    public data class APGatewayDetails(val gatewayGroup: APGatewayPaymentGroup) :
+        APSdkState(listOf(gatewayGroup))
+
+    public data class APPreTransactionInProgress(val gatewayGroup: APGatewayPaymentGroup) :
+        APSdkState(listOf(gatewayGroup))
+}
+```
 
 Klasa reprezentująca obecny stan widoku *APGatewayListCompose*/*APGatewayListView*. 
 
@@ -531,7 +1732,69 @@ Klasa reprezentująca obecny stan widoku *APGatewayListCompose*/*APGatewayListVi
 
 ### APTransactionData
 
-@[APTransactionData](codes/android/00_transaction_data_constructor.md)
+```kotlin
+public data class APTransactionData(
+   val amount: BigDecimal,
+   val orderId: String = NonceGenerator.nonce,
+   val gatewayId: Long = 0L,
+   val language: String = Locale.getDefault().language.uppercase(),
+   val authorizationCode: String? = null,
+   val email: String? = null,
+   val phone: String? = null,
+   val googlePaymentToken: String? = null,
+   val products: List<APProduct> = listOf(),
+   val params: Map<String, String> = mapOf(),
+)
+
+/** Builder class to make easier creation [APTransactionData] object. */
+public class Builder internal constructor(private val amount: BigDecimal) {
+    private var orderId: String = NonceGenerator.nonce
+    private var gatewayId: Long = 0L
+    private var language: String = Locale.getDefault().language.uppercase()
+    private var authorizationCode: String? = null
+    private var email: String? = null
+    private var phone: String? = null
+    private var googlePaymentToken: String? = null
+    private var products: List<APProduct> = listOf()
+    private var params: Map<String, String> = mapOf()
+
+    public fun orderId(orderId: String): Builder = apply { this.orderId = orderId }
+
+    public fun gatewayId(gatewayId: Long): Builder = apply { this.gatewayId = gatewayId }
+
+    public fun language(language: String): Builder = apply { this.language = language }
+
+    public fun authorizationCode(authorizationCode: String?): Builder = apply {
+        this.authorizationCode = authorizationCode
+    }
+
+    public fun email(email: String?): Builder = apply { this.email = email }
+
+    public fun phone(phone: String?): Builder = apply { this.phone = phone }
+
+    public fun googlePaymentToken(token: String?): Builder = apply {
+        this.googlePaymentToken = token
+    }
+
+    public fun products(products: List<APProduct>): Builder = apply { this.products = products }
+
+    public fun params(params: Map<String, String>): Builder = apply { this.params = params }
+
+    public fun build(): APTransactionData =
+        APTransactionData(
+            amount = amount,
+            orderId = orderId,
+            gatewayId = gatewayId,
+            language = language,
+            authorizationCode = authorizationCode,
+            email = email,
+            phone = phone,
+            googlePaymentToken = googlePaymentToken,
+            products = products,
+            params = params,
+        )
+    }
+```
 
 Klasa reprezentuje dane przekazywane do serwisu **Autopay** w celu rozpoczęcia transakcji. Jej jedynym wymaganym parametrem jest kwota transakcji.
 
@@ -548,7 +1811,28 @@ Klasa reprezentuje dane przekazywane do serwisu **Autopay** w celu rozpoczęcia 
 
 ### APTransactionStatus
 
-@[APTransactionStatus](codes/android/00_transaction_status_constructor.md)
+```kotlin
+public data class APTransactionStatus(
+   val orderId: String,
+   val remoteId: String,
+   val hash: String,
+   val serviceId: String,
+   val messageId: String,
+   val transactions: List<Transaction>,
+) {
+
+   public data class Transaction(
+       val orderId: String,
+       val remoteId: String,
+       val amount: String,
+       val currency: String,
+       val gatewayId: String,
+       val paymentDate: String,
+       val paymentStatus: APResult?,
+       val paymentStatusDetails: String,
+   )
+}
+```
 
 Klasa reprezentuje status transakcji dla danego `orderId`. 
 
@@ -573,11 +1857,43 @@ Każdy widok poza `APWebView` występuje w dwóch wersjach - Compose i View, w z
 
 ### APGatewayListCompose / APGatewayListView
 
-@[APGatewayListCompose](codes/android/00_gateway_list_compose_constructor.md)
+```kotlin
+@Composable
+public fun APGatewayListCompose(
+   amount: BigDecimal,
+   paymentSummary: String? = null,
+   visibleGateways: List<APGatewayPaymentGroup> = APGatewayPaymentGroup.entries.toList(),
+   customerEmail: String? = null,
+   customerPhone: String? = null,
+   orderId: String? = null,
+   onPaymentStateChange: (APSdkState) -> Unit = {},
+   onPreTransactionDone: (APPreTransaction) -> Unit = {},
+   onPreTransactionError: (Throwable) -> Unit = {},
+   finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+)
+```
 
-@[APGatewayListView constructor](codes/android/00_gateway_list_view_constructor.md)
+```kotlin
+public class APGatewayListView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
+    public var amount: BigDecimal
+    public var visibleGateways: List<APGatewayPaymentGroup>
+    public var paymentSummary: String?
+    public var customerEmail: String? = null
+    public var customerPhone: String? = null
+    public var orderId: String? = null
+    public var onPaymentStateChange: (APSdkState) -> Unit = {}
+    public var onPreTransactionDone: (APPreTransaction) -> Unit = {}
+    public var onPreTransactionError: (Throwable) -> Unit = {}
+    public var finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+}
+```
 
-@[APGatewayListView XML](codes/android/00_gateway_list_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.list.APGatewayListView
+   android:id="@+id/gatewayList"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 Widok listy kanałów płatności jest rozbudowanym widokiem obsługującym zarówno załadowanie listy kanałów płatności, ich wyświetlanie oraz rozwinięcie szczegółów wybranego kanału płatności wraz z załadowaniem regulaminów, opłaty konsumenckiej oraz dokonaniem płatności. Z racji tego, że ten widok posiada kilka stanów, zawiera on callback pozwalający reagować na zmieniający się stan. Po rozwinięciu szczegółów kanału płatności nadpisany jest systemowy callback na przycisk wstecz, by móc wrócić do listy kanałów płatności. Po dokonaniu płatności widok wraca do stanu załadowanej listy.
 
@@ -600,7 +1916,14 @@ Klasa służąca do obsługi strony przekierowania po dokonaniu płatności. Wyp
 
 **loadUrl**
 
-@[APWebView load](codes/android/00_webview_load.md)
+```kotlin
+public fun loadUrl(
+   url: String,
+   transactionCallback: (APResult?) -> Unit,
+   eventCallback: (APEvent?) -> Unit,
+   errorCallback: (APError?) -> Unit,
+)
+```
 
 Metoda do wczytywania strony przekierowania transakcji
 
@@ -611,11 +1934,35 @@ Metoda do wczytywania strony przekierowania transakcji
 
 ### APCardActivationCompose / APCardActivationView
 
-@[APCardActivationCompose](codes/android/00_gateway_card_activation_compose.md)
+```kotlin
+public APCardActivationCompose(
+    onActivationDone: (APPreTransaction) -> Unit,
+    onActivationError: (Throwable) -> Unit = {},
+    finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null,
+    orderId: String? = null,
+    activationTextColor: APThemeColor = APThemeColor(Color(0xFF282828), Color(0xFFFAFAFA)),
+    activationTextSize: TextUnit = 12.sp
+)
+```
 
-@[APCardActivationView constructor](codes/android/00_gateway_card_activation_view_constructor.md)
+```java
+@Composable
+public class APCardGatewayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
+    public var onActivationDone: (APPreTransaction) -> Unit = {}
+    public var onActivationError: (Throwable) -> Unit = {}
+    public var finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+    public var orderId: String? = null
+    public var activationTextColor: APThemeColor = APThemeColor(Color.parseColor("282828"), Color.parseColor("FAFAFA"))
+    public var activationTextSize: Float = 12f
+}
+```
 
-@[APCardActivationView XML](codes/android/00_gateway_card_activation_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.card.APCardActivationView
+   android:id="@+id/cardPaywall"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 Widok przedstawiający formularz aktywacji karty za pomocą serwisu Autopay. Naliczana w nim jest opłata konsumencka, która będzie zwrócona klientowi.
 
@@ -628,11 +1975,39 @@ Widok przedstawiający formularz aktywacji karty za pomocą serwisu Autopay. Nal
 
 ### APBankGatewayCompose / APBankGatewayView
 
-@[APBankGatewayCompose](codes/android/00_gateway_bank_compose_constructor.md)
+```kotlin
+@Composable
+public fun APBankGatewayCompose(
+   amount: BigDecimal,
+   customerEmail: String? = null,
+   customerPhone: String? = null,
+   orderId: String? = null,
+   @StringRes contentHeader: Int? = null,
+   onPreTransactionDone: (APPreTransaction) -> Unit = {},
+   onPreTransactionError: (Throwable) -> Unit = {},
+   finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null,
+)
+```
 
-@[APBankGatewayView constructor](codes/android/00_gateway_bank_view_constructor.md)
+```kotlin
+public class APBankGatewayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
+    public var amount: BigDecimal = BigDecimal(0)
+    public var customerEmail: String? = null
+    public var customerPhone: String? = null
+    public var orderId: String? = null
+    public var contentHeader: Int? = null
+    public var onPreTransactionDone: (APPreTransaction) -> Unit = {}
+    public var onPreTransactionError: (Throwable) -> Unit = {}
+    public var finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+}
+```
 
-@[APBankGatewayView XML](codes/android/00_gateway_bank_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.views.bank.APBankGatewayView
+   android:id="@+id/bankGateway"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 Widok rozwiniętej grupy kanałów płatności typu *BANK*. Nie zawiera podsumowania płatności.
 
@@ -646,11 +2021,38 @@ Widok rozwiniętej grupy kanałów płatności typu *BANK*. Nie zawiera podsumow
 
 ### APBlikGatewayCompose / APBlikGatewayView
 
-@[APBlikGatewayCompose](codes/android/00_gateway_blik_compose_constructor.md)
+```kotlin
+@Composable
+public fun APBlikGatewayCompose(
+   amount: BigDecimal,
+   customerEmail: String? = null,
+   customerPhone: String? = null,
+   orderId: String? = null,
+   @StringRes contentHeader: Int? = null,
+   onPreTransactionDone: (APPreTransaction) -> Unit = {},
+   onPreTransactionError: (Throwable) -> Unit = {},
+   finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null,
+)
+```
 
-@[APBlikGatewayView constructor](codes/android/00_gateway_blik_view_constructor.md)
+```kotlin
+public class APBlikGatewayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
+    public var amount: BigDecimal = BigDecimal(0)
+    public var customerEmail: String? = null
+    public var customerPhone: String? = null
+    public var orderId: String? = null
+    public var contentHeader: Int? = null
+    public var onPreTransactionDone: (APPreTransaction) -> Unit = {}
+    public var onPreTransactionError: (Throwable) -> Unit = {}
+    public var finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+}
+```
 
-@[APBlikGatewayView XML](codes/android/00_gateway_blik_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.views.bank.APBankGatewayView
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 Widok rozwiniętego kanału płatności typu *BLIK*. Nie zawiera podsumowania płatności.
 
@@ -665,11 +2067,36 @@ Widok rozwiniętego kanału płatności typu *BLIK*. Nie zawiera podsumowania p�
 
 ### APCardGatewayCompose / APCardGatewayView
 
-@[APCardGatewayCompose](codes/android/00_gateway_card_compose_constructor.md)
+```kotlin
+@Composable
+public fun APCardGatewayCompose(
+   amount: BigDecimal,
+   customerEmail: String? = null,
+   customerPhone: String? = null,
+   orderId: String? = null,
+   onPreTransactionDone: (APPreTransaction) -> Unit = {},
+   onPreTransactionError: (Throwable) -> Unit = {},
+   finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null,
+)
+```
 
-@[APCardGatewayView constructor](codes/android/00_gateway_card_view_constructor.md)
+```kotlin
+public class APCardGatewayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
+    public var amount: BigDecimal
+    public var customerEmail: String? = null
+    public var customerPhone: String? = null
+    public var orderId: String? = null
+    public var onPreTransactionDone: (APPreTransaction) -> Unit = {}
+    public var onPreTransactionError: (Throwable) -> Unit = {}
+    public var finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+}
+```
 
-@[APCardGatewayView XML](codes/android/00_gateway_card_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.views.card.APCardGatewayView
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 Widok rozwiniętego kanału płatności typu *CARD*. Nie zawiera podsumowania płatności. Obsługuje zarówno płatność kartą, płatność kartą automatyczną oraz oba kanały.
 
@@ -683,11 +2110,36 @@ Widok rozwiniętego kanału płatności typu *CARD*. Nie zawiera podsumowania p�
 
 ### APGooglePayGatewayCompose / APGooglePayGatewayView
 
-@[APGooglePayGatewayCompose](codes/android/00_gateway_google_compose_constructor.md)
+```kotlin
+@Composable
+fun APGooglePayGatewayCompose(
+   amount: BigDecimal,
+   customerEmail: String? = null,
+   customerPhone: String? = null,
+   orderId: String? = null,
+   onPreTransactionDone: (APPreTransaction) -> Unit = {},
+   onPreTransactionError: (Throwable) -> Unit = {},
+   finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null,
+)
+```
 
-@[APGooglePayGatewayView constructor](codes/android/00_gateway_google_view_constructor.md)
+```kotlin
+public class APGooglePayGatewayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
+    public var amount: BigDecimal
+    public var customerEmail: String? = null
+    public var customerPhone: String? = null
+    public var orderId: String? = null
+    public var onPreTransactionDone: (APPreTransaction) -> Unit = {}
+    public var onPreTransactionError: (Throwable) -> Unit = {}
+    public var finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+}
+```
 
-@[APGooglePayGatewayView XML](codes/android/00_gateway_google_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.views.google.APGooglePayGatewayView
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 Widok rozwiniętego kanału płatności typu *GOOGLE_PAY*. Nie zawiera podsumowania płatności.
 
@@ -701,11 +2153,36 @@ Widok rozwiniętego kanału płatności typu *GOOGLE_PAY*. Nie zawiera podsumowa
 
 ### APVisaGatewayCompose / APVisaGatewayView
 
-@[APVisaGatewayCompose](codes/android/00_gateway_visa_compose_constructor.md)
+```kotlin
+@Composable
+public fun APVisaGatewayCompose(
+   amount: BigDecimal,
+   customerEmail: String? = null,
+   customerPhone: String? = null,
+   orderId: String? = null,
+   onPreTransactionDone: (APPreTransaction) -> Unit = {},
+   onPreTransactionError: (Throwable) -> Unit = {},
+   finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null,
+)
+```
 
-@[APVisaGatewayView constructor](codes/android/00_gateway_visa_view_constructor.md)
+```kotlin
+public class APVisaGatewayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
+    public var amount: BigDecimal
+    public var customerEmail: String? = null
+    public var customerPhone: String? = null
+    public var orderId: String? = null;
+    public var onPreTransactionDone: (APPreTransaction) -> Unit = {}
+    public var onPreTransactionError: (Throwable) -> Unit = {}
+    public var finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+}
+```
 
-@[APVisaGatewayView XML](codes/android/00_gateway_visa_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.views.visa.APVisaGatewayView
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 Widok rozwiniętego kanału płatności typu *VISA*. Nie zawiera podsumowania płatności.
 

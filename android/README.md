@@ -13,7 +13,14 @@ Biblioteka została napisana w technologii Jetpack Compose (Compose BOM - 2025.0
 
 SDK jest dystrybuowane przez Maven Central. Upewnij się, że repozytorium Maven Central jest dodane do konfiguracji Gradle w Twoim projekcie:
 
-@[settings.gradle](codes/android/00_autopay_maven.md)
+```Groovy
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+```
 
 Następnie, w pliku `build.gradle` modułu, w którym planujesz użycie SDK, dodaj odpowiednią zależność:
 
@@ -67,7 +74,23 @@ Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt **[5. 
 
 ### Klasa AutopayConfig
 
-@[Autopay - init](codes/android/00_autopay_init.md)
+```kotlin
+Autopay.init(
+    AutopayConfig.Builder(
+            token = "",
+            serviceId = "serviceID",
+            acceptorId = "acceptorID",
+            environmentType = APEnvironmentType.PROD,
+        )
+        .enableLogging(false)
+        .googlePayMerchantId(null)
+        .contextPath("/payment")
+        .currencies(listOf("PLN"))
+        .regulationsFallbackLanguageCode("PL")
+        .merchantCountryCode("PL")
+        .build()
+)
+```
 
 Do pobrania listy kanałów płatności oraz startu transakcji wymagane jest utworzenie obiektu `AutopayConfig` za pomocą `AutopayConfig.Builder` zainicjalizowanego specjalnym **tokenem transakcyjnym** do bezpośredniej komunikacji **SDK** z **Systemem Płatności Online BM**, **numerem serwisu** i **numerem akceptanta** przydzielonymi przez **System Płatności Online BM** oraz **adresem środowiska Systemu Płatności Online BM**. Używając obiekt `AutopayConfig` należy zainicjować SDK za pomocą metody `Autopay.init()` - najlepiej wywołać ją w klasie pochodnej `Application`.
 
@@ -105,11 +128,49 @@ Widoki:
 Za wyświetlanie rozbudowanego widoku listy kanałów płatności odpowiadają klasy `APGatewayListCompose` oraz `APGatewayListView` w zależności, czy korzystasz w swojej aplikacji z `Jetpack Compose` czy tradycyjnie z widoków opartych o `xml`. 
 Widoki te obsługują automatyczne pobieranie (z backendu Autopay) i wyświetlanie dostępnych kanałów płatności. Po rozwinięciu grupy kanałów, SDK wykonuje zapytanie o kwotę opłaty konsumenckiej oraz odpowiednie regulaminy. Wysokość opłaty konsumenckiej jest zależna od modelu biznesowego jaki został ustalony dla merchanta. Każda rozwinięta grupa kanałów płatności pozwala na rozpoczęcie transakcji. 
 
-@[APGatewayListCompose](codes/android/00_gateway_list_compose.md)
+```kotlin
+APGatewayListCompose(
+    amount = BigDecimal("29.00"),
+    paymentSummary = "Testowa płatność",
+    visibleGateways = APGatewayPaymentGroup.entries,
+    customerEmail: String? = null,
+    customerPhone: String? = null,
+    orderId: String? = null,
+    onPreTransactionDone = { preTransaction: APPreTransaction -> },
+    onPaymentStateChange = { sdkState: APSdkState -> },
+    onPreTransactionError = { throwable: Throwable -> }
+    finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null
+)
+```
 
-@[APGatewayListView](codes/android/00_gateway_list_java.md)
+```java
+APGatewayListView gatewayView = view.findViewById(R.id.gatewayList);
+gatewayView.setAmount(new BigDecimal("29.00"));
+gatewayView.setPaymentSummary("Testowa płatność");
+gatewayView.setCustomerEmail("example@email.com");
+gatewayView.setCustomerPhone("123123123");
+gatewayView.setPaymentSummary("Testowa płatność");
+gatewayView.setOrderId("");
+gatewayView.setOnPreTransactionDone(apPreTransaction -> {
+   return Unit.INSTANCE;
+});
+gatewayView.setOnPaymentStateChange(apSdkState -> {
+   return Unit.INSTANCE;
+});
+gatewayView.setOnPreTransactionError(error -> {
+   return Unit.INSTANCE;
+});
+gatewayView.setFinishBeforePreStransaction(transactionData -> {
+   return Unit.INSTANCE;
+});
+```
 
-@[APGatewayListView XML](codes/android/00_gateway_list_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.list.APGatewayListView
+   android:id="@+id/gatewayList"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 ![Lista form płatności](images/android/00_gateway_list.jpg)
 
@@ -211,13 +272,63 @@ W trakcie płatności użytkownik może wpisywać dane karty płatniczej. Aby ek
 
 SDK zawiera własną implementację `WebView` w postaci klasy `APWebView`
 
-@[APWebView](codes/android/00_webview_load.md)
+```kotlin
+public fun loadUrl(
+   url: String,
+   transactionCallback: (APResult?) -> Unit,
+   eventCallback: (APEvent?) -> Unit,
+   errorCallback: (APError?) -> Unit,
+)
+```
 
-@[APWebView](codes/android/00_webview_load_compose.md)
+```kotlin
+AndroidView(
+   factory = { context ->
+      val view = APWebView(context)
+      view.canGoBack()
+      view.loadUrl(
+         url = "https://redirectUrl.com",
+         transactionCallback = { apResult: APResult? ->
+            ...
+         },
+         eventCallback = { apEvent: APEvent? ->
+            ...
+         },
+         errorCallback = { apError: APError? ->
+            ...
+         },
+      )
+      view
+   },
+   modifier = Modifier.fillMaxSize(),
+)
+```
 
-@[APWebView](codes/android/00_webview_load_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.webview.APWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+```
 
-@[APWebView](codes/android/00_webview_load_java.md)
+```Java
+((APWebView) view.findViewById(R.id.webView))
+   .loadUrl(
+      "https://redirectUrl.com",
+      result -> {
+         ...
+          return Unit.INSTANCE;
+      },
+      event -> {
+         ...
+          return Unit.INSTANCE;
+      },
+      error -> {
+         ...
+          return Unit.INSTANCE;
+      }
+   );
+```
 
 - `url` - url przekierowania otrzymany z rozpoczętej transakcji
 - `transactionCallback` — informuje o zakończeniu transakcji. Może być nullem ponieważ jest to wstępna informacja o statusie transakcji. Dla potwierdzenia rezultatu należy skorzystać z metody `checkTransactionStatus(orderId)` z klasy `Autopay`
@@ -242,31 +353,177 @@ Jeśli `onPreTransactionError` zostanie zwrócony błąd, trasnakcja nie powiod�
 
 1. Inicjalizacja SDK podając poprawne dane:
 
-@[Autopay init](codes/android/00_autopay_init.md)
+```kotlin
+Autopay.init(
+    AutopayConfig.Builder(
+            token = "",
+            serviceId = "serviceID",
+            acceptorId = "acceptorID",
+            environmentType = APEnvironmentType.PROD,
+        )
+        .enableLogging(false)
+        .googlePayMerchantId(null)
+        .contextPath("/payment")
+        .currencies(listOf("PLN"))
+        .regulationsFallbackLanguageCode("PL")
+        .merchantCountryCode("PL")
+        .build()
+)
+```
 
 W wersji Java:
 
-@[AutopayConfig](codes/android/00_java_config.md)
+```java
+Autopay.init(new AutopayConfig.Builder(
+    APEnvironmentType.DEV.INSTANCE,
+    "token",
+    "serviceId",
+    "acceptorId"
+)
+.contextPath("/payment")
+.enableLogging(true)
+.googlePayMerchantId("merchantId")
+.build());
+```
 
 2. Wewnątrz swojej kompozycji umieść `APGatewayListCompose`:
 
-@[APGatewayListCompose example](codes/android/00_example_gateway_list_compose.md)
+```kotlin
+...
+Column(
+   Modifier.verticalScroll(rememberScrollState())
+      .fillMaxWidth()
+      .padding(horizontal = 16.dp, vertical = 12.dp)
+) {
+   APGatewayListCompose(
+      BigDecimal("123.45"),
+      paymentSummary = "Payment summary",
+      customerEmail = "customer@email.com",
+      customerPhone = "123456789",
+      onPreTransactionDone = { preTransaction: PreTransaction ->
+         // handle preTransaction.redirectUrl or preTransaction.reason as? APErrorType
+      },
+      onPaymentStateChange = { sdkState: APSdkState ->
+         // handle sdkState
+      },
+      onPreTransactionError = { throwable: Throwable ->
+         if (it.isTokenExpired()) {
+            // Display progress that blocks UI, refresh token in your app, update it by using:
+            // Autopay.updateToken("new_token_here")
+            // Hide progress and let user use retry button inside SDK
+         } else {
+            // handle throwable
+         }
+      },
+   )
+}
+...
+```
 
 Lub w wersji Java umieść `APGatewayListView` wewnątrz scrollowalnego widoku i uzupełnij mu dane w kodzie:
 
-@[GatewayListXml example](codes/android/00_example_gateway_list_xml.md)
+```xml
+...
+<ScrollView
+   android:layout_width="match_parent"
+   android:layout_height="0dp"
+   android:layout_weight="1">
 
-@[GatewayListView example](codes/android/00_example_gateway_list_java.md)
+   <eu.autopay.pay.sdk.ui.list.APGatewayListView
+      android:id="@+id/gatewayList"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingHorizontal="16dp"
+      android:paddingVertical="12dp" />
+ </ScrollView>
+ ...
+```
+
+```Java
+...
+@Override
+public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    APGatewayListView gatewayView = view.findViewById(R.id.gatewayList);
+    gatewayView.setAmount(new BigDecimal("123.45"));
+    gatewayView.setCustomerEmail("customer@email.com");
+    gatewayView.setCustomerPhone("123456789");
+    gatewayView.setPaymentSummary("Payment summary");
+    gatewayView.setOnPreTransactionDone(apPreTransaction -> {
+        // handle apPreTransaction.getRedirectUrl() or apPreTransaction.reason as? APErrorType
+        return Unit.INSTANCE;
+    });
+    gatewayView.setOnPaymentStateChange(apSdkState -> {
+        // handle apSdkState
+        return Unit.INSTANCE;
+    });
+    gatewayView.setOnPreTransactionError(throwable -> {
+        if (ErrorUtils.INSTANCE.isTokenExpired(throwable)) {
+            // Display progress that blocks UI, refresh token in your app, update it by using:
+            // Autopay.updateToken("new_token_here");
+            // Hide progress and let user use retry button inside SDK
+        } else {
+            // handle throwable
+        }
+        return Unit.INSTANCE;
+    });
+}
+...
+```
 
 3. Następnie obsłużenie `redirectUrl` z obiektu `APPreTransaction` należy wykonać poprzez użycie widoku `APWebView` 
 
-@[APWebView example compose](codes/android/00_webview_load_compose.md)
+```kotlin
+AndroidView(
+   factory = { context ->
+      val view = APWebView(context)
+      view.canGoBack()
+      view.loadUrl(
+         url = "https://redirectUrl.com",
+         transactionCallback = { apResult: APResult? ->
+            ...
+         },
+         eventCallback = { apEvent: APEvent? ->
+            ...
+         },
+         errorCallback = { apError: APError? ->
+            ...
+         },
+      )
+      view
+   },
+   modifier = Modifier.fillMaxSize(),
+)
+```
 
 Lub w wersji Java:
 
-@[APWebView example XML](codes/android/00_webview_load_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.webview.APWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+```
 
-@[APWebView example Java](codes/android/00_webview_load_java.md)
+```Java
+((APWebView) view.findViewById(R.id.webView))
+   .loadUrl(
+      "https://redirectUrl.com",
+      result -> {
+         ...
+          return Unit.INSTANCE;
+      },
+      event -> {
+         ...
+          return Unit.INSTANCE;
+      },
+      error -> {
+         ...
+          return Unit.INSTANCE;
+      }
+   );
+```
 
 Pełne przykłady uruchamiania WebView, wraz z trzymaniem stanu przy zmianie konfiguracji / śmierci procesu aplikacji są przedstawione w aplikacji DEMO w dziale "Pliki do pobrania".
 
@@ -355,13 +612,56 @@ Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt **5. N
 
 Kontynuacja transakcji z linku realizowana jest poprzez uruchomienie klasy `APWebView` z linkiem przekierowania otrzymanym w ramach rozpoczętej transakcji.
 
-@[APWebView example compose](codes/android/00_webview_load_compose.md)
+```kotlin
+AndroidView(
+   factory = { context ->
+      val view = APWebView(context)
+      view.canGoBack()
+      view.loadUrl(
+         url = "https://redirectUrl.com",
+         transactionCallback = { apResult: APResult? ->
+            ...
+         },
+         eventCallback = { apEvent: APEvent? ->
+            ...
+         },
+         errorCallback = { apError: APError? ->
+            ...
+         },
+      )
+      view
+   },
+   modifier = Modifier.fillMaxSize(),
+)
+```
 
 Lub w wersji Java:
 
-@[APWebView example XML](codes/android/00_webview_load_xml.md)
+```xml
+<eu.autopay.pay.sdk.ui.webview.APWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+```
 
-@[APWebView example Java](codes/android/00_webview_load_java.md)
+```Java
+((APWebView) view.findViewById(R.id.webView))
+   .loadUrl(
+      "https://redirectUrl.com",
+      result -> {
+         ...
+          return Unit.INSTANCE;
+      },
+      event -> {
+         ...
+          return Unit.INSTANCE;
+      },
+      error -> {
+         ...
+          return Unit.INSTANCE;
+      }
+   );
+```
 
 Pełne przykłady uruchamiania WebView, wraz z trzymaniem stanu przy zmianie konfiguracji / śmierci procesu aplikacji są przedstawione w aplikacji DEMO w dziale "Pliki do pobrania".
 
@@ -369,11 +669,40 @@ Pełne przykłady uruchamiania WebView, wraz z trzymaniem stanu przy zmianie kon
 
 ![Formularz aktywacji karty płatniczej](images/android/00_gateway_card_activation.jpg)
 
-@[APCardActivationCompose](codes/android/00_gateway_card_activation_compose.md)
+```kotlin
+public APCardActivationCompose(
+    onActivationDone: (APPreTransaction) -> Unit,
+    onActivationError: (Throwable) -> Unit = {},
+    finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null,
+    orderId: String? = null,
+    activationTextColor: APThemeColor = APThemeColor(Color(0xFF282828), Color(0xFFFAFAFA)),
+    activationTextSize: TextUnit = 12.sp
+)
+```
 
-@[APCardActivationView](codes/android/00_gateway_card_activation_java.md)
+```java
+APCardActivationView cardPaywall = view.findViewById(R.id.cardPaywall);
 
-@[APCardActivationView XML](codes/android/00_gateway_card_activation_xml.md)
+cardPaywall.setOnActivationDone(apPreTransaction -> {
+   return Unit.INSTANCE;
+});
+cardPaywall.setOnActivationError(error -> {
+   return Unit.INSTANCE;
+});
+cardPaywall.setOrderId("");
+cardPaywall.setActivationTextColor(APThemeColor(Color.parseColor("282828"), Color.parseColor("FFAFAFA")));
+cardPaywall.setActivationTextSize(12);
+cardPaywall.setFinishBeforePreStransaction(transactionData -> {
+   return Unit.INSTANCE;
+});
+```
+
+```xml
+<eu.autopay.pay.sdk.ui.card.APCardActivationView
+   android:id="@+id/cardPaywall"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 **SDK** udostępnia widok pozwalający na dokonanie aktywacji karty płatniczej. Występuje tutaj zarówno wersja dla Compose `APCardActivationCompose`, jak i implementacja dla aplikacji wykorzystujących widoki z XML'ami `APCardActivationView`.
 
@@ -413,11 +742,45 @@ Wspólne parametry:
 
 Przykładowo dla banków jako grupy kanałów płatności (i analogicznie dla każdego innego widoku):
 
-@[APBankGatewayCompose](codes/android/00_gateway_bank_compose.md)
+```kotlin
+@Composable
+public fun APBankGatewayCompose(
+   amount: BigDecimal,
+   customerEmail: String? = null,
+   customerPhone: String? = null,
+   orderId: String? = null,
+   @StringRes contentHeader: Int? = null,
+   onPreTransactionDone: (APPreTransaction) -> Unit = {},
+   onPreTransactionError: (Throwable) -> Unit = {},
+   finishBeforePreTransaction: ((APTransactionData) -> Unit)? = null,
+)
+```
 
-@[APBankGatewayView](codes/android/00_gateway_bank_view.md)
+```java
+APBankGatewayView bankGateway = view.findViewById(R.id.bankGateway);
 
-@[APBankGatewayView XML](codes/android/00_gateway_bank_xml.md)
+bankGateway.setAmount(new BigDecimal("1.23"));
+bankGateway.setOnPreTransactionDone(apPreTransaction -> {
+   return Unit.INSTANCE;
+});
+bankGateway.setOnPreTransactionError(error -> {
+   return Unit.INSTANCE;
+});
+bankGateway.setFinishBeforePreStransaction(transactionData -> {
+   return Unit.INSTANCE;
+});
+bankGateway.setCustomerPhone("");
+bankGateway.setCustomerEmail("");
+bankGateway.setOrderId("");
+bankGateway.setContentHeader(R.string.example_header);
+```
+
+```xml
+<eu.autopay.pay.sdk.ui.views.bank.APBankGatewayView
+   android:id="@+id/bankGateway"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content" />
+```
 
 ### Google Pay
 
@@ -439,7 +802,118 @@ Przed integracją **SDK** warto upewnić się w **Autopay** czy obsługa regulam
 
 📌 **SDK** dostarcza domyślną stylistykę widoków zgodną i dostosowaną do wymogów dostępności WCAG. Przy wykorzystaniu SDK i dokonywaniu zmian w kolorach, wymiarach, twórca aplikacji bierze na siebie odpowiedzialność za ich dobór aby spełnić wymogi dostępności.
 
-@[AutopayUIStyle](codes/android/00_style_autopay_ui_style.md)
+```kotlin
+public data class AutopayUIStyle(
+    val typography: APTypography = APTypography(),
+    val primaryButtonStyle: APButtonStyle = APButtonStyle.APPrimaryButtonStyle,
+    val secondaryButtonStyle: APButtonStyle = APButtonStyle.APSecondaryButtonStyle,
+    val tertiaryButtonStyle: APButtonStyle = APButtonStyle.APTertiaryButtonStyle,
+    val inputStyle: APTextInputStyle = APTextInputStyle(),
+    val gatewayButtonStyle: APGatewayButtonStyle = APGatewayButtonStyle(),
+    val gatewayTitleStyle: APGatewayTitleStyle = APGatewayTitleStyle(),
+    val checkboxStyle: APCheckboxStyle = APCheckboxStyle(),
+    val switchStyle: APSwitchStyle = APSwitchStyle(),
+    val radioButtonStyle: APRadioButtonStyle = APRadioButtonStyle(),
+    val dialogStyle: APDialogStyle = APDialogStyle(),
+    val loaderStyle: APLoaderStyle = APLoaderStyle(),
+    val bankGridStyle: APBankGridStyle = APBankGridStyle(),
+    val paymentSummaryStyle: APPaymentSummaryStyle = APPaymentSummaryStyle(),
+    val dccPaymentFormStyle: APDCCPaymentFormStyle = APDCCPaymentFormStyle(),
+    val errorColor: APThemeColor = APThemeColor(APColors.errorLight, APColors.errorDark),
+    val footerIconsColor: APThemeColor = APThemeColor(APColors.greyDarkLight, APColors.greyDarkDark),
+) {
+    /** Builder class to make easier creation [AutopayUIStyle] object in Java projects. */
+    public class Builder(private var styleInstance: AutopayUIStyle = AutopayUIStyle()) {
+
+        public fun build(): AutopayUIStyle = styleInstance
+
+        public fun typography(typography: APTypography): Builder {
+            styleInstance = styleInstance.copy(typography = typography)
+            return this
+        }
+
+        public fun primaryButtonStyle(primaryButtonStyle: APButtonStyle): Builder {
+            styleInstance = styleInstance.copy(primaryButtonStyle = primaryButtonStyle)
+            return this
+        }
+
+        public fun secondaryButtonStyle(secondaryButtonStyle: APButtonStyle): Builder {
+            styleInstance = styleInstance.copy(secondaryButtonStyle = secondaryButtonStyle)
+            return this
+        }
+
+        public fun tertiaryButtonStyle(tertiaryButtonStyle: APButtonStyle): Builder {
+            styleInstance = styleInstance.copy(tertiaryButtonStyle = tertiaryButtonStyle)
+            return this
+        }
+
+        public fun inputStyle(inputStyle: APTextInputStyle): Builder {
+            styleInstance = styleInstance.copy(inputStyle = inputStyle)
+            return this
+        }
+
+        public fun gatewayButtonStyle(gatewayButtonStyle: APGatewayButtonStyle): Builder {
+            styleInstance = styleInstance.copy(gatewayButtonStyle = gatewayButtonStyle)
+            return this
+        }
+
+        public fun gatewayTitleStyle(gatewayTitleStyle: APGatewayTitleStyle): Builder {
+            styleInstance = styleInstance.copy(gatewayTitleStyle = gatewayTitleStyle)
+            return this
+        }
+
+        public fun checkboxStyle(checkboxStyle: APCheckboxStyle): Builder {
+            styleInstance = styleInstance.copy(checkboxStyle = checkboxStyle)
+            return this
+        }
+
+        public fun switchStyle(switchStyle: APSwitchStyle): Builder {
+            styleInstance = styleInstance.copy(switchStyle = switchStyle)
+            return this
+        }
+
+        public fun radioButtonStyle(radioButtonStyle: APRadioButtonStyle): Builder {
+            styleInstance = styleInstance.copy(radioButtonStyle = radioButtonStyle)
+            return this
+        }
+
+        public fun dialogStyle(dialogStyle: APDialogStyle): Builder {
+            styleInstance = styleInstance.copy(dialogStyle = dialogStyle)
+            return this
+        }
+
+        public fun loaderStyle(loaderStyle: APLoaderStyle): Builder {
+            styleInstance = styleInstance.copy(loaderStyle = loaderStyle)
+            return this
+        }
+
+        public fun bankGridStyle(bankGridStyle: APBankGridStyle): Builder {
+            styleInstance = styleInstance.copy(bankGridStyle = bankGridStyle)
+            return this
+        }
+
+        public fun paymentSummaryStyle(paymentSummaryStyle: APPaymentSummaryStyle): Builder {
+            styleInstance = styleInstance.copy(paymentSummaryStyle = paymentSummaryStyle)
+            return this
+        }
+
+        public fun dccPaymentFormStyle(dccPaymentFormStyle: APDCCPaymentFormStyle): Builder {
+            styleInstance = styleInstance.copy(dccPaymentFormStyle = dccPaymentFormStyle)
+            return this
+        }
+
+        public fun errorColor(errorColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(errorColor = errorColor)
+            return this
+        }
+
+        public fun footerIconsColor(footerIconsColor: APThemeColor): Builder {
+            styleInstance = styleInstance.copy(footerIconsColor = footerIconsColor)
+            return this
+        }
+    }
+}
+```
 
 Klasa ta zawiera zestaw klas grupujących personalizację odpowiednich widoków oraz kilka ogólnych parametrów. W przypadku ustawiania kolorów dla danych elementów korzystamy z klasy `APThemeColor` przyjmującej 2 parametry: `lightColor` - wymagany kolor dla trybu jasnego, a także `darkColor` będący kolorem używanym w trakcie korzystania z ciemnego trybu w systemie. Kolor dla trybu ciemnego jest opcjonalny, jeśli nie zostanie podany, brana jest wartość koloru dla trybu jasnego.
 
@@ -614,5 +1088,4 @@ Zwracany obiekt transakcji - `APPreTransaction` - można obsłużyć w taki sam 
 `public fun checkTransactionStatusBlocking(orderId: String): APTransactionStatus?`
 
 Metody pozwalające na sprawdzenie statusu transakcji na podstawie jej identyfikatora - `orderId`, otrzymanego przy rozpoczynaniu transakcji jako parametr `APPreTransaction.orderId`. Zwracany obiekt ma listę transakcji przypisanych do zamówienia o podanym identyfikatorze, z których każda ma swój własny status `paymentStatus` lub informacje zwrotną o błędzie w parametrze `paymentStatusDetails`.
-
 

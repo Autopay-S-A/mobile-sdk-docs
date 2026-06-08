@@ -136,7 +136,7 @@ Jeżeli chcesz użyć któregoś komponentu frameworka, w wykorzystującym go pl
 
 ## 2. Tutorial - przykładowa implementacja
 
-Poniższy tutorial opisuje sposób integracji biblioteki w wariancie z wykorzystaniem tokenu transakcyjnego uzyskanego z backendu aplikacji (Wariant 2). Zalecany jest wariant mieszany – z użyciem `WebView` i tworzeniem transakcji po stronie backendu. Aplikacja otrzymuje jedynie link do kontynuacji, który następnie jest ładowany w komponencie [WebView](/broken/pages/0e6c5bee74ee25fe1b071518585dec24a8499706#webview).
+Poniższy tutorial opisuje sposób integracji biblioteki w wariancie z wykorzystaniem tokenu transakcyjnego uzyskanego z backendu aplikacji (Wariant 2). Zalecany jest wariant mieszany – z użyciem `WebView` i tworzeniem transakcji po stronie backendu. Aplikacja otrzymuje jedynie link do kontynuacji, który następnie jest ładowany w komponencie [WebView](tutorial-przykladowa-implementacja#webview).
 
 Wykonaj poniższe czynności, aby zintegrować Twoją aplikację na Androida z **Autopay SDK**:
 
@@ -148,7 +148,7 @@ Aplikacja odpytuje swój backend o token transakcyjny (akcja dzieje się bez udz
 {% endstep %}
 
 {% step %}
-Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokena**](/broken/pages/048f1e0a97b8095e790d176a3d86e8027b4c8374)).
+Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokena**](download/System_platnosci_online_obsluga_transakcji_Dodatek_oAuth_1.0.0.pdf)).
 {% endstep %}
 
 {% step %}
@@ -199,7 +199,32 @@ Dodatkowo klasa `APConfig` posiada następujące metody aktualizujące:
 
 **UWAGA**: Token transakcyjny ma ograniczony czas ważności, tym samym przed każdym użyciem metody z klasy `Autopay` zalecane jest pobranie z backendu aplikacji nowego tokenu transakcyjnego.
 
-@[Powołanie konfiguracji](/broken/pages/cb2e15337d7200598385a5be37deb93a41b031bd)
+```Swift
+    APConfig(
+            token: String,
+            serviceId: Int,
+            acceptorId: Int,
+            applePayMerchantId: String?,
+            environment: APEnvironmentEnum,
+            contextPath: String?,
+            currencies: [String]?,
+            countryCode: String?,
+            defaultRegulationsCode: String? = nil,
+            regulationsHidden: [APGatewayPaymentGroup]? = nil
+    )
+```
+
+```Objective-C
+APConfig * config = [[APConfig alloc]
+    initWithToken:(NSString *)token
+    serviceId:(NSInteger)serviceId
+    acceptorId:(NSInteger)acceptorId
+    applePayMerchantId:(nullable NSString *)applePayMerchantId
+    environment:(APEnvironmentEnum)environment
+    contextPath:(nullable NSString *)contextPath
+    currencies:(nullable NSArray<NSString *> *)currencies
+    countryCode:(nullable NSString *)countryCode;
+```
 
 ### Przygotowanie obiektu APGatewayBaseViewModelData
 
@@ -222,7 +247,33 @@ Opcjonalne:
 * `customerFeeDidUpdatedCallback` — callback wywoływany w momencie zaktualizowania opłaty konsumenckiej.
 * `tokenExpiredCallback` - callback wywoływany gdy SDK wykryje wygaśnięty token, zwraca obiekt błędu `APError`.
 
-@[Powołanie konfiguracji widoku](/broken/pages/aa1cb090d99450eabc877d681628cf5864ae2357)
+```Swift
+    APGatewayBaseViewModelData(
+            config: APConfig,
+            amount: Double,
+            summary: String?,
+            customerEmail: String?,
+            customerPhone: String?,
+            paymentViewCallback: APPPaymentViewCallback?,
+            payTappedCallback: APPayTappedCallback?,
+            customerFeeDidUpdatedCallback: APCustomerFeeDidUpdatedCallback?,
+            tokenExpiredCallback: APTokenExpiredCallback?
+        )
+```
+
+```Objective-C
+    APGatewayBaseViewModelData(
+            config: APConfig,
+            amount: Double,
+            summary: String?,
+            customerEmail: String?,
+            customerPhone: String?,
+            paymentViewCallback: APPPaymentViewCallback?,
+            payTappedCallback: APPayTappedCallback?,
+            customerFeeDidUpdatedCallback: APCustomerFeeDidUpdatedCallback?,
+            tokenExpiredCallback: APTokenExpiredCallback?
+        )
+```
 
 **UWAGA:** Jeśli token wygaśnie, należy zablokować interfejs użytkownika, pobrać nowy token, zaktualizować go w obiekcie configuracyjnym `APConfig` metodą `setToken(token: String)`, odblokować interfejs i pozwolić użytkownikowi na kontynuowanie płatności.
 
@@ -248,7 +299,23 @@ W przypadku osadzenia dowolnego wiodku pochodzącego z SDK przy użyciu SwiftUI 
 Za wyświetlanie rozbudowanego widoku listy kanałów płatności odpowiadają klasy `APGatewayListView` oraz `APGatewayListContainerView` w zależności, czy korzystasz w swojej aplikacji z `SwiftUI` czy `UIKit`.\
 Widoki te obsługują pobieranie i wyświetlanie dostępnych kanałów płatności. Po rozwinięciu grupy kanałów, SDK wykonuje zapytanie o kwotę opłaty konsumenckiej oraz odpowiednie regulaminy. Wysokość opłaty konsumenckiej jest zależna od modelu biznesowego jaki został ustalony dla merchanta.
 
-@[APGatewayListView / APGatewayListContainerView](/broken/pages/8772a06a2831fc4a1dabcb0b0cc5b10c530326c7)
+```SwiftUI
+    APGatewayListView(
+        data: APGatewayBaseViewModelData,
+        excludedGatewayPaymentGroups: [APGatewayPaymentGroup] = [],
+        selectedPaymentGroupHandler: @escaping (APGatewayPaymentGroup?) -> Void
+    ).environmentObject(APStyleManager)
+```
+
+```UIKit
+    APGatewayListContainerView(
+        data: APGatewayBaseViewModelData,
+        styleManager: APStyleManager = .init(),
+        excludedGatewayPaymentGroups: [APGatewayPaymentGroup],
+        selectedPaymentGroupHandler: @escaping (APGatewayPaymentGroup) -> Void,
+        deselectedPaymentGroupHandler: @escaping () -> Void
+    )
+```
 
 Parametry widoku:
 
@@ -323,7 +390,19 @@ Po poprawnym wypełnieniu formularza przycisk rozpoczynania płatności zmieni s
 
 SDK zawiera własną implementację `WKWebView` w postaci klasy `WebView` oraz `WebViewContainerView` dla implementacji UIKIt
 
-@[WebView / WebContainerView](/broken/pages/72596e4da138c3b72021f9e1656c423d169798ee)
+```SwiftUI
+    WebView(
+        url: URL,
+        transactionCallback: (_ result: APResult?, _ error: APError?) -> Void
+    )
+```
+
+```UIKit
+    WebViewContainerView(
+        url: URL,
+        transactionCallback: (_ result: APResult?, _ error: APError?) -> Void
+    )
+```
 
 * `url` — URL który ma zostać otwarty w webView
 * `transactionCallback` — callback zwracający status transakcji lub błąd. Callback może zwrócić zarówno status jak i bład w postaci nil ponieważ jest to wstępna informacja o statusie transakcji. Dla potwierdzenia rezultatu należy skorzystać z metody `getTransactionStatus(orderId: String)` z klasy `Autopay`
@@ -336,13 +415,406 @@ SDK zawiera własną implementację `WKWebView` w postaci klasy `WebView` oraz `
 {% step %}
 Inicjalizacja niezbędnych danych do wyświetlania widoku w viewModelu:
 
-@[Konfiguracja danych](/broken/pages/d23877bd62390273763b6c5768d0cc8550d73734)
+```SwiftUI
+import AutopaySdk
+import Combine
+import SwiftUI
+
+@MainActor
+class PaymentContentViewModel: ObservableObject {
+    @Published var redirectUrl: URL? = nil
+    @Published var shouldShowPaymentStatus: Bool = false
+    @Published var shouldShowWebView: Bool = false
+    @Published var navigationTitle: LocalizedStringKey = "demo_list_title"
+    @Published var styleManager: APStyleManager = APStyleManager()
+
+    private var orderId: String?
+    private var error: APError?
+    private var subscriptions = Set<AnyCancellable>()
+
+    init() {
+        setupBinding()
+    }
+
+    var viewData: APGatewayBaseViewModelData {
+        return APGatewayBaseViewModelData(
+            config: SdkConfigManager.shared.config,
+            amount: Double(SdkConfigManager.shared.param(for: .price).replacingOccurrences(of: ",", with: ".")) ?? 29.00,
+            summary: SdkConfigManager.shared.param(for: .paymentSummary),
+            customerEmail: SdkConfigManager.shared.param(for: .email),
+            paymentViewCallback: { [weak self] result, error in
+                self?.transactionCompleted(result: result, error: error)
+            },
+            tokenExpiredCallback: { error in
+                // Display progress, refresh token, update it by using:
+                // config.setToken(token: "new_token_here")
+                // And let user use retry button or pay button
+            }
+        )
+    }
+
+    var paymentStatusViewModel: PaymentStatusViewModel? {
+        if let error {
+            return .init(orderId: nil, titleKey: error.message, imageName: APPaymentStatus.failure.imageName)
+        }
+        guard let orderId else {
+            return nil
+        }
+        return .init(orderId: orderId)
+    }
+
+    func transactionCompleted(result: AutopaySdk.APTransaction?, error: APError?) {
+        clearState()
+        guard let result = result else {
+            if let error {
+                self.error = error
+                shouldShowPaymentStatus = true
+            }
+            return
+        }
+        if let redirectUrl = result.redirectUrl, let url = URL(string: redirectUrl) {
+            self.redirectUrl = url
+        }
+
+        orderId = result.orderId
+
+        if redirectUrl == nil {
+            shouldShowPaymentStatus = true
+        }
+    }
+
+    func webViewCompleted(result _: APResult?, error: APError?) {
+        redirectUrl = nil
+        if let error {
+            self.error = error
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.shouldShowPaymentStatus = true
+        }
+    }
+
+    func setSelectedPaymentGroup(_ paymentGroup: APGatewayPaymentGroup?) {
+        switch paymentGroup {
+        case .applePay: navigationTitle = "demo_apple_pay_title"
+        case .bankTransfer: navigationTitle = "demo_bank_title"
+        case .blik: navigationTitle = "demo_blik_title"
+        case .card: navigationTitle = "demo_card_title"
+        case .visa: navigationTitle = "demo_visa_title"
+        default: navigationTitle = "demo_list_title"
+        }
+    }
+
+    private func setupBinding() {
+        $redirectUrl.sink { [weak self] url in
+            self?.shouldShowWebView = url != nil
+        }.store(in: &subscriptions)
+    }
+
+    func clearState() {
+        orderId = nil
+        redirectUrl = nil
+        error = nil
+    }
+}
+```
+
+```UIKit
+import Foundation
+import Combine
+import AutopaySdk
+
+@MainActor
+final class PaymentContentViewModelUIKit {
+
+    @Published var redirectUrl: URL? = nil
+    @Published var shouldShowWebView: Bool = false
+    @Published var shouldShowPaymentStatus: Bool = false
+    @Published var navigationTitle: String = "demo_list_title"
+
+    var orderId: String?
+    var error: APError?
+
+    var viewData: APGatewayBaseViewModelData {
+        APGatewayBaseViewModelData(
+            config: SdkConfigManager.shared.config,
+            amount: Double(
+                SdkConfigManager.shared.param(for: .price)
+                    .replacingOccurrences(of: ",", with: ".")
+            ) ?? 29.00,
+            summary: SdkConfigManager.shared.param(for: .paymentSummary),
+            customerEmail: SdkConfigManager.shared.param(for: .email),
+            paymentViewCallback: { [weak self] result, error in
+                self?.transactionCompleted(result: result, error: error)
+            },
+            tokenExpiredCallback: { error in
+                // Display progress, refresh token, update it by using:
+                // config.setToken(token: "new_token_here")
+                // And let user use retry button or pay button
+            }
+        )
+    }
+
+    func webViewCompleted(result: APTransaction?, error: APError?) {
+        if let error {
+            self.error = error
+        }
+        self.shouldShowWebView = false
+        self.redirectUrl = nil
+        self.shouldShowPaymentStatus = true
+    }
+
+    func transactionCompleted(result: APTransaction?, error: APError?) {
+        if let error {
+            self.error = error
+            self.shouldShowPaymentStatus = true
+            self.shouldShowWebView = false
+            self.redirectUrl = nil
+            return
+        }
+        if let redirect = result?.redirectUrl, let url = URL(string: redirect) {
+            self.redirectUrl = url
+            self.shouldShowWebView = true
+        } else {
+            self.shouldShowPaymentStatus = true
+            self.shouldShowWebView = false
+            self.redirectUrl = nil
+        }
+    }
+
+    func setSelectedPaymentGroup(_ group: APGatewayPaymentGroup?) {
+        switch group {
+        case .applePay:     navigationTitle = "demo_apple_pay_title"
+        case .bankTransfer: navigationTitle = "demo_bank_title"
+        case .blik:         navigationTitle = "demo_blik_title"
+        case .card:         navigationTitle = "demo_card_title"
+        case .visa:         navigationTitle = "demo_visa_title"
+        default:            navigationTitle = "demo_list_title"
+        }
+    }
+}
+```
 {% endstep %}
 
 {% step %}
 Konfiguracja widoku wraz z obsługą **redirectUrl** w **WebView**:
 
-@[Konfiguracja widoku](/broken/pages/2145aea8aad6a2bf24578c0b7b9f1c46eb800523)
+```SwiftUI
+import AutopaySdk
+import SwiftUI
+
+struct PaymentContentView: View {
+    @EnvironmentObject private var colorManager: ColorManager
+    @StateObject private var viewModel: PaymentContentViewModel = .init()
+
+    var body: some View {
+        VStack {
+            content
+            webViewNavigationLink
+        }
+        .background(colorManager.neutralLightColor)
+        .fullScreenCover(
+            isPresented: $viewModel.shouldShowPaymentStatus,
+            content: {
+                if let viewModel = viewModel.paymentStatusViewModel {
+                    PaymentStatusView(viewModel: viewModel, isPresented: $viewModel.shouldShowPaymentStatus) {
+                        self.viewModel.redirectUrl = nil
+                    }
+                }
+            }
+        )
+        .navigationTitle(viewModel.navigationTitle)
+    }
+
+    @ViewBuilder
+    var content: some View {
+        if #available(iOS 17.0, *) {
+            ScrollView {
+                paymentView
+            }
+            .contentMargins(.bottom, 48)
+        } else {
+            ScrollView {
+                paymentView
+            }
+            .safeAreaInset(edge: .bottom) {
+                Spacer()
+                    .frame(height: 48)
+            }
+        }
+    }
+
+    var paymentView: some View {
+        APGatewayListView(
+            data: viewModel.viewData) { viewModel.setSelectedPaymentGroup($0) }
+            .background(.white)
+            .environmentObject(viewModel.styleManager)
+    }
+
+    var webViewNavigationLink: some View {
+        NavigationLink(
+            destination: webView,
+            isActive: $viewModel.shouldShowWebView
+        ) {}
+            .accessibilityHidden(true)
+    }
+
+    var webView: some View {
+        RedirectWebView(url: viewModel.redirectUrl) { result, error in
+            viewModel.webViewCompleted(result: result, error: error)
+        }
+    }
+}
+
+struct RedirectWebView: View {
+    @State var url: URL?
+    var transactionCallback: (APResult?, APError?) -> Void
+
+    var body: some View {
+        Group {
+            if let url {
+                WebView(
+                    url: url,
+                    transactionCallback: transactionCallback
+                )
+                .navigationBarTitleDisplayMode(.inline)
+            }
+        }
+    }
+}
+
+```
+
+```UIKit
+import UIKit
+import Combine
+import AutopaySdk
+
+final class PaymentContentViewController: UIViewController {
+
+    let viewModel = PaymentContentViewModelUIKit()
+    private var gatewayContainerView: APGatewayListContainerView!
+    private var bag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+
+        gatewayContainerView = APGatewayListContainerView(
+            data: viewModel.viewData,
+            selectedPaymentGroupHandler: { [weak self] group in
+                self?.viewModel.setSelectedPaymentGroup(group)
+            },
+            deselectedPaymentGroupHandler: { [weak self] group in
+                self?.viewModel.setSelectedPaymentGroup(nil)
+            }
+        )
+
+        view.addSubview(gatewayContainerView)
+        gatewayContainerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            gatewayContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            gatewayContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            gatewayContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            gatewayContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
+        bindViewModel()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        gatewayContainerView.attach(to: self)
+    }
+
+    private func bindViewModel() {
+        viewModel.$navigationTitle
+            .receive(on: RunLoop.main)
+            .sink { [weak self] key in
+                self?.title = NSLocalizedString(key, comment: "")
+            }
+            .store(in: &bag)
+
+        viewModel.$redirectUrl
+            .combineLatest(viewModel.$shouldShowWebView)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] url, shouldShow in
+                guard let self, shouldShow, let url else { return }
+                self.openRedirect(url)
+            }
+            .store(in: &bag)
+
+        viewModel.$shouldShowPaymentStatus
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] show in
+                guard let self, show else { return }
+                self.presentPaymentStatus()
+            }
+            .store(in: &bag)
+    }
+
+    private func openRedirect(_ url: URL) {
+        let redirectVC = RedirectWebViewController(
+            url: url,
+            transactionCallback: { [weak self] result, error in
+                self?.viewModel.webViewCompleted(result: result as? APTransaction, error: error)
+            }
+        )
+        navigationController?.pushViewController(redirectVC, animated: true)
+    }
+
+    private func presentPaymentStatus() {
+        let alert = UIAlertController(
+            title: "Status płatności",
+            message: viewModel.error?.localizedDescription ?? "Zakończono",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.viewModel.clearState()
+        })
+        present(alert, animated: true)
+    }
+}
+
+public final class RedirectWebViewController: UIViewController {
+
+    private let url: URL
+    private let transactionCallback: APPWebViewCallback
+    private var webContainer: WebViewContainerView!
+
+    public init(url: URL, transactionCallback: @escaping APPWebViewCallback) {
+        self.url = url
+        self.transactionCallback = transactionCallback
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+
+        webContainer = WebViewContainerView(
+            url: url,
+            transactionCallback: transactionCallback
+        )
+
+        view.addSubview(webContainer)
+        webContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            webContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            webContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            webContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            webContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        webContainer.attach(to: self)
+    }
+}
+```
 {% endstep %}
 {% endstepper %}
 
@@ -411,7 +883,50 @@ Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**5. 
 {% endstep %}
 {% endstepper %}
 
-@[Transakcja wariant I](/broken/pages/52ba8eaeebfe3178f8861a89dd22d73c878003b7)
+```Swift
+import AutopaySdk
+import SwiftUI
+
+struct TransactionView: View {
+    ...
+    var paymentView: some View {
+        APGatewayListView(
+            data: APGatewayBaseViewModelData(
+                config: SdkConfigManager.shared.config,
+                amount: Double(SdkConfigManager.shared.param(for: .price).replacingOccurrences(of: ",", with: ".")) ?? 29.00,
+                summary: SdkConfigManager.shared.param(for: .paymentSummary),
+                customerEmail: SdkConfigManager.shared.param(for: .email),
+                payTappedCallback: { paymentGroup, gateway, transactionData in
+                    viewModel.processTransacton(paymentGroup: paymentGroup, gateway: gateway, transactionData: transactionData)
+                },
+                tokenExpiredCallback: { error in
+                    // Display progress, refresh token, update it by using:
+                    // config.setToken(token: "new_token_here")
+                    // And let user use retry button or pay button
+               }
+            )) { viewModel.setSelectedPaymentGroup($0) }
+            .background(.white)
+            .environmentObject(viewModel.styleManager)
+    }
+    ...
+}
+
+
+class TransactionViewModel: ObservableObject {
+    ...
+    func processTransaction(paymentGroup: APGatewayPaymentGroup, gateway: APGateway, transactionData: APTransactionData) {
+        Task {
+            do {
+                let data = try await Autopay(config: SdkConfigManager.shared.config).startTransaction(transactionData: transactionData)
+                transactionCompleted(result: data, error: nil)
+            } catch {
+                transactionCompleted(result: nil, error: error as? APError)
+            }
+        }
+    }
+    ...
+}
+```
 
 #### Wariant III
 
@@ -445,11 +960,66 @@ Status transakcji zostaje przesłany do backendu partnera jako ITN (punkt [**Nat
 
 Aplikacja ma również możliwość samodzielnie odpytać o status transakcji poprzez wykorzystanie metody `getTransactionStatus()` z klasy `Autopay` (Otrzymany status jest równoznaczny z ITN’ami). Do tego celu potrzebuje `orderId` procesowanej transakcji (może go otrzymać wraz z linkiem do kontynuacji transakcji od swojego backendu).
 
-@[Transakcja wariant III](/broken/pages/21a474ffd8312d18114cd2749b7a76f4b79b1afa)
+```Swift
+import AutopaySdk
+import SwiftUI
+
+struct TransactionView: View {
+    @State var url: URL?
+    @StateObject private var viewModel: TransactionViewModel = TransactionViewModel()
+
+    var body: some View {
+        Group {
+            if let url = viewModel.url {
+                WebView(url: url) { result, error in
+                    if let result {
+                        viewModel.checkStatus(result: result)
+                    } else {
+                        // handle error
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+class TransactionViewModel: ObservableObject {
+    @Published var url: URL?
+    private var orderId: String = "TestID"
+
+    func checkStatus(result: APResult?) {
+        Task {
+            do {
+                let status = try await Autopay(config: SdkConfigManager.shared.config).getTransactionStatus(orderId: orderId)
+            } catch {
+                // handle error
+            }
+        }
+    }
+}
+```
 
 ### Aktywacja karty płatniczej
 
-@[APCardActivationGatewayView / APCardActivationGatewayContainerView](/broken/pages/141f3abab2df4f508e23598169a93e8d8c6fe3c5)
+```SwiftUI
+    APCardActivationGatewayView(
+        apConfig: APConfig,
+        payTappedCallback: APPayTappedCallback? = nil,
+        paymentViewCallback: APPPaymentViewCallback? = nil,
+        tokenExpiredCallback: APTokenExpiredCallback? = nil
+    ).environmentObject(APStyleManager)
+```
+
+```UIKit
+    APCardActivationGatewayContainerView(
+        apConfig: APConfig,
+        styleManager: APStyleManager = .init(),
+        payTappedCallback: APPayTappedCallback? = nil,
+        paymentViewCallback: APPPaymentViewCallback? = nil,
+        tokenExpiredCallback: APTokenExpiredCallback? = nil
+    )
+```
 
 **SDK** udostępnia widok pozwalający na dokonanie aktywacji karty płatniczej. Występuje tutaj zarówno wersja dla SwiftUI **APCardActivationGatewayView**, jak i implementacja dla aplikacji wykorzystujących widoki UIKit **APCardActivationGatewayContainerView**.
 
@@ -466,7 +1036,11 @@ Aplikacja ma również możliwość samodzielnie odpytać o status transakcji po
 
 **SDK** udostępnia szereg metod pozwalających na samodzielną obsługę płatności z serwisem **Autopay**. Tak samo jak w przypadku korzystania z dedykowanych widoków, na początku trzeba przygotować obiekt konfiguracyjny `APConfig` a następnie przekazać go podczas inicjalizacji klasy `Autopay` lub w przypadku Obj-C `AutopayObjC`.
 
-@[Autopay / AutopayObjc](/broken/pages/96e574f1b29be2099a07423a8193022806035bea)
+```Swift
+    Autopay(
+        config: APConfig
+    )
+```
 
 Wszystkie metody dostępne są z obiektu _Autopay_.
 
@@ -580,7 +1154,38 @@ W przypadku osadzenia dowolnego wiodku pochodzącego z SDK przy użyciu SwiftUI 
 
 Przykładowa implementacja dla banków jako grupy kanałów płatności:
 
-@[APBankTransferGatewayView / APBankTransferGatewayContainerView](/broken/pages/bb1492cf85f9383e10dd95be756a71a5fcb68c75)
+```SwiftUI
+        APBankTransferGatewayView(
+            data: APGatewayBaseViewModelData(
+                config: APConfig,
+                amount: Double,
+                summary: String?,
+                customerEmail: String?,
+                customerPhone: String?,
+                paymentViewCallback: APPPaymentViewCallback?,
+                payTappedCallback: APPayTappedCallback?,
+                customerFeeDidUpdatedCallback: APCustomerFeeDidUpdatedCallback?,
+                tokenExpiredCallback: APTokenExpiredCallback?
+            )
+        ).environmentObject(APStyleManager)
+```
+
+```UIKit
+        APBankTransferGatewayContainerView(
+            data: APGatewayBaseViewModelData(
+                config: APConfig,
+                amount: Double,
+                summary: String?,
+                customerEmail: String?,
+                customerPhone: String?,
+                paymentViewCallback: APPPaymentViewCallback?,
+                payTappedCallback: APPayTappedCallback?,
+                customerFeeDidUpdatedCallback: APCustomerFeeDidUpdatedCallback?,
+                tokenExpiredCallback: APTokenExpiredCallback?
+            ),
+            styleManager: APStyleManager = .init()
+        )
+```
 
 ## 4. Personalizacja widoków
 
@@ -588,7 +1193,108 @@ Przykładowa implementacja dla banków jako grupy kanałów płatności:
 
 **SDK** umożliwa szereg globalnych personalizacji widoków, które udostępnia. Służy do tego metoda **APStyleManager** przekazywany jako `enviromentObject` w przypadku implementacji SwiftUI oraz atrybut `styleManager: APStyleManager` w inicjalizatorach w przypadku implementacji UIKit. Obiekt ten zawiera style domyślne oraz kolorystykę przedstawioną w aplikacji demonstracyjnej, tak by użytkownik mógł podmienić tylko to czego potrzebuje.
 
-@[APStyleManager](/broken/pages/afa2d19038ccfc4302d21a868637be97c107a3b1)
+```SwiftUI
+import AutopaySdk
+import SwiftUI
+
+class PaymentViewModel: ObservableObject {
+
+    lazy var styleManager: APStyleManager = {
+        let styleManager = APStyleManager()
+        styleManager.typography.labelLargeFont = .systemFont(ofSize: 12)
+        styleManager.primaryButtonStyle.containerColor = APColor(light: .blue, dark: .yellow)
+        return styleManager
+    }()
+
+    lazy var config: APGatewayBaseViewModelData = {
+        return APGatewayBaseViewModelData(
+            config: SdkConfigManager.shared.config,
+            amount: 20.00,
+            summary: "Test",
+            customerEmail: "test@email.com",
+            customerPhone: "+48555555555") { result, error in
+                // process result
+            } customerFeeDidUpdatedCallback: { customerFee in
+                // process update customerFee
+            }
+
+    }()
+}
+
+struct PaymentView: View {
+
+    @StateObject private var viewModel: PaymentViewModel = .init()
+
+    var body: some View {
+        APGatewayListView(
+            data: viewModel.config,
+            excludedGatewayPaymentGroups: [.applePay]) { group in
+                // did select group
+            }
+            .background(.white)
+            .environmentObject(viewModel.styleManager)
+    }
+}
+```
+
+```UIKit
+import AutopaySdk
+import UIKit
+
+class PaymentViewModel {
+
+    lazy var styleManager: APStyleManager = {
+        let styleManager = APStyleManager()
+        styleManager.typography.labelLargeFont = .systemFont(ofSize: 12)
+        styleManager.primaryButtonStyle.containerColor = APColor(light: .blue, dark: .yellow)
+        return styleManager
+    }()
+
+    lazy var config: APGatewayBaseViewModelData = {
+        return APGatewayBaseViewModelData(
+            config: SdkConfigManager.shared.config,
+            amount: 20.00,
+            summary: "Test",
+            customerEmail: "test@email.com",
+            customerPhone: "+48555555555") { result, error in
+                // process result
+            } customerFeeDidUpdatedCallback: { customerFee in
+                // process update customerFee
+            }
+
+    }()
+}
+
+class PaymentViewController: UIViewController {
+
+    private var viewModel: PaymentViewModel = .init()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupPaymentView()
+    }
+
+    private func setupPaymentView() {
+        let gatewayListView = APGatewayListContainerView(
+            data: viewModel.config,
+            styleManager: viewModel.styleManager,
+            excludedGatewayPaymentGroups: [.applePay]) { group in
+                // did select group
+            } deselectedPaymentGroupHandler: {
+                // did deselect group
+            }
+        view.addSubview(gatewayListView)
+        NSLayoutConstraint.activate([
+            gatewayListView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            gatewayListView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            gatewayListView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16)
+        ])
+
+        gatewayListView.attach(to: self)
+
+    }
+}
+```
 
 Klasa ta zawiera zestaw klas grupujących personalizację odpowiednich widoków oraz kilka ogólnych parametrów. W przypadku ustawiania kolorów dla danych elementów korzystamy z klasy **APColor** przyjmującą 2 parametry: `light` - wymagany kolor dla trybu jasnego, a także `dark` będący kolorem używanym w trakcie korzystania z ciemnego trybu w systemie. Kolor dla trybu ciemnego jest opcjonalny, jeśli nie zostanie podany, brana jest wartość koloru dla trybu jasnego. W przypadku styli tekstów korzystamy z klasy **APTextStyle** przyjmującej 2 parametry `font` - czcionka oraz `color` - klasa **APColor** określająca kolor tekstu.
 
@@ -709,100 +1415,395 @@ Dodatkowo jako developer możesz zmienić wartość nagłówka na płatności ty
 
 Przykład zmiany czcionek na inną wagę oraz rozmiar, wraz ze zmianą koloru czcionki
 
-@[Zmiana stylu typografii](/broken/pages/24dda175cfbc48b80e11d8634e22890ec2731819)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.typography.labelSmallFont = .systemFont(ofSize: 10, weight: .light)
+    styleManager.typography.labelMediumFont = .systemFont(ofSize: 13, weight: .light)
+    styleManager.typography.labelLargeFont = .systemFont(ofSize: 15, weight: .light)
+    styleManager.typography.labelXLargeFont = .systemFont(ofSize: 20, weight: .light)
+    styleManager.typography.labelSmallBoldFont = .systemFont(ofSize: 10, weight: .heavy)
+    styleManager.typography.defaultTextColor = APColor(light: .brown, dark: .yellow)
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.typography.labelSmallFont = .systemFont(ofSize: 10, weight: .light)
+styleManager.typography.labelMediumFont = .systemFont(ofSize: 13, weight: .light)
+styleManager.typography.labelLargeFont = .systemFont(ofSize: 15, weight: .light)
+styleManager.typography.labelXLargeFont = .systemFont(ofSize: 20, weight: .light)
+styleManager.typography.labelSmallBoldFont = .systemFont(ofSize: 10, weight: .heavy)
+styleManager.typography.defaultTextColor = [[APColor alloc] initWithLight:UIColor.brownColor dark:UIColor.yellowColor];
+```
 
 **Przycisk główny**
 
 Przykład zmiany parametrów głównego przycisku.
 
-@[Zmiana stylu przycisku głównego](/broken/pages/7982ea721f3ed0425165431fec46f50d88b520b4)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.primaryButtonStyle.containerColor = APColor(light: .orange)
+    styleManager.primaryButtonStyle.containerInactiveColor = APColor(light: .orange.opacity(0.4))
+    styleManager.primaryButtonStyle.borderColor = APColor(light: .blue)
+    styleManager.primaryButtonStyle.borderInactiveColor = APColor(light: .blue.opacity(0.4))
+    styleManager.primaryButtonStyle.borderWidth = 1
+    styleManager.primaryButtonStyle.cornerRadius = 15
+    styleManager.primaryButtonStyle.textStyle = APTextStyle(
+        font: .systemFont(ofSize: 20, weight: .heavy),
+        color: APColor(light: .gray)
+    )
+    styleManager.primaryButtonStyle.textInactiveStyle = APTextStyle(
+        font: .systemFont(ofSize: 20, weight: .heavy),
+        color: APColor(light: .gray.opacity(0.4))
+    )
+```
+
+```Objective-C
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.primaryButtonStyle.containerColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.primaryButtonStyle.containerInactiveColor = [[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]];
+styleManager.primaryButtonStyle.borderColor = [[APColor alloc] initWithLight:UIColor.blueColor];
+styleManager.primaryButtonStyle.borderInactiveColor = [[APColor alloc] initWithLight:[UIColor.blueColor colorWithAlphaComponent:0.4]];
+styleManager.primaryButtonStyle.borderWidth = 1;
+styleManager.primaryButtonStyle.cornerRadius = 15;
+styleManager.primaryButtonStyle.textStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:20 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.grayColor]];
+styleManager.primaryButtonStyle.textInactiveStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:20 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:[UIColor.grayColor colorWithAlphaComponent:0.4]]];
+```
 
 **Przycisk dodatkowy**
 
 Przykład zmiany parametrów dodatkowego przycisku.
 
-@[Zmiana stylu przycisku dodatkowego](/broken/pages/163eec5ef906430a51984dd700eb21a7bdad7bc7)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.secondaryButtonStyle.containerColor = APColor(light: .gray)
+    styleManager.secondaryButtonStyle.containerInactiveColor = APColor(light: .gray.opacity(0.4))
+    styleManager.secondaryButtonStyle.borderColor = APColor(light: .orange)
+    styleManager.secondaryButtonStyle.borderInactiveColor = APColor(light: .orange.opacity(0.4))
+    styleManager.secondaryButtonStyle.cornerRadius = 15
+    styleManager.secondaryButtonStyle.textStyle = APTextStyle(
+        font: .systemFont(ofSize: 20, weight: .heavy),
+        color: APColor(light: .orange)
+    )
+    styleManager.secondaryButtonStyle.textInactiveStyle = APTextStyle(
+        font: .systemFont(ofSize: 20, weight: .heavy),
+        color: APColor(light: .orange.opacity(0.4))
+    )
+```
+
+```Objective-C
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.secondaryButtonStyle.containerColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+styleManager.secondaryButtonStyle.containerInactiveColor = [[APColor alloc] initWithLight:[UIColor.grayColor colorWithAlphaComponent:0.4]];
+styleManager.secondaryButtonStyle.borderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.secondaryButtonStyle.borderInactiveColor = [[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]];
+styleManager.secondaryButtonStyle.cornerRadius = 15;
+styleManager.secondaryButtonStyle.textStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:20 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.orangeColor]];
+styleManager.secondaryButtonStyle.textInactiveStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:20 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]]];
+```
 
 **Przycisk pomocniczy**
 
 Przykład zmiany parametrów pomocniczego przycisku.
 
-@[Zmiana stylu przycisku pomocniczego](/broken/pages/899ae72af97d241204027b9a5045da12d979d0d9)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.tertiaryButtonStyle.containerColor = APColor(light: .gray)
+    styleManager.tertiaryButtonStyle.containerInactiveColor = APColor(light: .gray.opacity(0.4))
+    styleManager.tertiaryButtonStyle.borderColor = APColor(light: .orange)
+    styleManager.tertiaryButtonStyle.borderInactiveColor = APColor(light: .orange.opacity(0.4))
+    styleManager.tertiaryButtonStyle.cornerRadius = 15
+    styleManager.tertiaryButtonStyle.textStyle = APTextStyle(
+        font: .systemFont(ofSize: 15, weight: .light),
+        color: APColor(light: .orange)
+    )
+    styleManager.tertiaryButtonStyle.textInactiveStyle = APTextStyle(
+        font: .systemFont(ofSize: 15, weight: .light),
+        color: APColor(light: .orange.opacity(0.4))
+    )
+```
+
+```Objective-C
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.tertiaryButtonStyle.containerColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+styleManager.tertiaryButtonStyle.containerInactiveColor = [[APColor alloc] initWithLight:[UIColor.grayColor colorWithAlphaComponent:0.4]];
+styleManager.tertiaryButtonStyle.borderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.tertiaryButtonStyle.borderInactiveColor = [[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]];
+styleManager.tertiaryButtonStyle.cornerRadius = 15;
+styleManager.tertiaryButtonStyle.textStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:15 weight:UIFontWeightLight] color:[[APColor alloc] initWithLight:UIColor.orangeColor]];
+styleManager.tertiaryButtonStyle.textInactiveStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:15 weight:UIFontWeightLight] color:[[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]]];
+```
 
 **Siatka banków**
 
 Przykład zmiany parametrów siatki banków na grupie Przelewy bankowe
 
-@[Zmiana stylu siatki banków](/broken/pages/1c13cdf8425eb5b2e9c4c2a369689cf1203cddc9)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.bankGridStyle.columns = 1
+    styleManager.bankGridStyle.cellHeight = 120
+    styleManager.bankGridStyle.radius = 5
+    styleManager.bankGridStyle.checkedBorderColor = APColor(light: .orange)
+    styleManager.bankGridStyle.uncheckedBorderColor = APColor(light: .orange.opacity(0.4))
+    styleManager.bankGridStyle.backgroundColor = APColor(light: .gray)
+```
+
+```Objective-C
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.bankGridStyle.columns = 1;
+styleManager.bankGridStyle.cellHeight = 120;
+styleManager.bankGridStyle.radius = 5;
+styleManager.bankGridStyle.checkedBorderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.bankGridStyle.uncheckedBorderColor = [[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]];
+styleManager.bankGridStyle.backgroundColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+```
 
 **Checkbox**
 
 Przykład zmiany parametrów siatki banków na grupie Przelewy bankowe
 
-@[Zmiana stylu checkbox](/broken/pages/51d339bf544c07a8cf7ff468e453291871cac334)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.checkboxStyle.checkedColor = APColor(light: .orange)
+    styleManager.checkboxStyle.uncheckedColor = APColor(light: .gray)
+    styleManager.checkboxStyle.errorColor = APColor(light: .red)
+```
+
+```Objective-C
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.checkboxStyle.checkedColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.checkboxStyle.uncheckedColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+styleManager.checkboxStyle.errorColor = [[APColor alloc] initWithLight:UIColor.redColor];
+```
 
 **Formularzem przewalutowania**
 
 Przykład zmiany parametrów okna z formularzem przewalutowania przy płatności kartą
 
-@[Zmiana stylu DCC](/broken/pages/d64283b3d4dc4d7da44ba244a5c5b913b057949e)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.dccPaymentFormStyle.cellBackgroundColor = APColor(light: .gray.opacity(0.3))
+    styleManager.dccPaymentFormStyle.selectedBorderColor = APColor(light: .orange)
+    styleManager.dccPaymentFormStyle.unselectedBorderColor = APColor(light: .orange.opacity(0.4))
+    styleManager.dccPaymentFormStyle.cellRadius = 5
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.dccPaymentFormStyle.cellBackgroundColor = [[APColor alloc] initWithLight:[UIColor.grayColor colorWithAlphaComponent:0.3]];
+styleManager.dccPaymentFormStyle.selectedBorderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.dccPaymentFormStyle.unselectedBorderColor = [[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]];
+styleManager.dccPaymentFormStyle.cellRadius = 5;
+```
 
 **Okna dialogu**
 
 Przykład zmiany parametrów okna dialogu
 
-@[Zmiana stylu okna dialogu](/broken/pages/906192f6342a34692966aaa016eabfbfb8dcdad5)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.dialogStyle.dialogBackgroundColor = APColor(light: .white)
+    styleManager.dialogStyle.dialogRadius = 5
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.dialogStyle.dialogBackgroundColor = [[APColor alloc] initWithLight:UIColor.whiteColor];
+styleManager.dialogStyle.dialogRadius = 5;
+```
 
 **Loader**
 
 Przykład zmiany parametrów komponentu ładowania danych
 
-@[Zmiana stylu loadera](/broken/pages/875ccd6d1b61605fff4fde02173a1ee685297044)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.loaderStyle.size = 30
+    styleManager.loaderStyle.color = APColor(light: .orange)
+```
+
+```Sbjective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.loaderStyle.size = 30;
+styleManager.loaderStyle.color = [[APColor alloc] initWithLight:UIColor.orangeColor];
+```
 
 **Przycisków kanału płatności**
 
 Przykład zmiany parametrów przycisków kanału płatności na liście kanałów płatności
 
-@[Zmiana stylu przycisku kanału płatności](/broken/pages/4470ac9ce62ab51d15a98747bfa88a6499316d34)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.paymentMethodButtonStyle.containerColor = APColor(light: .gray)
+    styleManager.paymentMethodButtonStyle.borderColor = APColor(light: .orange)
+    styleManager.paymentMethodButtonStyle.cornerRadius = 15
+    styleManager.paymentMethodButtonStyle.iconColor = APColor(light: .orange)
+    styleManager.paymentMethodButtonStyle.textStyle = APTextStyle(
+        font: .systemFont(ofSize: 20, weight: .heavy),
+        color: APColor(light: .orange)
+    )
+```
+
+```Objective-C
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.paymentMethodButtonStyle.containerColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+styleManager.paymentMethodButtonStyle.borderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.paymentMethodButtonStyle.cornerRadius = 15;
+styleManager.paymentMethodButtonStyle.iconColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.paymentMethodButtonStyle.textStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:20 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.orangeColor]];
+```
 
 **Tytułu kanału płatności**
 
 Przykład zmiany parametrów tytułu kanału płatności po wybraniu danej formy i rozwinięciu jej szczegółów
 
-@[Zmiana stylu tytułu kanału](/broken/pages/48c4fabdf49d13536acadd18e785f3011cfbe725)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.paymentMethodTitleStyle.backgroundColor = APColor(light: .gray)
+    styleManager.paymentMethodTitleStyle.iconColor = APColor(light: .orange)
+    styleManager.paymentMethodTitleStyle.radius = 15
+    styleManager.paymentMethodTitleStyle.textStyle = APTextStyle(
+        font: .systemFont(ofSize: 20, weight: .heavy),
+        color: APColor(light: .orange)
+    )
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.paymentMethodTitleStyle.backgroundColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+styleManager.paymentMethodTitleStyle.iconColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.paymentMethodTitleStyle.radius = 15;
+styleManager.paymentMethodTitleStyle.textStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:20 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.orangeColor]];
+```
 
 **Podsumowanie płatności**
 
 Przykład zmiany parametrów komponentu z podsumowaniem płatności
 
-@[Zmiana stylu podsumowania](/broken/pages/c6787871afd5b6ffe3eb9dd0f76042afd8e378ce)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.paymentSummaryStyle.backgroundColor = APColor(light: .white)
+    styleManager.paymentSummaryStyle.borderColor = APColor(light: .orange)
+    styleManager.paymentSummaryStyle.borderWidth = 2
+    styleManager.paymentSummaryStyle.radius = 5
+    styleManager.paymentSummaryStyle.dividerColor = APColor(light: .orange)
+    styleManager.paymentSummaryStyle.dividerHeight = 2
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.paymentSummaryStyle.backgroundColor = [[APColor alloc] initWithLight:UIColor.whiteColor];
+styleManager.paymentSummaryStyle.borderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.paymentSummaryStyle.borderWidth = 2;
+styleManager.paymentSummaryStyle.radius = 5;
+styleManager.paymentSummaryStyle.dividerColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.paymentSummaryStyle.dividerHeight = 2;
+```
 
 **RadioButton**
 
 Przykład zmiany parametrów komponentu typu radio button
 
-@[Zmiana stylu RadioButton](/broken/pages/58ae53e1ba50e247c586dae0d6d3489c5d86c302)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.radioButtonStyle.checkedColor = APColor(light: .orange)
+    styleManager.radioButtonStyle.uncheckedColor = APColor(light: .gray)
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.radioButtonStyle.checkedColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.radioButtonStyle.uncheckedColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+```
 
 **Switch / Toggle**
 
 Przykład zmiany parametrów komponentu typu switch / toggle
 
-@[Zmiana stylu Switcha](/broken/pages/1a1ba2e5247d3fa85ebabc29057cc2adbd762eb2)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.switchStyle.checkedThumbColor = APColor(light: .orange)
+    styleManager.switchStyle.uncheckedThumbColor = APColor(light: .gray)
+    styleManager.switchStyle.checkedTrackColor = APColor(light: .black)
+    styleManager.switchStyle.uncheckedTrackColor = APColor(light: .gray)
+    styleManager.switchStyle.checkedBorderColor = APColor(light: .orange)
+    styleManager.switchStyle.uncheckedBorderColor = APColor(light: .orange.opacity(0.4))
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.switchStyle.checkedThumbColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.switchStyle.uncheckedThumbColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+styleManager.switchStyle.checkedTrackColor = [[APColor alloc] initWithLight:UIColor.blackColor];
+styleManager.switchStyle.uncheckedTrackColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+styleManager.switchStyle.checkedBorderColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.switchStyle.uncheckedBorderColor = [[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]];
+```
 
 **Pole tekstowe**
 
 Przykład zmiany parametrów pola tekstowego do wprowadzania danych
 
-@[Zmiana stylu pola tekstowego](/broken/pages/59d3b997e48bec3b39ea6b0bc47329874bb3716a)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.textInputStyle.inputTextStyle = APTextStyle(
+            font: .systemFont(ofSize: 20, weight: .heavy),
+            color: APColor(light: .blue)
+        )
+    styleManager.textInputStyle.labelTextStyle = APTextStyle(
+            font: .systemFont(ofSize: 15, weight: .heavy),
+            color: APColor(light: .blue)
+        )
+    styleManager.textInputStyle.errorTextStyle = APTextStyle(
+            font: .systemFont(ofSize: 12, weight: .heavy),
+            color: APColor(light: .red)
+        )
+    styleManager.textInputStyle.backgroundColor = APColor(light: .gray)
+    styleManager.textInputStyle.borderActiveColor = APColor(light: .orange)
+    styleManager.textInputStyle.borderInactiveColor = APColor(light: .orange.opacity(0.4))
+    styleManager.textInputStyle.borderErrorColor = APColor(light: .red)
+    styleManager.textInputStyle.trailingIconsColor = APColor(light: .orange)
+    styleManager.textInputStyle.radius = 5
+    styleManager.textInputStyle.spaceBetweenInputs = 25
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.textInputStyle.inputTextStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:20 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.blueColor]];
+styleManager.textInputStyle.labelTextStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:15 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.blueColor]];
+styleManager.textInputStyle.errorTextStyle = [[APTextStyle alloc] initWithFont:[UIFont systemFontOfSize:12 weight:UIFontWeightHeavy] color:[[APColor alloc] initWithLight:UIColor.redColor]];
+styleManager.textInputStyle.backgroundColor = [[APColor alloc] initWithLight:UIColor.grayColor];
+styleManager.textInputStyle.borderActiveColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.textInputStyle.borderInactiveColor = [[APColor alloc] initWithLight:[UIColor.orangeColor colorWithAlphaComponent:0.4]];
+styleManager.textInputStyle.borderErrorColor = [[APColor alloc] initWithLight:UIColor.redColor];
+styleManager.textInputStyle.trailingIconsColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+styleManager.textInputStyle.radius = 5;
+styleManager.textInputStyle.spaceBetweenInputs = 25;
+```
 
 **Stopka logo partnerów**
 
 Przykład zmiany koloru ikon stopki z logo partnerów
 
-@[Zmiana stylu stopki](/broken/pages/44b28a304a7e6fcd85b35d6c2f89c78ae5cbb5e9)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.footerIconsColor = APColor(light: .orange)
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.footerIconsColor = [[APColor alloc] initWithLight:UIColor.orangeColor];
+```
 
 **Kolor błędu**
 
 Przykład zmiany koloru ikon błędu
 
-@[Zmiana stylu błędu](/broken/pages/4b116add101fc7a0727fdbe725e821cc0001e7a0)
+```Swift
+    let styleManager = APStyleManager()
+    styleManager.errorColor = APColor(light: .black)
+```
+
+```Objective-c
+APStyleManager *styleManager = [APStyleManager new];
+styleManager.errorColor = [[APColor alloc] initWithLight:UIColor.blackColor];
+```
