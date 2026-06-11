@@ -1,4 +1,5 @@
 ---
+cover: .gitbook/assets/autopay_sdk.png
 coverY: 0
 ---
 
