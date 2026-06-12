@@ -17,8 +17,7 @@ parametrów, zostanie zwrócony (w tej samej sesji HTTP) ciąg znaków (max 500 
 który można następnie użyć do autoryzacji żądań z Aplikacji. Poniżej lista oczekiwanych\
 parametrów:
 
-<table><thead><tr><th width="114.21875">Kolejność do HASH</th><th width="133.93359375">Nazwa</th><th width="115.26171875">Typ</th><th>Opis</th></tr></thead><tbody><tr><td>1</td><td>ServiceID</td><td>string{1,10}</td><td>Identyfikator Serwisu Partnera</td></tr><tr><td>2</td><td>MessageID</td><td>string{32}</td><td>Pseudolosowy identyfikator komunikatu o długości<br>32 znaków alfanumerycznych alfabetu łacińskiego<br>(np. na bazie UID), wartość pola musi być unikalna<br>dla Serwisu Partnera</td></tr><tr><td>99</td><td>Hash</td><td>string{1,128}</td><td>Wartość funkcji skrótu dla komunikatu obliczona<br>zgodnie z opisem w rozdziale Bezpieczeństwo.<br>Weryfikacja zgodności wyliczonego skrótu<br>przez Serwis Partnera jest obowiązkowa.</td></tr></tbody></table>
+<table><thead><tr><th width="114.21875">Kolejność do HASH</th><th width="133.93359375">Nazwa</th><th width="115.26171875">Typ</th><th>Opis</th></tr></thead><tbody><tr><td>1</td><td>ServiceID</td><td>string{1,10}</td><td>Identyfikator Serwisu Partnera</td></tr><tr><td>2</td><td>MessageID</td><td>string{32}</td><td>Pseudolosowy identyfikator komunikatu o długości<br>32 znaków alfanumerycznych alfabetu łacińskiego<br>(np. na bazie UID), wartość pola musi być unikalna<br>dla Serwisu Partnera</td></tr><tr><td>99</td><td>Hash</td><td>string{1,128}</td><td>Wartość funkcji skrótu dla komunikatu obliczona<br>zgodnie z opisem w rozdziale <a href="https://developers.autopay.pl/online/dokumentacja#bezpiecze%C5%84stwo-transakcji">Bezpieczeństwo</a>.<br>Weryfikacja zgodności wyliczonego skrótu<br>przez Serwis Partnera jest obowiązkowa.</td></tr></tbody></table>
 
 Przykładowa struktura wywołania metody:\
 `https://domena_bramki/webapi/getMacAccessToken?ServiceID=&MessageID=&Hash=<Hash>`
-
