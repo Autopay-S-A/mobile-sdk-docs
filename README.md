@@ -88,3 +88,8 @@ W aplikacji mobilnej ekrany **SDK** mogą być wywoływane na dwa sposoby:
 * Dodanie karty płatniczej, z której będzie pobierana opłata cykliczna.
 
 Chcesz zobaczyć jak działa **Autopay SDK** jeszcze przed implementacją w Twojej aplikacji? Sięgnij po demonstracyjną aplikację, w której prezentujemy różne warianty implementacji **Autopay SDK**.
+
+Zapoznaj się ze szczegółową dokumentacją
+
+<table data-view="cards"><thead><tr><th></th><th data-hidden data-card-target data-type="content-ref"></th><th data-hidden data-card-cover data-type="image">Cover image</th></tr></thead><tbody><tr><td>Android</td><td><a href="android/">android</a></td><td data-object-fit="contain"><a href=".gitbook/assets/android.png">android.png</a></td></tr><tr><td>IOS</td><td><a href="ios/">ios</a></td><td data-object-fit="contain"><a href=".gitbook/assets/ios.png">ios.png</a></td></tr></tbody></table>
+
