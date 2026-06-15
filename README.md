@@ -63,7 +63,7 @@ Realizacja płatności może odbywać się w trzech wariantach:
     * Brak stylowania konkretnych kontrolek
     * Wyświetlanie paywalla Autopay w webview
 
-<figure><img src=".gitbook/assets/diagram_variant_II.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/diagram_variant_III.png" alt=""><figcaption></figcaption></figure>
 
 ### Natywnie czy WebView?
 

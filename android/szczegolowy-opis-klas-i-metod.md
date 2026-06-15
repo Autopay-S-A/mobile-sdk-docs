@@ -10,7 +10,7 @@ W zasadzie nie klasa, a obiekt zawierający metodę inicjalizacyjną projektu, k
 
 `public fun init(config: AutopayConfig)`
 
-Metoda inicjalizująca działanie **SDK**. Jej parametr config zawiera wszystkie informacje niezbędne do funkcjonowania biblioteki pozwalające na prawidłową komunikację z serwisem **Autopay**. Jej wywołanie jest **NIEZBĘDNE** do korzystania z **SDK**. Zaleca się wywołanie jej w klasie dziedziczącej po `Application`, ale można w dowolnym innym momencie przed użyciem widoków lub metod udostępnionych przez bibliotekę. Każde ponowne wywołanie tej metody inicjalizuje **SDK** na nowo, powodując wyczyszczenie danym cache’owanych na potrzeby skrócenia czasu odpowiedzi na zapytania.
+Metoda inicjalizująca działanie **SDK**. Jej parametr config zawiera wszystkie informacje niezbędne do funkcjonowania biblioteki pozwalające na prawidłową komunikację z serwisem **Autopay**. Jej wywołanie jest **NIEZBĘDNE** do korzystania z **SDK**. Zaleca się wywołanie jej w klasie dziedziczącej po `Application`, ale można w dowolnym innym momencie przed użyciem widoków lub metod udostępnionych przez bibliotekę. Każde ponowne wywołanie tej metody inicjalizuje **SDK** na nowo, powodując wyczyszczenie danych cache’owanych na potrzeby skrócenia czasu odpowiedzi na zapytania.
 
 **updateToken**
 
@@ -22,7 +22,7 @@ Służy do aktualizacji tokenu autoryzacyjnego.
 
 `public suspend fun getGatewaysList(): List<APGateway>?`
 
-Zwraca listę kanałów płatności zdefiniowanych dla skonfigurowanego serwisu. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca nulla gdy SDK nie zostało zainicjalizowane oraz SDK wypisuje w logach wyjątek.
+Zwraca listę kanałów płatności zdefiniowanych dla skonfigurowanego serwisu. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca wartość null, gdy SDK nie zostało zainicjalizowane oraz umieszcza informację o wyjątku w logach.
 
 `public fun getGatewaysListBlocking(): List<APGateway>?` - odpowiednik metody `getGatewaysList` dla JAVY.
 
@@ -30,7 +30,7 @@ Zwraca listę kanałów płatności zdefiniowanych dla skonfigurowanego serwisu.
 
 `public suspend fun getRegulationsForGateway(gatewayId: Long): List<APRegulation>?`
 
-Zwraca listę regulaminów dla wybranego kanału płatności identyfikującego się parametrem `gatewayId`. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca nulla gdy SDK nie zostało zainicjalizowane oraz SDK wypisuje w logach wyjątek.
+Zwraca listę regulaminów dla wybranego kanału płatności identyfikującego się parametrem `gatewayId`. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca wartość null, gdy SDK nie zostało zainicjalizowane oraz umieszcza informację o wyjątku w logach.
 
 `public fun getRegulationsForGatewayBlocking(gatewayId: Long): List<APRegulation>?` - odpowiednik metody `getRegulationsForGateway` dla JAVY.
 
@@ -38,7 +38,7 @@ Zwraca listę regulaminów dla wybranego kanału płatności identyfikującego s
 
 `public suspend fun getCustomerFeeForGateway(gatewayId: Long, amount: BigDecimal): APCustomerFee?`
 
-Zwraca opłatę konsumencką dla wybranego kanału płatności i zdefiniowanej kwoty transakcji. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca nulla gdy SDK nie zostało zainicjalizowane oraz SDK wypisuje w logach wyjątek.
+Zwraca opłatę konsumencką dla wybranego kanału płatności i zdefiniowanej kwoty transakcji. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca wartość null, gdy SDK nie zostało zainicjalizowane oraz umieszcza informację o wyjątku w logach.
 
 `public fun getCustomerFeeForGatewayBlocking(gatewayId: Long, amount: BigDecimal): APCustomerFee?` - odpowiednik metody `getCustomerFeeForGateway` dla JAVY.
 
@@ -46,7 +46,7 @@ Zwraca opłatę konsumencką dla wybranego kanału płatności i zdefiniowanej k
 
 `public suspend fun makeTransaction(transactionData: APTransactionData): APPreTransaction?`
 
-Rozpoczyna transakcję na podstawie zdefiniowanych danych kryjących się pod parametrem `transactionData`. Zwraca dane transakcji. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca nulla gdy SDK nie zostało zainicjalizowane oraz SDK wypisuje w logach wyjątek.
+Rozpoczyna transakcję na podstawie zdefiniowanych danych kryjących się pod parametrem `transactionData`. Zwraca dane transakcji. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca wartość null, gdy SDK nie zostało zainicjalizowane oraz umieszcza informację o wyjątku w logach.
 
 `public fun makeTransactionBlocking(transactionData: APTransactionData): APPreTransaction?` - odpowiednik metody `makeTransaction` dla JAVY.
 
@@ -54,7 +54,7 @@ Rozpoczyna transakcję na podstawie zdefiniowanych danych kryjących się pod pa
 
 `public suspend fun checkTransactionStatus(orderId: String): APTransactionStatus`
 
-Odpytuje serwis o status transakcji kryjący się pod identyfikatorem `orderId`. Zwraca dane o statusie transakcji. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca nulla gdy SDK nie zostało zainicjalizowane oraz SDK wypisuje w logach wyjątek.
+Odpytuje serwis o status transakcji kryjący się pod identyfikatorem `orderId`. Zwraca dane o statusie transakcji. Należy pamiętać o wywołaniu jej w osobnym wątku ze względu na komunikację HTTP kryjącą się pod nią. Zwraca wartość null, gdy SDK nie zostało zainicjalizowane oraz umieszcza informację o wyjątku w logach.
 
 `public fun checkTransactionStatusBlocking(orderId: String): APTransactionStatus?` - odpowiednik metody `checkTransactionStatus` dla JAVY.
 
@@ -100,7 +100,7 @@ Ustawia własne tłumaczenie nagłówka przy płatności typu Przelew bankowy.
 
 ### AutopayConfig
 
-Klasa reprezentująca pełną konfigurację **SDK**. Jej dane są wymagana podczas korzystania z widoków udostępnionych przez **SDK**, a także do prawidłowego korzystania z metod pozwalających na samodzielną komunikację z serwisem **Autopay**. Klasa posiada wewnątrz Buildera pozwalającego na łatwiejsze utworzenie obiektu konfiguracyjnego.
+Klasa reprezentująca pełną konfigurację **SDK**. Jej dane są wymagane podczas korzystania z widoków udostępnionych przez **SDK**, a także do prawidłowego korzystania z metod pozwalających na samodzielną komunikację z serwisem **Autopay**. Klasa posiada wewnątrz Buildera pozwalającego na łatwiejsze utworzenie obiektu konfiguracyjnego.
 
 ```kotlin
 public class AutopayConfig
@@ -199,8 +199,8 @@ private constructor(
 * `acceptorId` Identyfikator akceptanta.
 * `contextPath` Służy do ustawiania dedykowanego kontekstu kanału płatności pozwalającego na ostylowanie kanału pod klienta. Wartość domyślna **/payment**.
 * `currencies` Lista walut, na podstawie której będą pobierane kanały płatności. Domyślnie lista kanałów płatności pobierana jest dla waluty **PLN**. Dopuszczalne są jedynie wartości: PLN, EUR, GBP oraz USD. Waluty muszą być zgodne z konfiguracją kanału na backendzie Autopay. Płatność odbędzie się w **pierwszej** walucie znajdującej się na tej liście.
-* `regulationsFallbackLanguageCode` - kod języka regulaminów, w przypadku gdy w domyślnym języku urządzenia nie są dostępne. Kod w formacie ISO-3166-1 alfa-2 (domyślnie `PL`)
-* `merchantCountryCode` Kod kraju merchanta używany przez Google Pay. Domyślnie **PL**. Dwuznakowy kod języka w ISO 639-1.
+* `regulationsFallbackLanguageCode` - kod języka regulaminów, w przypadku gdy w domyślnym języku urządzenia nie są dostępne. Kod w formacie ISO-3166-1 alfa-2 (domyślnie `PL`).
+* `merchantCountryCode` Kod kraju merchanta używany przez Google Pay. Kod w formacie ISO 639-1 (domyślnie `PL`).
 * `googlePayMerchantId` Identyfikator merchanta używany przez Google Pay. Domyślnie **null**.
 * `enableLogging` Definiuje, czy dane mają być logowane na konsoli - informacje dla programisty. Domyślnie _false_. Dodatkowo dane takie jak numer karty, kod CVV czy token karty pozostają anonimizowane. Ze względów bezpieczeństwa w buildach produkcyjnych **ZALECA SIĘ** pozostawienie flagi z wartością false.
 
