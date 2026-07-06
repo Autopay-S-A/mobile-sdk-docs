@@ -55,7 +55,7 @@ Wynik `gatewayList` warto cache'ować i regularnie odświeżać, aby nie blokowa
 {% endstep %}
 
 {% step %}
-### Pobierz dane prawne przez `legalData`
+### Pobierz wymagane zgody formalne przez `legalData`
 
 Po wyborze kanału płatności Merchant pobiera listę regulaminów, zgód i innych obowiązków formalnych wymaganych dla danego scenariusza:
 
@@ -78,7 +78,7 @@ Dane z `legalData` należy traktować jako część procesu transakcyjnego. Jeś
 {% endstep %}
 
 {% step %}
-### Zainicjuj płatność przez `payment`
+### Zainicjuj płatność
 
 Po wybraniu kanału i zebraniu wymaganych akceptacji backend Merchanta inicjuje transakcję w Autopay:
 
@@ -86,6 +86,10 @@ Po wybraniu kanału i zebraniu wymaganych akceptacji backend Merchanta inicjuje 
 POST https://{host_bramki}/payment
 Content-Type: application/x-www-form-urlencoded
 ```
+
+{% hint style="warning" %}
+Endpoint /payment to domyślna ścieżka kontekstowa inicjacji płatności. W bardziej zaawansowanych integracjach możliwe są inne ścieżki dostosowane pod partnera (np. pod kątem brandingu)&#x20;
+{% endhint %}
 
 W żądaniu należy przekazać dane transakcji, między innymi:
 
@@ -97,7 +101,7 @@ W żądaniu należy przekazać dane transakcji, między innymi:
 * pola akceptacji wynikające z `legalData`, jeśli są wymagane,
 * `Hash` - podpis żądania zgodny z konfiguracją serwisu.
 
-Autopay zwraca odpowiedź startu transakcji. W zależności od kanału i scenariusza może ona zawierać link kontynuacji, status przyjęcia zlecenia albo informację o błędzie walidacji.
+Autopay zwraca odpowiedź na próbę startu transakcji. W zależności od kanału i scenariusza może ona zawierać link kontynuacji, status przyjęcia zlecenia albo informację o błędzie walidacji.
 
 {% hint style="info" %}
 Odpowiedź synchroniczna z `payment` nie zastępuje ITN. Logikę biznesową, taką jak wydanie towaru lub uruchomienie usługi, należy oprzeć o poprawnie zweryfikowany komunikat ITN.
