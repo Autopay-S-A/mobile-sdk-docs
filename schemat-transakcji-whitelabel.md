@@ -50,6 +50,8 @@ Na podstawie odpowiedzi Merchant buduje widok wyboru metody płatności. Kluczow
 {% hint style="info" %}
 Wynik `gatewayList` warto cache'ować i regularnie odświeżać, aby nie blokować płatnika w przypadku chwilowej niedostępności API.
 {% endhint %}
+
+<a href="https://developers.autopay.pl/online/dokumentacja#odpytywanie-o-list%C4%99-aktualnie-dost%C4%99pnych-kana%C5%82%C3%B3w-p%C5%82atno%C5%9Bci" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
 {% endstep %}
 
 {% step %}
