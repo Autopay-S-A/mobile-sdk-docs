@@ -1,4 +1,8 @@
-# whitelabel transaction
+---
+description: Podstawowy schemat transakcji Autopay w modelu whitelabel
+---
+
+# Schemat transakcji whitelabel
 
 Poniżej znajduje się podstawowy schemat pierwszej transakcji Autopay w modelu, w którym Merchant prezentuje kanały płatności po swojej stronie (tzw. whitelabel). Proces zaczyna się od pobrania aktualnej konfiguracji kanałów, następnie pobrania danych prawnych wymaganych dla wybranego kanału, zainicjowania płatności przez `payment`, a kończy się asynchronicznym odebraniem i potwierdzeniem komunikatu ITN.
 

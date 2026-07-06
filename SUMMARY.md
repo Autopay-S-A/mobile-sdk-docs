@@ -10,4 +10,4 @@
   * [Migracja z poprzednich wersji](ios/migracja.md)
   * [Demo App (IOS)](https://github.com/Autopay-S-A/autopay-sdk-pay-ios)
 * [Skład wziąć token?](token.md)
-* [whitelabel transaction](whitelabel-transaction.md)
+* [Schemat transakcji whitelabel](schemat-transakcji-whitelabel.md)

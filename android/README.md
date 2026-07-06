@@ -42,7 +42,7 @@ Aby zapewnić poprawne wyświetlanie regulaminów, powinno się ustawić ich dom
 
 ## 2. Tutorial - przykładowa implementacja
 
-Poniższy tutorial opisuje sposób integracji biblioteki w wariancie z wykorzystaniem tokenu transakcyjnego uzyskanego z backendu aplikacji (Wariant 2). Zalecany jest wariant mieszany – z użyciem `WebView` i tworzeniem transakcji po stronie backendu. Aplikacja otrzymuje jedynie link do kontynuacji, który następnie jest ładowany w komponencie [APWebView za pomocą metody loadUrl](tutorial-przykladowa-implementacja/#apwebview).
+Poniższy tutorial opisuje sposób integracji biblioteki w wariancie z wykorzystaniem tokenu transakcyjnego uzyskanego z backendu aplikacji (Wariant 2). Zalecany jest wariant mieszany – z użyciem `WebView` i tworzeniem transakcji po stronie backendu. Aplikacja otrzymuje jedynie link do kontynuacji, który następnie jest ładowany w komponencie [APWebView za pomocą metody loadUrl](https://github.com/Autopay-S-A/mobile-sdk-docs/blob/develop/android/tutorial-przykladowa-implementacja/README.md#apwebview).
 
 Wykonaj poniższe czynności, aby zintegrować Twoją aplikację na Androida z **Autopay SDK**:
 
@@ -54,7 +54,7 @@ Aplikacja odpytuje swój backend o token transakcyjny (akcja dzieje się bez udz
 {% endstep %}
 
 {% step %}
-Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokenu**](download/System_platnosci_online_obsluga_transakcji_Dodatek_oAuth_1.0.0.pdf)).
+Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokenu**](https://github.com/Autopay-S-A/mobile-sdk-docs/blob/develop/android/download/System_platnosci_online_obsluga_transakcji_Dodatek_oAuth_1.0.0.pdf)).
 {% endstep %}
 
 {% step %}
@@ -530,7 +530,7 @@ Aplikacja odpytuje swój backend o token transakcyjny (akcja dzieje się bez udz
 {% endstep %}
 
 {% step %}
-Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokena**](download/System_platnosci_online_obsluga_transakcji_Dodatek_oAuth_1.0.0.pdf)).
+Backend aplikacji odpytuje backend Autopay o token transakcyjny (opis w dokumencie [**Specyfikacja integracji Serwisu Partnera z Systemem Płatności Online Autopay w zakresie obsługi transakcji – Usługa pobrania tymczasowego Tokena**](https://github.com/Autopay-S-A/mobile-sdk-docs/blob/develop/android/download/System_platnosci_online_obsluga_transakcji_Dodatek_oAuth_1.0.0.pdf)).
 {% endstep %}
 
 {% step %}
