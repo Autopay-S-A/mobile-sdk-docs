@@ -73,6 +73,8 @@ Odpowiedź wskazuje, jakie treści należy pokazać klientowi i które identyfik
 {% hint style="warning" %}
 Dane z `legalData` należy traktować jako część procesu transakcyjnego. Jeśli dla wybranego kanału wymagane są regulaminy lub zgody, ich identyfikatory powinny trafić do późniejszego wywołania `payment`.
 {% endhint %}
+
+<a href="https://developers.autopay.pl/online/dokumentacja#odpytywanie-o-list%C4%99-aktualnie-dost%C4%99pnych-zg%C3%B3d-formalnych" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
 {% endstep %}
 
 {% step %}
@@ -100,6 +102,8 @@ Autopay zwraca odpowiedź startu transakcji. W zależności od kanału i scenari
 {% hint style="info" %}
 Odpowiedź synchroniczna z `payment` nie zastępuje ITN. Logikę biznesową, taką jak wydanie towaru lub uruchomienie usługi, należy oprzeć o poprawnie zweryfikowany komunikat ITN.
 {% endhint %}
+
+<a href="https://developers.autopay.pl/online/dokumentacja#rozpocz%C4%99cie-transakcji" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
 {% endstep %}
 
 {% step %}
