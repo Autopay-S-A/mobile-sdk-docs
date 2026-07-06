@@ -109,6 +109,8 @@ Odpowiedź synchroniczna z `payment` nie zastępuje ITN. Logikę biznesową, tak
 {% step %}
 ### Odbierz i potwierdź ITN
 
+
+
 Po zmianie statusu transakcji Autopay wysyła do backendu Merchanta asynchroniczny komunikat ITN na skonfigurowany adres powiadomień.
 
 Merchant powinien:
@@ -138,5 +140,8 @@ Przykładowa odpowiedź potwierdzająca odebranie ITN:
 {% hint style="warning" %}
 Jeśli Autopay nie otrzyma poprawnej odpowiedzi na ITN, będzie ponawiać wysyłkę powiadomienia. Obsługa ITN powinna być idempotentna.
 {% endhint %}
+
+<a href="https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-(itn)" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
 {% endstep %}
 {% endstepper %}
+
