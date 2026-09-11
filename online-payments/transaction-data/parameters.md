@@ -1,0 +1,25 @@
+# Parametry transakcji
+
+<!-- TODO MIG-032: Źródło: README-2.md:415,444–450,1546. Problem: CustomerEmail jest wymagany w tabeli, lecz pominięty w liście i przykładzie startu. Opisy unikalności OrderID różnią się między startem i przedtransakcją. Wymagana decyzja/materiał: Potwierdzić wymagalność CustomerEmail i reguły ponawiania OrderID; zachowano oba warianty. -->
+
+> TODO MIG-032: CustomerEmail jest wymagany w tabeli, lecz pominięty w liście i przykładzie startu. Opisy unikalności OrderID różnią się między startem i przedtransakcją. Potwierdzić wymagalność CustomerEmail i reguły ponawiania OrderID; zachowano oba warianty.
+
+## Lista parametrów rozpoczęcia transakcji
+
+**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich
+numeracją.
+
+| kolejność Hash | nazwa | wymagany | typ | opis |
+| --- | --- | --- | --- | --- |
+| 1 | ServiceID | TAK | string{1,10} | Identyfikator Serwisu Partnera, nadawany w trakcie rejestracji usługi jednoznacznie identyfikuje Serwis Partnera w Systemie płatności online. Dopuszczalne są cyfry. |
+| 2 | OrderID | TAK | string{1,32} | Identyfikator transakcji o długości do 32 znaków alfanumerycznych alfabetu łacińskiego. Wartość pola musi być unikalna dla Serwisu Partnera. Dopuszczalne alfanumeryczne znaki alfabetu łacińskiego oraz znaki z zakresu: -\_ |
+| 3 | Amount | TAK | amount | Kwota transakcji. Jako separator dziesiętny używana jest kropka - \'.\' Format: 0.00; maksymalna długość: 14 cyfr przed kropką i 2 po kropce. _**UWAGA:** Dopuszczalna wartość pojedynczej Transakcji w Systemie produkcyjnym to odpowiednio:</br> <ul><li>*dla PBL* – min. 0.01 PLN, max. 100000.00 PLN (lub do wysokości ustalonej przez Bank wydający instrument płatniczy);</li> <li>*dla Kart płatniczych* – min. 0.10 PLN, max. 100000.00 PLN (lub do wysokości indywidualnego limitu pojedynczej transakcji w Banku wydawcy Karty);</li> <li> *dla Szybkich przelewów* – min. 0.01 PLN, max. 100000.00 PLN (lub do wysokości indywidualnego limitu pojedynczej transakcji w Banku dla przelewu wewnątrzbankowego);</li> <li>*dla BLIK* – min. 0.01 PLN, max. 50000.00 PLN (lub do wysokości indywidualnego limitu pojedynczej transakcji w Banku dla przelewu wewnątrzbankowego);</li> <li> *dla OTP* – min. 100.00 PLN, max. 2000.00 PLN;</li> <li> *dla Alior Rat* – min. 50.00 PLN, max. 7750.00 PLN_</li> </ul> |
+| 4 | Description | NIE | string{1,79} | Tytuł transakcji (wpłaty); na początku tytułu przelewu umieszczane są identyfikatory transakcji nadawane przez System płatności online, do tego doklejana jest wartość tego parametru. W niektórych przypadkach, niezależnych od AP tytuł przelewu może zostać dodatkowo zmodyfikowany przez Bank, w którym nastąpiła wpłata dokonana przez klienta. Wartość parametru dopuszcza alfanumeryczne znaki alfabetu łacińskiego oraz znaki z zakresu: `.` `:` `-` `,` `spacja`. |
+| 5 | GatewayID | NIE | integer{1,5} | Identyfikator Kanału Płatności, za pomocą, którego Klient zamierza uregulować płatność. Ten parametr odpowiada w szczególności za model prezentowania Kanałów Płatności: <ul> <li>\- na stronie AP – wartość parametru „0";</li> <li> \- w Serwisie Partnera – wartość parametru odpowiada wybranemu przez  Klienta Kanałowi Płatności np. GatewayID=3.</li> </ul> Wszystkie Kanały Płatności do samodzielnego osadzenia w Serwisie udostępniane są Partnerowi w ramach usługi **gatewayList**. |
+| 6 | Currency | NIE | string{1,3} | Waluta transakcji; domyślną walutą jest PLN (użycie innej waluty musi być uzgodnione w trakcie integracji). W ramach **ServiceID** obsługiwana jest jedna waluta. Dopuszczalne jedynie wartości: PLN, EUR, GBP oraz USD. |
+| 7 | CustomerEmail | TAK | string{3,255} | Adres email Klienta. |
+| 19 | ValidityTime | NIE | string{1,19} | Moment upłynięcia ważności transakcji; po jego przekroczeniu link przestaje być aktywny, a wszelkie wpłaty są zwracane do nadawcy przelewu; przykładowa wartość: 2021-10-31 07:54:50; w przypadku braku parametru ustawiana jest wartość domyślna 6 dni. <br> Maksymalna ważność transakcji to 31 dni (w przypadku ustawienia wartości parametru dalej, niż 31 dni do przodu, czas ważności zostanie odpowiednio skrócony). <br> Np. transakcja wystartowana w chwili 2020-05-01 08:00:00, z parametrem ValidityTime = 2021-05-01 08:00:00, otrzyma ważność do 2020-06-01 08:00:00.(Czas w CET) |
+| 34 | LinkValidityTime | NIE | string{1,19} | Moment upłynięcia ważności linku; po jego przekroczeniu link przestaje być aktywny, nie wpływa to jednak na czas oczekiwania na wpłatę; przykładowa wartość: 2014-10-30 07:54:50; proszę zwrócić uwagę na to, aby do czasu ważności linku, dostosowany był czas ważności transakcji (być może zajdzie potrzeba podania również parametru **ValidityTime**, aby wydłużyć jej standardową ważność). |
+| nd. | Hash | TAK | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../security/hashing.md#przykładowe-obliczenia-wartości-funkcji-skrótu-podczas-rozpoczęcia-transakcji). |
+
+[Przebieg i przykłady rozpoczęcia transakcji](../payment-flow/start-transaction.md) · [Dodatkowe parametry](additional-parameters.md)
