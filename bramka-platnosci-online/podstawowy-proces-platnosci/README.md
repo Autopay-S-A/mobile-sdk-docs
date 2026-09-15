@@ -1,0 +1,2 @@
+# Podstawowy proces płatności
+

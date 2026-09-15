@@ -1,4 +1,4 @@
-# Nawigacja GitBooka
+# Table of contents
 
 * [Dokumentacja Autopay](README.md)
 
@@ -11,15 +11,15 @@
 ## Bramka Płatności Online
 
 * [Bramka Płatności Online](online-payments/README.md)
-* Pierwsze kroki
+* [Pierwsze kroki](bramka-platnosci-online/pierwsze-kroki/README.md)
   * [Jak działa płatność](online-payments/getting-started/payment-overview.md)
   * [Dane potrzebne do integracji](online-payments/getting-started/integration-credentials.md)
   * [Uruchomienie i testy](online-payments/getting-started/testing-and-go-live.md)
-* Podstawowy proces płatności
+* [Podstawowy proces płatności](bramka-platnosci-online/podstawowy-proces-platnosci/README.md)
   * [Rozpoczęcie transakcji](online-payments/payment-flow/start-transaction.md)
   * [Powrót klienta do serwisu](online-payments/payment-flow/customer-redirect.md)
   * [Status transakcji i ITN](online-payments/payment-flow/transaction-status-and-itn.md)
-* Metody płatności
+* [Metody płatności](bramka-platnosci-online/metody-platnosci/README.md)
   * [Dostępne metody płatności](online-payments/payment-methods/README.md)
   * [BLIK](online-payments/payment-methods/blik.md)
   * [Karty płatnicze](online-payments/payment-methods/cards.md)
@@ -27,26 +27,26 @@
   * [Google Pay](online-payments/payment-methods/google-pay.md)
   * [Apple Pay](online-payments/payment-methods/apple-pay.md)
   * [Visa Mobile](online-payments/payment-methods/visa-mobile.md)
-* Zaawansowane scenariusze płatności
+* [Zaawansowane scenariusze płatności](bramka-platnosci-online/zaawansowane-scenariusze-platnosci/README.md)
   * [Przedtransakcja](online-payments/advanced-flows/pretransaction.md)
   * [Płatności automatyczne](online-payments/advanced-flows/recurring-payments.md)
   * [Preautoryzacja kartowa](online-payments/advanced-flows/card-preauthorization.md)
   * [Płatność z potwierdzeniem merchanta](online-payments/advanced-flows/merchant-confirmation.md)
   * [BLIK OneClick](online-payments/advanced-flows/blik-oneclick.md)
-* Dane transakcji
+* [Dane transakcji](bramka-platnosci-online/dane-transakcji/README.md)
   * [Parametry transakcji](online-payments/transaction-data/parameters.md)
   * [Koszyk produktów](online-payments/transaction-data/product-basket.md)
   * [Dodatkowe parametry](online-payments/transaction-data/additional-parameters.md)
   * [Statusy transakcji](online-payments/transaction-data/statuses.md)
-* Powiadomienia
+* [Powiadomienia](bramka-platnosci-online/powiadomienia/README.md)
   * [ITN – status transakcji](online-payments/notifications/itn.md)
   * [IPN – status produktu](online-payments/notifications/ipn.md)
   * [ISTN – status rozliczenia](online-payments/notifications/istn.md)
   * [RPAN i RPDN – płatności automatyczne](online-payments/notifications/rpan-rpdn.md)
   * [Ponawianie powiadomień](online-payments/notifications/retry-policy.md)
-* Bezpieczeństwo
+* [Bezpieczeństwo](bramka-platnosci-online/bezpieczenstwo/README.md)
   * [Hash i uwierzytelnianie komunikatów](online-payments/security/hashing.md)
-* Pozostałe operacje API
+* [Pozostałe operacje API](bramka-platnosci-online/pozostale-operacje-api/README.md)
   * [Lista metod płatności – gatewayList](online-payments/api-operations/gateway-list.md)
   * [Regulaminy i zgody](online-payments/api-operations/legal-consents.md)
   * [Status transakcji](online-payments/api-operations/transaction-status.md)
