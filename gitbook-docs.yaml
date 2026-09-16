@@ -1,6 +1,6 @@
 $schema: https://api.gitbook.com/gitbook-docs.yaml
 site:
-  title: Dokumentacja Autopay
+  title: Sandbox Dokumentacja Autopay
   structure:
     - type: space
       key: space-docs
