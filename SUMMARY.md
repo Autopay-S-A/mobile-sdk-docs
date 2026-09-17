@@ -10,7 +10,6 @@
 
 ## Bramka Płatności Online
 
-* [Bramka Płatności Online](bramka-platnosci-online/online-payments.md)
 * [Pierwsze kroki](bramka-platnosci-online/pierwsze-kroki/README.md)
   * [Jak działa płatność](bramka-platnosci-online/pierwsze-kroki/payment-overview.md)
   * [Dane potrzebne do integracji](bramka-platnosci-online/pierwsze-kroki/integration-credentials.md)
@@ -19,6 +18,12 @@
   * [Rozpoczęcie transakcji](bramka-platnosci-online/podstawowy-proces-platnosci/start-transaction.md)
   * [Powrót klienta do serwisu](bramka-platnosci-online/podstawowy-proces-platnosci/customer-redirect.md)
   * [Status transakcji i ITN](bramka-platnosci-online/podstawowy-proces-platnosci/transaction-status-and-itn.md)
+* [Zaawansowana integracja](integracja-whitelabel/whitelabel.md)
+  * [Wybór metody płatności po stronie merchanta](integracja-whitelabel/payment-method-selection.md)
+  * [Jak działa Widget Autopay](integracja-whitelabel/widget/README.md)
+    * [Widget kartowy](integracja-whitelabel/widget/cards.md)
+    * [Widget Visa Mobile](integracja-whitelabel/widget/visa-mobile.md)
+  * [Wymagania integracyjne i bezpieczeństwo](integracja-whitelabel/requirements.md)
 * [Metody płatności](bramka-platnosci-online/metody-platnosci/README.md)
   * [Dostępne metody płatności](bramka-platnosci-online/metody-platnosci/payment-methods.md)
   * [BLIK](bramka-platnosci-online/metody-platnosci/blik.md)
@@ -54,15 +59,6 @@
   * [Saldo](bramka-platnosci-online/pozostale-operacje-api/balance.md)
   * [Wypłaty](bramka-platnosci-online/pozostale-operacje-api/payouts.md)
   * [Zwroty](bramka-platnosci-online/pozostale-operacje-api/refunds.md)
-
-## Integracja WhiteLabel
-
-* [O integracji WhiteLabel](integracja-whitelabel/whitelabel.md)
-* [Wybór metody płatności po stronie merchanta](integracja-whitelabel/payment-method-selection.md)
-* [Jak działa Widget Autopay](integracja-whitelabel/widget/README.md)
-  * [Widget kartowy](integracja-whitelabel/widget/cards.md)
-  * [Widget Visa Mobile](integracja-whitelabel/widget/visa-mobile.md)
-* [Wymagania integracyjne i bezpieczeństwo](integracja-whitelabel/requirements.md)
 
 ## SDK mobilne
 
