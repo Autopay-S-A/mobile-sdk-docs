@@ -1,8 +1,8 @@
-name: Sync WooCommerce documentation
+name: Sync Magento documentation
 
 on:
   schedule:
-    - cron: '17 4 * * *'
+    - cron: '37 4 * * *'
   workflow_dispatch:
 
 permissions:
@@ -29,24 +29,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          upstream_readme="$RUNNER_TEMP/woocommerce-README.md"
+          upstream_readme="$RUNNER_TEMP/magento-README.md"
           curl --fail --show-error --silent --location \
             --retry 3 --connect-timeout 15 --max-time 120 \
-            https://raw.githubusercontent.com/bluepayment-plugin/autopay-payments/main/README.md \
+            https://raw.githubusercontent.com/bluepayment-plugin/magento-2.x-plugin/master/README.md \
             --output "$upstream_readme"
-          python3 scripts/sync_woocommerce_readme.py "$upstream_readme"
+          python3 scripts/sync_magento_readme.py "$upstream_readme"
 
       - name: Commit changed documentation
         shell: bash
         run: |
           set -euo pipefail
-          git add -- wtyczki-e-commerce/woocommerce.md
+          git add -- wtyczki-e-commerce/magento.md
           if git diff --cached --quiet; then
-            echo "No WooCommerce documentation changes."
+            echo "No Magento documentation changes."
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'docs: sync WooCommerce README from upstream'
+          git commit -m 'docs: sync Magento README from upstream'
           # A concurrent update or branch protection fails safely; never force-push.
           git push origin "HEAD:$TARGET_BRANCH"
