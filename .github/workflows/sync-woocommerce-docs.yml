@@ -1,0 +1,52 @@
+name: Sync WooCommerce documentation
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-woocommerce-docs
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Always update the default branch, including manually triggered runs.
+    env:
+      TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - name: Check out documentation
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Download and import the upstream README
+        shell: bash
+        run: |
+          set -euo pipefail
+          upstream_readme="$RUNNER_TEMP/woocommerce-README.md"
+          curl --fail --show-error --silent --location \
+            --retry 3 --connect-timeout 15 --max-time 120 \
+            https://raw.githubusercontent.com/bluepayment-plugin/autopay-payments/main/README.md \
+            --output "$upstream_readme"
+          python3 scripts/sync_woocommerce_readme.py "$upstream_readme"
+
+      - name: Commit changed documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- wtyczki-e-commerce/woocommerce.md
+          if git diff --cached --quiet; then
+            echo "No WooCommerce documentation changes."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: sync WooCommerce README from upstream'
+          # A concurrent update or branch protection fails safely; never force-push.
+          git push origin "HEAD:$TARGET_BRANCH"
