@@ -1,6 +1,6 @@
 # PrestaShop
 
-
+<figure><img src="../.gitbook/assets/prestashop.png" alt="" width="120"><figcaption></figcaption></figure>
 
 ## O wtyczce
 
