@@ -1,6 +1,6 @@
 # Magento
 
-
+<figure><img src="../.gitbook/assets/magento.png" alt="" width="120"><figcaption></figcaption></figure>
 
 ## O wtyczce
 
