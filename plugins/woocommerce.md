@@ -1,6 +1,6 @@
 # WooCommerce
 
-
+<figure><img src="../.gitbook/assets/woocommerce.png" alt="" width="120"><figcaption></figcaption></figure>
 
 ## O wtyczce
 
