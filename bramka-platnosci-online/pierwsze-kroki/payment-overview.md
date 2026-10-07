@@ -6,7 +6,7 @@ W Serwisie Partnera, po skompletowaniu zamówienia, Klientowi prezentowana jest 
 
 a) dedykowanej strony Systemu przygotowanej przez AP, na której Klientowi prezentowana jest lista dostępnych Kanałów Płatności oraz podsumowanie zarejestrowanej transakcji (patrz [Model Paywall](payment-overview.md#model-paywall)) lub
 
-b) bezpośrednio strony Kanału Płatności (Banku, BLIK lub do płatności Kartą) - (patrz [Model WhiteLabel](../../integracja-whitelabel/payment-method-selection.md#model-whitelabel)).
+b) bezpośrednio strony Kanału Płatności (Banku, BLIK lub do płatności Kartą) - (patrz [Model WhiteLabel](../whitelabel/payment-method-selection.md#model-whitelabel)).
 
 Po stronie Systemu następuje walidacja przekazanych parametrów i zapisanie transakcji z ustalonym okresem ważności. Jeśli w momencie walidacji, czas ważności linku będzie już przekroczony, Klientowi zostanie wyświetlony odpowiedni komunikat (weryfikacja ważności transakcji następuje także przy zmianie statusu płatności). Po pozytywnej weryfikacji parametrów transakcji (oraz po wybraniu Kanału Płatności), Klient dokonuje autoryzacji transakcji. W jej tytule, oprócz nadawanych przez System identyfikatorów, może być także umieszczany stały opis, ustalony wcześniej pomiędzy AP a Partnerem lub dynamiczna wartość przekazywana przez Partnera przy starcie transakcji.
 

@@ -22,6 +22,6 @@ Zaimplementuj [podstawowy proces płatności](../podstawowy-proces-platnosci/).
 {% step %}
 ### Rozszerz
 
-Rozszerz go o [zaawansowaną integrację](../../integracja-whitelabel/whitelabel.md), jeśli chcesz przenieść wybór metody płatności i obsługę widgetów do swojego serwisu.
+Rozszerz go o [zaawansowaną integrację](../whitelabel/), jeśli chcesz przenieść wybór metody płatności i obsługę widgetów do swojego serwisu.
 {% endstep %}
 {% endstepper %}
