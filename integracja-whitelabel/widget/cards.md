@@ -1,49 +1,32 @@
 # Widget kartowy
 
-<!-- TODO MIG-039: Źródło: README-2.md:2259–2260. Problem: Nie dostarczono odrębnego załącznika z kartami i scenariuszami testowymi. Wymagana decyzja/materiał: Dostarczyć załącznik testowy widgetu kartowego. -->
-
 > TODO MIG-039: Nie dostarczono odrębnego załącznika z kartami i scenariuszami testowymi. Dostarczyć załącznik testowy widgetu kartowego.
 
 ## Widget Kartowy - Przykład implementacji na stronie partnera
 
-**WAŻNE!** [Poniższy przykład kodu HTML](#omówienie-przykładowego-kodu-html-js-widget-kartowy-i-visamobile) powstał gównie w celach poglądowych.
-Aby go faktycznie uruchomić na swoim lokalnym komputerze, poniższy plik HTML musi zostać umieszczony pod jakąś lokalną domeną (dowolną, może być `test.local`).
-Ten HTML nie może być odpalany w przeglądarce w formie lokalnego pliku ponieważ eventyJS wymieniane pomiędzy IFRAME a stroną są weryfikowane pod kątem zgodności domeny (a wieć jakaś domena musi być obecna).
-
+**WAŻNE!** [Poniższy przykład kodu HTML](cards.md#omówienie-przykładowego-kodu-html-js-widget-kartowy-i-visamobile) powstał gównie w celach poglądowych. Aby go faktycznie uruchomić na swoim lokalnym komputerze, poniższy plik HTML musi zostać umieszczony pod jakąś lokalną domeną (dowolną, może być `test.local`). Ten HTML nie może być odpalany w przeglądarce w formie lokalnego pliku ponieważ eventyJS wymieniane pomiędzy IFRAME a stroną są weryfikowane pod kątem zgodności domeny (a wieć jakaś domena musi być obecna).
 
 Poniższa strona ma za zadanie imitować Front Merchanta, pokazując jakie elementy należy zaimplementować aby dokonać integracji z Widget'em Autopay.
 
 W przeglądarce poniższa, przykładowa strona składa się z trzech sekcji:
-- sekcja górna zawiera możliwość wyboru konkretnych kanałów płatności
-- sekcja środkowa zawiera miejsce, w którym osadzony będzie HTML IFRAME, do którego, w razie potrzeby, umieszczany będzie adres widget'u (visamobile lub standardowego kartowego wedle potrzeby)
-- sekcja dolna zawiera (domyślnie nieaktywny) przycisk `PayButon` spięty z SDK JS sterujący uruchomieniem procesu w widget'cie  (w tym przykładzie przycisk uaktywnia się dopiero, gdy otrzymuje komunikat o poprawnej walidacji i uzyskaniu kompletu danych potrzebnych do wystartowania procesu)
 
-<!-- TODO MIG-051: Źródło: README-2.md: images/widget-empty-example-page-start.png. Problem: Brak obrazu/diagramu: images/widget-empty-example-page-start.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
+* sekcja górna zawiera możliwość wyboru konkretnych kanałów płatności
+* sekcja środkowa zawiera miejsce, w którym osadzony będzie HTML IFRAME, do którego, w razie potrzeby, umieszczany będzie adres widget'u (visamobile lub standardowego kartowego wedle potrzeby)
+* sekcja dolna zawiera (domyślnie nieaktywny) przycisk `PayButon` spięty z SDK JS sterujący uruchomieniem procesu w widget'cie (w tym przykładzie przycisk uaktywnia się dopiero, gdy otrzymuje komunikat o poprawnej walidacji i uzyskaniu kompletu danych potrzebnych do wystartowania procesu)
 
 > TODO MIG-051: Brak obrazu/diagramu: images/widget-empty-example-page-start.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
 
-
-Kiedy zostanie wybrany kanał kartowy (payway: 1500 lub 1503), wczyta się dedykowany widok formatki kartowej (oparty o HTML IFRAME).
-W momencie wprowadzenia w widgecie pełnych, prawidłowych danych kartowych,  (dzięki eventom walidacyjnym) nastąpi uaktywnienie się przycisku "Zapłać" na Froncie Merchanta.
-
-<!-- TODO MIG-052: Źródło: README-2.md: images/widget-card-example-page-loaded.png. Problem: Brak obrazu/diagramu: images/widget-card-example-page-loaded.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
+Kiedy zostanie wybrany kanał kartowy (payway: 1500 lub 1503), wczyta się dedykowany widok formatki kartowej (oparty o HTML IFRAME). W momencie wprowadzenia w widgecie pełnych, prawidłowych danych kartowych, (dzięki eventom walidacyjnym) nastąpi uaktywnienie się przycisku "Zapłać" na Froncie Merchanta.
 
 > TODO MIG-052: Brak obrazu/diagramu: images/widget-card-example-page-loaded.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
 
-
-
 **Podpowiedź:** Jak widać w przykładzie w modelu WhiteLabel jest również możliwa obsługa kanału VisaMobile. Implementacja/osadzenie są analogiczne do widgeta kartowego dlatego poniższy kod zawiera już oba przypadki.
-
 
 **Walidacja i skompletowanie danych**
 
 W momencie wpisywania danych karty Autopay Widget JS SDK otrzymuje od widget'u event'y `VALIDITY_STATUS` z wartoscią `valid: false`
 
-<!-- TODO MIG-053: Źródło: README-2.md: images/widget-card-example-page-invalid.png. Problem: Brak obrazu/diagramu: images/widget-card-example-page-invalid.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
-
 > TODO MIG-053: Brak obrazu/diagramu: images/widget-card-example-page-invalid.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
-
-
 
 Gdy uzyskamy pełne dane karty, ostatnim event'em będzie `VALIDITY_STATUS` z wartością `valid: true`
 
@@ -53,90 +36,59 @@ Gdy uzyskamy pełne dane karty, ostatnim event'em będzie `VALIDITY_STATUS` z wa
 
 O ten event można oprzeć uaktywnianie przycisku `PayButton`
 
-<!-- TODO MIG-054: Źródło: README-2.md: images/widget-card-example-page-ready.png. Problem: Brak obrazu/diagramu: images/widget-card-example-page-ready.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
-
 > TODO MIG-054: Brak obrazu/diagramu: images/widget-card-example-page-ready.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
 
-
-
 **Podpowiedź:** Na środowisku testowym płatności kartowe są oparte o mock 3ds i mock autoryzacyjny. Poszczególnym scenariuszom odpowiadają dedykowane numery kart testowych. Pełna lista przypadków testowych znajduje się w oddzielnym załączniku.
-
 
 **Ekran DCC**
 
 W przypadku gdy dany scenariusz i karta spełnia warunki uzyskania oferty DCC pojawi dodatkowy ekran z propozycją przewalutowania dla Cardholdera
 
-<!-- TODO MIG-055: Źródło: README-2.md: images/widget-card-example-page-dcc.png. Problem: Brak obrazu/diagramu: images/widget-card-example-page-dcc.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
-
 > TODO MIG-055: Brak obrazu/diagramu: images/widget-card-example-page-dcc.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
 
-
-Cardholder może zdecydować się na skorzystanie z obciążenia karty w natywnej dla niej walucie lub pozostawić oryginalną walute.
-Na tym ekranie również występuje walidacja.
-
-<!-- TODO MIG-056: Źródło: README-2.md: images/widget-card-example-page-dcc-invalid.png. Problem: Brak obrazu/diagramu: images/widget-card-example-page-dcc-invalid.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
+Cardholder może zdecydować się na skorzystanie z obciążenia karty w natywnej dla niej walucie lub pozostawić oryginalną walute. Na tym ekranie również występuje walidacja.
 
 > TODO MIG-056: Brak obrazu/diagramu: images/widget-card-example-page-dcc-invalid.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
 
-
-Wybór waluty Cardholdera nie będzie miał wpływu na Merchanta i oryginalna kwotę samej transakcji, ale będzie miał wpływ na kwote jaką zostanie obciążna karta.
-Jeśli Cardholder nie chce skorzystać z oferty przewalutowania DCC, zaznacza oryginaną walute (czyli w tym przypadku PLN).
-
-<!-- TODO MIG-057: Źródło: README-2.md: images/widget-card-example-page-dcc-rejected.png. Problem: Brak obrazu/diagramu: images/widget-card-example-page-dcc-rejected.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
+Wybór waluty Cardholdera nie będzie miał wpływu na Merchanta i oryginalna kwotę samej transakcji, ale będzie miał wpływ na kwote jaką zostanie obciążna karta. Jeśli Cardholder nie chce skorzystać z oferty przewalutowania DCC, zaznacza oryginaną walute (czyli w tym przypadku PLN).
 
 > TODO MIG-057: Brak obrazu/diagramu: images/widget-card-example-page-dcc-rejected.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
 
-
 **Uzyskanie tokenu**
 
-Przycisk należy powiązać z Autopay Widget JS SDK tak, aby jego kliknięcie triggerowało wywołanie metody `widget.sendForm();` w obiekcie `WidgetConnection`
-Co finalnie, zaowocuje uzyskaniem event'u `FORM_SUCCESS`, czyli uzyskaniem wartości paymentToken'u (w polu `message`).
-
+Przycisk należy powiązać z Autopay Widget JS SDK tak, aby jego kliknięcie triggerowało wywołanie metody `widget.sendForm();` w obiekcie `WidgetConnection` Co finalnie, zaowocuje uzyskaniem event'u `FORM_SUCCESS`, czyli uzyskaniem wartości paymentToken'u (w polu `message`).
 
 ```javascript
 {status: 'FORM_SUCCESS', message: 'eyJ...n19', id: 'M2Z...ZmU2'}
 ```
 
-<!-- TODO MIG-058: Źródło: README-2.md: images/widget-card-example-page-clicked.png. Problem: Brak obrazu/diagramu: images/widget-card-example-page-clicked.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
-
 > TODO MIG-058: Brak obrazu/diagramu: images/widget-card-example-page-clicked.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
-
-
 
 ## Widget Kartowy - Szczegółowy schemat komunikacji i wymiany danych
 
 Poniżej przedstawiono szczegółowy schemat komunikacji miedzy Merchantem, Cardholderem a systemami płatniczymi Autopay w przypadku tzw. integracji WhiteLabel (czyli z użyciem widget'a kartowego)
 
-<!-- TODO MIG-059: Źródło: README-2.md: images/widget-card-diagram-flow.svg. Problem: Brak obrazu/diagramu: images/widget-card-diagram-flow.svg. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
-
 > TODO MIG-059: Brak obrazu/diagramu: images/widget-card-diagram-flow.svg. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
-
-
 
 Bezpieczne przekazania danych karty do systemu Autopay oraz pełny flow transakcji:
 
 * (0) Przekazanie do frontu danych konfiguracyjnych inicjujących osadzenie widget'a
 * (1) Wyświetlenie formatki kartowej Widgeta osadzonej na froncie Merchanta (dane karty nie są podawane na frontendzie merchanta tylko na frontendzie widget'a Autopay)
 * (2) Start poprzez wpisanie przez Cardholdera danych karty
-* (3) Przesłanie danych kartowych z użyciem połączenia TLS zabezpieczonego certyfikatem typu Extended Validation do backendu CardsAutopay
-  ** Dotyczy tylko przypadku gdy jest możliwe zaproponowanie DCC
-  ** (3a) Zwrócenie szczegółów propozycji przewalutowania DCC
-  ** (3b) Cardholder podejmuje decyzję, czy chce skorzystać z DCC
-  ** (3c) Następuje przekazanie danych karty wprowadzonych wcześniej przez Cardholdera oraz decyzji DCC
+* (3) Przesłanie danych kartowych z użyciem połączenia TLS zabezpieczonego certyfikatem typu Extended Validation do backendu CardsAutopay \*\* Dotyczy tylko przypadku gdy jest możliwe zaproponowanie DCC \*\* (3a) Zwrócenie szczegółów propozycji przewalutowania DCC \*\* (3b) Cardholder podejmuje decyzję, czy chce skorzystać z DCC \*\* (3c) Następuje przekazanie danych karty wprowadzonych wcześniej przez Cardholdera oraz decyzji DCC
 * (4) WidgetJS otrzymuje z CardsAutopay i przesyła do Frontu Merchanta (za pomocą JS) wartość `paymentToken'a`
 * (5) Front Merchanta poprzez Event JavaScript otrzymuje z Widget'a token platniczy
 * (6) Front Merchanta przekazuje do Backendu Merchanta token płatniczy
-* (7) Następuje backendowy start [Przedtransakcji z paymentToken'em](../../online-payments/advanced-flows/pretransaction.md#przedtransakcja) otrzymanym wcześniej z frontu
-* (8) Autopay API zwraca URL [kontynuacji transakcji](../../online-payments/advanced-flows/pretransaction.md#odpowiedź-na-przedtransakcję--link-do-kontynuacji-transakcji) który posłuży przekierowania do startu transakcji z użytkownikiem
+* (7) Następuje backendowy start [Przedtransakcji z paymentToken'em](../../bramka-platnosci-online/zaawansowane-scenariusze-platnosci/pretransaction.md#przedtransakcja) otrzymanym wcześniej z frontu
+* (8) Autopay API zwraca URL [kontynuacji transakcji](../../bramka-platnosci-online/zaawansowane-scenariusze-platnosci/pretransaction.md#odpowiedź-na-przedtransakcję--link-do-kontynuacji-transakcji) który posłuży przekierowania do startu transakcji z użytkownikiem
 * (9) Backend Merchanta przekazuje do FrontuMerchanta URL przekierowujący
 * (10) Przekierowanie Cardholdera ze strony Merchanta na PayAutopay w celu autentykacji 3DS
 * Następuje weryfikacja 3DS (w zależności od decyzji banku może to być werfikacja pełna lub uproszczona)
 * (11) Po "powrocie" Cardholdera z 3DS następuje dokończenie/zebranie wyniku autentykacji i autoryzacja
 * (12) Autopay otrzymuje wynik obciążenia
 * (13) Status transakcji jest przekazywany do Systemu Płatności Online (w tle)
-* (14) Następuje przekierowanie Cardholdera ze strony PayAutopay (po autentykacji 3DS) z powrotem [do strony Merchanta](../../online-payments/payment-flow/customer-redirect.md#przekierowanie-do-serwisu-partnera)
-* (15) Asynchronicznie do Backendu Merchanta przychodzi komunikat [ITN](../../online-payments/notifications/itn.md#powiadomienia-natychmiastowe-itn) ze statusem transakcji
-  ** ( w przypadku transakcji inicjującej rekurencje, Backend Merchanta dostanie też dodatkowy komunikat [RPAN](../../online-payments/notifications/rpan-rpdn.md#komunikat-rpan) )
+* (14) Następuje przekierowanie Cardholdera ze strony PayAutopay (po autentykacji 3DS) z powrotem [do strony Merchanta](../../bramka-platnosci-online/podstawowy-proces-platnosci/customer-redirect.md#przekierowanie-do-serwisu-partnera)
+* (15) Asynchronicznie do Backendu Merchanta przychodzi komunikat [ITN](../../bramka-platnosci-online/powiadomienia/itn.md#powiadomienia-natychmiastowe-itn) ze statusem transakcji \*\* ( w przypadku transakcji inicjującej rekurencje, Backend Merchanta dostanie też dodatkowy komunikat [RPAN](../../bramka-platnosci-online/powiadomienia/rpan-rpdn.md#komunikat-rpan) )
 
 ## Omówienie przykładowego kodu HTML JS (Widget Kartowy i VisaMobile)
 
