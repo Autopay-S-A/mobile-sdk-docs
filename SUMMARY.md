@@ -45,6 +45,7 @@
   * [Statusy transakcji](bramka-platnosci-online/dane-transakcji/statuses.md)
 * [Powiadomienia](bramka-platnosci-online/powiadomienia/README.md)
   * [ITN – status transakcji](bramka-platnosci-online/powiadomienia/itn.md)
+  * [Obsługa statusów z ITN](bramka-platnosci-online/powiadomienia/itn-status-handling.md)
   * [IPN – status produktu](bramka-platnosci-online/powiadomienia/ipn.md)
   * [ISTN – status rozliczenia](bramka-platnosci-online/powiadomienia/istn.md)
   * [RPAN i RPDN – płatności automatyczne](bramka-platnosci-online/powiadomienia/rpan-rpdn.md)

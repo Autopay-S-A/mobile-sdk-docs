@@ -32,9 +32,9 @@ Parametry:
   	Hash=2ab52e6918c6ad3b69a8228a2ab815f11ad58533eeed963dd990df8d8c3709d1
 ```
 
-Przesłanie komunikatu bez wszystkich **wymaganych** parametrów (**ServiceID, OrderID, Amount i Hash**) lub zawierającego błędne ich wartości, spowoduje zatrzymanie procesu płatności wraz z podaniem kodu błędu transakcji i krótką informacją o błędzie (brak powrotu na stronę Serwisu Partnera).
+Przesłanie komunikatu bez wszystkich **wymaganych** parametrów (**ServiceID, OrderID, Amount, CustomerEmail i Hash**) lub zawierającego błędne ich wartości, spowoduje zatrzymanie procesu płatności wraz z podaniem kodu błędu transakcji i krótką informacją o błędzie (brak powrotu na stronę Serwisu Partnera).
 
-**WAŻNE!** "Para parametrów **ServiceID** i **OrderID** jednoznacznie identyfikuje transakcję. Niedopuszczalne jest powtórzenie się wartości parametru **OrderID** przez cały okres świadczenia usług przez System na rzecz jednego Serwisu Partnera (**ServiceID**)."
+**WAŻNE!** Para parametrów **ServiceID** i **OrderID** identyfikuje transakcję. Zalecamy, aby wartość **OrderID** nie powtarzała się przez cały okres świadczenia usług przez System na rzecz jednego Serwisu Partnera (**ServiceID**). Domyślnie System nie weryfikuje unikalności **OrderID** przy starcie transakcji; blokowanie startów z powtórzonym **OrderID** można uzgodnić w trakcie integracji.
 
 Opcjonalny parametr **GatewayID** służy do określenia Kanału Płatności, za pomocą którego ma zostać zrealizowana płatność. Pozwala to przenieść ekran wyboru Kanałów Płatności do Serwisu. Aktualna lista identyfikatorów Kanałów Płatności, wraz z logotypami, dostępna jest poprzez metodę **gatewayList**.
 
