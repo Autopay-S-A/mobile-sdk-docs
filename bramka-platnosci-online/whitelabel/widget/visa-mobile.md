@@ -48,7 +48,37 @@ Przycisk należy powiązać z Autopay Widget JS SDK tak, aby jego kliknięcie tr
 
 ## Widget Visa Mobile - Szczegółowy schemat komunikacji i wymiany danych
 
-> TODO MIG-064: Brak obrazu/diagramu: images/widget-visa-mobile-diagram-flow.svg. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    participant MF as Merchant Front
+    participant MB as Merchant Backend
+    participant PA as PayAutopay
+    participant CA as CardsAutopay
+    participant V as Visa
+    participant AK as Akceptant kart
+
+    MF->>CA: (1) Start – wpisanie numeru telefonu
+    CA->>V: (2) Start Visa
+    V-->>CA: (3) Wynik
+    CA-->>MF: (4) Dane tokenu płatniczego
+    MF->>MB: (5) Przekazanie tokenu
+    MB->>PA: (6) Start transakcji PayAutopay
+    PA-->>MB: (7) Odpowiedź PENDING
+    MB-->>MF: (8) Wynik
+    alt Anulowanie transakcji
+        PA->>CA: (9a) Próba anulowania
+        CA->>V: (9b) Anulowanie
+        V-->>CA: (9c) Wynik
+        CA-->>PA: (9d) Status transakcji
+        PA-)MB: (9e) ITN (transakcja anulowana)
+    else Potwierdzenie w aplikacji Visa Mobile
+        V->>CA: (10) Dane płatnicze
+        CA->>AK: (11) Obciążenie
+        AK-->>CA: (12) Wynik obciążenia
+        CA-->>PA: (13) Status transakcji do PayAutopay
+        PA-)MB: (14) ITN
+    end
+```
 
 Start transakcji:
 

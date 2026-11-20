@@ -118,24 +118,95 @@ W przypadku braku wywołania przez Partnera obciążenia w terminach określonyc
 
 ## Schemat A dla Preautoryzacji: Zakładanie blokady podczas autoryzacji płatności jednorazowej
 
-> TODO MIG-044: Brak obrazu/diagramu: images/SchematA.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant K as Klient
+    participant P as Partner
+    participant S as System Płatności Online
+    K->>P: Płatność u Partnera
+    P->>S: Rozpoczęcie transakcji (parametr startowy Hold=true)
+    S-->>S: Autoryzacja płatności i założenie blokady środków
+    S->>P: Powrót (przekierowanie) na stronę Serwisu Partnera
+    S-)P: ITN (paymentStatus=ON_HOLD)
+    P->>K: Realizacja usługi (dla paymentStatus=ON_HOLD w ITN)
+```
 
 ## Schemat B dla Preautoryzacji: Zakładanie blokady podczas inicjowania płatności automatycznej (zapisywania karty)
 
-> TODO MIG-045: Brak obrazu/diagramu: images/SchematB.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant K as Klient
+    participant P as Partner
+    participant S as System Płatności Online
+    K->>P: Płatność u Partnera
+    P->>S: Rozpoczęcie transakcji (Hold=true, RecurringAction=INIT_WITH_PAYMENT, RecurringAcceptanceState=ACCEPTED)
+    S-->>S: Autoryzacja płatności, założenie blokady środków
+    S->>P: Powrót (przekierowanie) na stronę Serwisu Partnera
+    S-)P: ITN (paymentStatus=ON_HOLD)
+    P->>K: Realizacja usługi (dla paymentStatus=ON_HOLD w ITN)
+```
 
 ## Schemat C dla Preautoryzacji: Zakładanie blokady z wykorzystaniem wcześniej zapisanej karty
 
-> TODO MIG-046: Brak obrazu/diagramu: images/SchematC.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant K as Klient
+    participant P as Partner
+    participant S as System Płatności Online
+    K->>P: Płatność u Partnera
+    P-->>S: Rozpoczęcie transakcji (Hold=true, RecurringAction=MANUAL, ClientHash)
+    S-->>S: Autoryzacja płatności, założenie blokady środków z użyciem zapisanej karty
+    S-->>P: Odpowiedź na zlecenie założenia blokady
+    S-)P: ITN (paymentStatus=ON_HOLD)
+    P->>K: Realizacja usługi (dla paymentStatus=ON_HOLD w ITN)
+```
 
 ## Schemat D dla Preautoryzacji: Zlecenie przez Partnera obciążenia wcześniej zautoryzowanej karty
 
-> TODO MIG-047: Brak obrazu/diagramu: images/SchematD.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant K as Klient
+    participant P as Partner
+    participant S as System Płatności Online
+    K->>P: Zakończenie usługi u Partnera
+    P-->>S: Zlecenie obciążenia karty (transactionClear – RemoteID, ew. Amount, Products)
+    S-->>S: Obciążenie karty
+    S-->>P: Odpowiedź na zlecenie obciążenia karty
+    S-)P: ITN (paymentStatus=SUCCESS)
+    P->>K: Podsumowanie kosztów usługi (dla paymentStatus=SUCCESS w ITN)
+    S-)P: RPAN (ClientHash), jeśli blokada nastąpiła wraz z inicjalizacją płatności automatycznej
+    P-->>P: Zapisanie karty u Partnera
+```
 
 ## Schemat E dla Preautoryzacji: Zlecenie przez Partnera zwolnienia blokady (bez potrącania środków)
 
-> TODO MIG-048: Brak obrazu/diagramu: images/SchematE.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant K as Klient
+    participant P as Partner
+    participant S as System Płatności Online
+    K->>P: Rezygnacja z usługi u Partnera
+    P-->>S: Zlecenie zdjęcia blokady (transactionCancel – RemoteID)
+    S-->>S: Anulowanie transakcji, zdjęcie blokady
+    S-->>P: Odpowiedź na zlecenie zdjęcia blokady
+    S-)P: ITN (paymentStatus=FAILURE, paymentStatusDetails=CANCELLED)
+    P->>K: Potwierdzenie rezygnacji z usługi (dla paymentStatus=FAILURE w ITN)
+```
 
 ## Schemat F dla Preautoryzacji: Zwolnienie blokady przez System (bez potrącania środków)
 
-> TODO MIG-049: Brak obrazu/diagramu: images/SchematF.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant K as Klient
+    participant P as Partner
+    participant S as System Płatności Online
+    S-->>S: Anulowanie transakcji, zdjęcie blokady
+    S-)P: ITN (paymentStatus=FAILURE, paymentStatusDetails=CANCELLED)
+    P->>K: Potwierdzenie rezygnacji z usługi (dla paymentStatus=FAILURE w ITN)
+```

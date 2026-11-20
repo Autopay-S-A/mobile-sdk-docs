@@ -10,7 +10,44 @@
 
 Proces płatności z potwierdzeniem merchanta to model płatniczy, w którym środki klienta są wstępnie przyjmowane, a następnie – dopiero po decyzji merchanta – przekazywane Merchantowi do rozliczenia (/transactionConfirm (TODO: odwołanie wymaga potwierdzenia)) lub zwracana na rachunek Klienta ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieoplaconej-transakcji)) na żądanie Merchanta albo na skutek upływu czasu. Umożliwia to weryfikację zamówienia, sprawdzenie dostępności towaru lub wykonanie dodatkowych procesów decyzyjnych, zanim środki faktycznie zostaną przekazane na rachunek bankowy Merchanta. Poniżej przedstawiono przebieg procesu zgodnie z diagramem sekwencji.
 
-> TODO MIG-042: Brak obrazu/diagramu: images/paybm-sequences-2pv.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    participant K as Klient
+    participant P as Partner
+    participant A as Autopay
+    participant KP as Kanał płatności
+
+    K->>P: checkout
+    P->>A: /payment
+    Note over P,A: MerchantConfirmationRequired = true
+    A->>KP: start transakcji
+    KP-->>A: link z przekierowaniem
+    A-->>P: link z przekierowaniem
+    P-->>K: link z przekierowaniem
+    K->>KP: przejście do kanału płatności
+    Note right of KP: Autoryzacja płatności
+    KP-->>A: powrót
+    A-->>P: powrót
+    P-->>K: powrót
+    KP->>A: status płatności
+    A->>P: ITN
+    Note over P,A: PaymentStatus = ON_HOLD
+    P-->>A: potwierdzenie
+
+    alt Potwierdzenie
+        P->>A: /transactionConfirm
+        A-->>P: potwierdzenie
+        A->>P: ITN
+        Note over P,A: PaymentStatus = SUCCESS
+        P-->>A: potwierdzenie
+    else Odrzucenie
+        P->>A: /transactionCancel
+        A-->>P: potwierdzenie
+        A->>P: ITN
+        Note over P,A: PaymentStatus = FAILURE
+        P-->>A: potwierdzenie
+    end
+```
 
 ### Inicjalizacja procesu
 

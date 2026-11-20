@@ -68,7 +68,39 @@ Przycisk należy powiązać z Autopay Widget JS SDK tak, aby jego kliknięcie tr
 
 Poniżej przedstawiono szczegółowy schemat komunikacji miedzy Merchantem, Cardholderem a systemami płatniczymi Autopay w przypadku tzw. integracji WhiteLabel (czyli z użyciem widget'a kartowego)
 
-> TODO MIG-059: Brak obrazu/diagramu: images/widget-card-diagram-flow.svg. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    participant MB as Merchant Backend
+    participant MF as Merchant Front
+    participant CH as Cardholder
+    participant W as Widget CardsAutopay
+    participant PA as PayAutopay Backend
+    participant CA as CardsAutopay Backend
+    participant AK as Akceptant kart
+
+    MB->>MF: (0) Dane konfiguracyjne do initJS
+    MF->>CH: (1) Wyświetlenie widgetu
+    CH->>W: (2) Wpisanie danych karty
+    W->>CA: (3) Przekazanie danych karty wprowadzonych przez Cardholdera
+    opt Propozycja DCC (nie dotyczy wszystkich kart)
+        CA-->>W: (3a) Zwrócenie propozycji DCC
+        CH->>W: (3b) Decyzja w sprawie DCC
+        W->>CA: (3c) Przekazanie danych karty i decyzji DCC
+    end
+    CA-->>W: (4) Zwrócenie tokenu płatniczego
+    W-->>MF: (5) JS Event zawierający token płatniczy
+    MF->>MB: (6) Przekazanie tokenu do backendu Merchanta
+    MB->>PA: (7) Backendowy start transakcji PayAutopay z paymentTokenem
+    PA-->>MB: (8) Zwrócenie URL przekierowania do startu transakcji z użytkownikiem
+    MB-->>MF: (9) Przekazanie URL na front
+    MF->>PA: (10) Przekierowanie Cardholdera na PayAutopay w celu autentykacji 3DS
+    PA->>CA: 3DS
+    CA->>AK: (11) Autentykacja 3DS i autoryzacja
+    AK-->>CA: (12) Wynik obciążenia
+    CA-->>PA: (13) Status transakcji
+    PA-->>MF: (14) Przekierowanie Cardholdera z powrotem do strony Merchanta
+    PA-)MB: (15) ITN
+```
 
 Bezpieczne przekazania danych karty do systemu Autopay oraz pełny flow transakcji:
 

@@ -1,7 +1,5 @@
 # O SDK mobilnym
 
-> TODO MIG-023: Gałęzie pozostają w android/ i ios/: przeniesienie zerwałoby odwołania ../.gitbook/assets/ i ../token.md. Ewentualne przeniesienie wymaga osobnej decyzji o zmianie chronionych odwołań.
-
 ## Czym jest Autopay SDK?
 
 **Autopay SDK** jest gotową biblioteką służącą do realizowania płatności mobilnych na platformach **Android** i **iOS**. Obsługujemy różne formy płatności: **Google Pay, Apple Pay, BLIK, karty płatnicze, przelewy bankowe**. **SDK** zostało przetłumaczone na język angielski i niemiecki.
