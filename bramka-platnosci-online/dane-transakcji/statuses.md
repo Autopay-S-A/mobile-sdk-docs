@@ -56,9 +56,29 @@ W modelu, w którym potrzebna jest cała historia zmian statusów
 transakcji i/lub powiadamianie Klienta o ważniejszych zmianach statusów
 transakcji należy zastosować logikę przybliżoną do poniższego opisu.
 
-<!-- TODO MIG-041: Źródło: README-2.md: images/obraz2.png. Problem: Brak obrazu/diagramu: images/obraz2.png. Wymagana decyzja/materiał: Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. -->
-
-> TODO MIG-041: Brak obrazu/diagramu: images/obraz2.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+| Dotychczasowy ogólny status płatności | PaymentStatus w ITN | Różne RemoteID | Proces biznesowy (powiadomienie Klienta o zmianie statusu) | Proces biznesowy (wykonanie opłaconej usługi, wysyłka produktu itp.) | Zawartość pola confirmation odpowiedzi | Aktualizacja ogólnego statusu transakcji, jej czasu i wartości RemoteID | Uwagi |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Brak | PENDING | n/d | Tak | Nie | CONFIRMED | Tak | |
+| Brak | FAILURE | n/d | Tak | Nie | CONFIRMED | Tak | |
+| Brak | SUCCESS | n/d | Tak | Tak | CONFIRMED | Tak | |
+| PENDING | PENDING | Nie | Nie | Nie | CONFIRMED | Nie | |
+| PENDING | FAILURE | Nie | Tak | Nie | CONFIRMED | Tak | |
+| PENDING | SUCCESS | Nie | Tak | Tak | CONFIRMED | Tak | |
+| FAILURE | PENDING | Nie | Nie | Nie | CONFIRMED | Nie | |
+| FAILURE | FAILURE | Nie | Nie | Nie | CONFIRMED | Nie | |
+| FAILURE | SUCCESS | Nie | Tak | Tak | CONFIRMED | Tak | |
+| SUCCESS | PENDING | Nie | Nie | Nie | CONFIRMED | Nie | Niemożliwe |
+| SUCCESS | FAILURE | Nie | Nie | Nie | CONFIRMED | Nie | Niemożliwe |
+| SUCCESS | SUCCESS | Nie | Nie | Nie | CONFIRMED | Nie | |
+| PENDING | PENDING | Tak | Nie | Nie | CONFIRMED | Tak | |
+| PENDING | FAILURE | Tak | Nie | Nie | CONFIRMED | Tak | |
+| PENDING | SUCCESS | Tak | Tak | Tak | CONFIRMED | Tak | |
+| FAILURE | PENDING | Tak | Nie | Nie | CONFIRMED | Tak | |
+| FAILURE | FAILURE | Tak | Nie | Nie | CONFIRMED | Tak | |
+| FAILURE | SUCCESS | Tak | Tak | Tak | CONFIRMED | Tak | |
+| SUCCESS | PENDING | Tak | Nie | Nie | CONFIRMED | Nie | Niemożliwe |
+| SUCCESS | FAILURE | Tak | Nie | Nie | CONFIRMED | Nie | Niemożliwe |
+| SUCCESS | SUCCESS | Tak | Nie | Nie | NOTCONFIRMED | Nie | Niemożliwe |
 
 
 ## Szczegółowy opis zmiany statusu weryfikacji – dla transakcji zakończonej poprawnie (wynik pozytywny lub negatywny)

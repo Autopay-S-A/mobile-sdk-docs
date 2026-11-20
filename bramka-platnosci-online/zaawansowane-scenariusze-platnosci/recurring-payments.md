@@ -29,7 +29,19 @@ c) wartość **INIT\_WITHOUT\_PAYMENT** – odpowiada aktywacji usługi płatno�
 
 d) brak parametru (lub pusty) – o ile nie wybrano kanału płatności w Serwisie, System wyświetli wszystkie dostępne dla Serwisu kanały płatności (wraz z automatycznymi) oraz pozostawi Klientowi decyzję: płatność jednorazowa, czy uruchomienie płatności automatycznej. Jeśli Klient wybierze płatność automatyczną, to transakcja zostanie w standardowy sposób rozliczona na rzecz Partnera (a w RPAN wróci parametr RecurringAction=INIT\_WITH\_PAYMENT).
 
-> TODO MIG-065: Brak obrazu/diagramu: images/aktywacja\_płatności\_automatycznej.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Serwis Partnera
+    participant A as System Autopay
+    participant B as Akceptant kart lub bank
+    P->>A: Start transakcji
+    A->>B: Autoryzacja płatności i obciążenie Klienta
+    B-->>A: Potwierdzenie obciążenia
+    A->>P: Powrót klienta
+    A-)P: ITN i RPAN
+    A-)P: Rozliczenie transakcji
+```
 
 ### Start transakcji automatycznej - wymagane parametry
 
@@ -69,7 +81,19 @@ Poprawne odebranie identyfikatora usługi (**ClientHash**), sprawia, że Partner
 
 Poniżej proces automatycznego obciążenia Klienta za usługę/towar (a więc **RecurringAction=MANUAL/AUTO** i rozliczenie transakcji do Partnera).
 
-> TODO MIG-066: Brak obrazu/diagramu: images/obciążenie\_dla\_płatności\_automatycznej.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Serwis Partnera
+    participant A as System Autopay
+    participant B as Akceptant kart lub bank
+    P->>A: Start transakcji
+    A-->>P: Potwierdzenie przyjęcia dyspozycji
+    A->>B: Obciążenie w kanale płatności
+    B-->>A: Status transakcji z kanału płatności
+    A-)P: ITN
+    A-)P: Rozliczenie transakcji
+```
 
 Komunikat ITN wysyłany po płatności automatycznej jest podobny do tych, otrzymywanych po płatnościach jednorazowych. Rozszerzony jest jedynie o węzeł RecurringData oraz (dla płatności kartowej) CardData.
 
@@ -89,7 +113,16 @@ b) **MANUAL** - płatność jednym kliknięciem (obciążenie zlecane przez Klie
 
 Partner może dezaktywować usługę płatności automatycznych w dowolnym momencie. Proces może składać się z komunikatu zlecającego dezaktywację oraz komunikatu RPDN (dedykowanego dla zdarzeń rezygnacji z usługi płatności automatycznej).
 
-> TODO MIG-067: Brak obrazu/diagramu: images/dezaktywacja\_usługi.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Serwis Partnera
+    participant A as System Autopay
+    P->>A: Komunikat dezaktywacji
+    A-->>P: Potwierdzenie przyjęcia dyspozycji
+    A->>A: Dezaktywacja płatności automatycznej
+    A-)P: RPDN
+```
 
 Może się również zdarzyć, że rezygnacja z usługi zostanie zainicjowana ze strony AP (np. na wniosek Klienta, banku lub organizacji kartowej). W takiej sytuacji System również dostarczy komunikat RPDN.
 

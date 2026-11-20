@@ -32,4 +32,60 @@ Poniżej znajdziemy diagramy sekwencji dla 2 modeli integracji.
 
 Model najprostszy, gdzie wybór kanałów płatności znajduje się na stronach Autopay (paywall).
 
-> TODO MIG-040: Brak obrazu/diagramu: images/paybm-sequences-trx-paywall.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+```mermaid
+sequenceDiagram
+    participant K as Klient
+    participant P as Partner
+    participant A as Autopay
+    participant KP as Kanał płatności
+
+    K->>P: rozpoczęcie płatności
+    P->>A: /payment
+    A->>K: strona z kanałami płatności (paywall)
+    K->>A: /payment_update
+    A->>KP: start transakcji
+    KP-->>A: link z przekierowaniem
+    A-->>P: link z przekierowaniem
+    P-->>K: link z przekierowaniem
+    K->>KP: przejście do kanału płatności
+    Note right of KP: Autoryzacja płatności
+    KP-->>A: powrót
+    A-->>P: powrót
+    P-->>K: powrót
+    KP->>A: status płatności
+    A->>P: ITN
+    P-->>A: potwierdzenie
+```
+
+#### Model WhiteLabel
+
+Wybór kanału płatności odbywa się w Serwisie Partnera, który pobiera listę kanałów i wymagane regulaminy z Autopay. Szczegóły w części [Model WhiteLabel](../whitelabel/payment-method-selection.md#model-whitelabel).
+
+```mermaid
+sequenceDiagram
+    participant K as Klient
+    participant P as Partner
+    participant A as Autopay
+    participant KP as Kanał płatności
+
+    K->>P: SID
+    P->>A: /gatewayList/v3
+    A-->>P: odpowiedź JSON
+    Note over P: rekomendowany cache 1 min
+    P->>A: /legalData
+    A-->>P: odpowiedź JSON
+    Note over P: rekomendowany cache 3 h
+    P->>A: /payment
+    A->>KP: start transakcji
+    KP-->>A: link z przekierowaniem
+    A-->>P: link z przekierowaniem
+    P-->>K: link z przekierowaniem
+    K->>KP: przejście do kanału płatności
+    Note right of KP: Autoryzacja płatności
+    KP-->>A: powrót
+    A-->>P: powrót
+    P-->>K: powrót
+    KP->>A: status płatności
+    A->>P: ITN
+    P-->>A: potwierdzenie
+```
