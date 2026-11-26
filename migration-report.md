@@ -31,6 +31,8 @@ Decyzje podjęte podczas przeglądu komentarzy analityka i otwartych punktów TO
 | 2026-11-26 | MIG-031 (spotkanie) | Odpowiedź `gatewayList/v3`: poprawne nazwy pól to `gatewayID` i `iconUrl`; odpowiedź nie zawiera Hash. |
 | 2026-11-26 | MIG-033 (spotkanie) | `transactionClear`: odpowiedź `<transaction>` z `serviceID`, `messageID`, `confirmation`, `hash` (poprzedni przykład `<balancePayoff>` był błędny). `Products` – opcjonalny, wymagany tylko, gdy preautoryzacja obejmowała wiele produktów. |
 | 2026-11-26 | MIG-022 (spotkanie) | Analitycy akceptują konwencję historii zmian (tylko zmiany API i zachowania bramki) i dbają o kolejne wpisy. Historię zaczynamy prowadzić po oficjalnej publikacji; do tego czasu strona bez wpisów. |
+| 2026-11-26 | Stara dokumentacja i portal developers.autopay.pl | Brak decyzji o wyłączeniu. Przez pewien czas stara i nowa dokumentacja są utrzymywane równolegle; linki do starego portalu na razie zostają. Zmiany w starej dokumentacji trzeba przenosić do GitBooka. |
+| 2026-11-26 | Kolejność Hash parametrów startu | Numeracja „kolejność Hash” w tabelach parametrów podstawowych i dodatkowych odtworzona z listy `hashorder` z kodu bramki (od analityków): 78 udokumentowanych parametrów, numery 1–78 bez duplikatów. `ValidityTime` = 25, `LinkValidityTime` = 40, `IPKSeFTransaction` = 77, `IPKSeFLinkValidityTime` = 78. `CustomerEmail` liczony na pozycji 700 (parametry podstawowe), `Title` (rozliczenie) na 1500. |
 
 ## Źródła i konfiguracja
 
