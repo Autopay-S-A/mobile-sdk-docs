@@ -1,10 +1,10 @@
 # Widget kartowy
 
-> TODO MIG-039: Nie dostarczono odrębnego załącznika z kartami i scenariuszami testowymi. Dostarczyć załącznik testowy widgetu kartowego.
-
 ## Widget Kartowy - Przykład implementacji na stronie partnera
 
-**WAŻNE!** [Poniższy przykład kodu HTML](cards.md#omówienie-przykładowego-kodu-html-js-widget-kartowy-i-visamobile) powstał gównie w celach poglądowych. Aby go faktycznie uruchomić na swoim lokalnym komputerze, poniższy plik HTML musi zostać umieszczony pod jakąś lokalną domeną (dowolną, może być `test.local`). Ten HTML nie może być odpalany w przeglądarce w formie lokalnego pliku ponieważ eventyJS wymieniane pomiędzy IFRAME a stroną są weryfikowane pod kątem zgodności domeny (a wieć jakaś domena musi być obecna).
+{% hint style="warning" %}
+[Poniższy przykład kodu HTML](cards.md#omówienie-przykładowego-kodu-html-js-widget-kartowy-i-visamobile) powstał gównie w celach poglądowych. Aby go faktycznie uruchomić na swoim lokalnym komputerze, poniższy plik HTML musi zostać umieszczony pod jakąś lokalną domeną (dowolną, może być `test.local`). Ten HTML nie może być odpalany w przeglądarce w formie lokalnego pliku ponieważ eventyJS wymieniane pomiędzy IFRAME a stroną są weryfikowane pod kątem zgodności domeny (a wieć jakaś domena musi być obecna).
+{% endhint %}
 
 Poniższa strona ma za zadanie imitować Front Merchanta, pokazując jakie elementy należy zaimplementować aby dokonać integracji z Widget'em Autopay.
 
@@ -14,19 +14,21 @@ W przeglądarce poniższa, przykładowa strona składa się z trzech sekcji:
 * sekcja środkowa zawiera miejsce, w którym osadzony będzie HTML IFRAME, do którego, w razie potrzeby, umieszczany będzie adres widget'u (visamobile lub standardowego kartowego wedle potrzeby)
 * sekcja dolna zawiera (domyślnie nieaktywny) przycisk `PayButon` spięty z SDK JS sterujący uruchomieniem procesu w widget'cie (w tym przykładzie przycisk uaktywnia się dopiero, gdy otrzymuje komunikat o poprawnej walidacji i uzyskaniu kompletu danych potrzebnych do wystartowania procesu)
 
-> TODO MIG-051: Brak obrazu/diagramu: images/widget-empty-example-page-start.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-empty-example-page-start.png)
 
 Kiedy zostanie wybrany kanał kartowy (payway: 1500 lub 1503), wczyta się dedykowany widok formatki kartowej (oparty o HTML IFRAME). W momencie wprowadzenia w widgecie pełnych, prawidłowych danych kartowych, (dzięki eventom walidacyjnym) nastąpi uaktywnienie się przycisku "Zapłać" na Froncie Merchanta.
 
-> TODO MIG-052: Brak obrazu/diagramu: images/widget-card-example-page-loaded.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-card-example-page-loaded.png)
 
-**Podpowiedź:** Jak widać w przykładzie w modelu WhiteLabel jest również możliwa obsługa kanału VisaMobile. Implementacja/osadzenie są analogiczne do widgeta kartowego dlatego poniższy kod zawiera już oba przypadki.
+{% hint style="info" %}
+Jak widać w przykładzie w modelu WhiteLabel jest również możliwa obsługa kanału VisaMobile. Implementacja/osadzenie są analogiczne do widgeta kartowego dlatego poniższy kod zawiera już oba przypadki.
+{% endhint %}
 
 **Walidacja i skompletowanie danych**
 
 W momencie wpisywania danych karty Autopay Widget JS SDK otrzymuje od widget'u event'y `VALIDITY_STATUS` z wartoscią `valid: false`
 
-> TODO MIG-053: Brak obrazu/diagramu: images/widget-card-example-page-invalid.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-card-example-page-invalid.png)
 
 Gdy uzyskamy pełne dane karty, ostatnim event'em będzie `VALIDITY_STATUS` z wartością `valid: true`
 
@@ -36,23 +38,25 @@ Gdy uzyskamy pełne dane karty, ostatnim event'em będzie `VALIDITY_STATUS` z wa
 
 O ten event można oprzeć uaktywnianie przycisku `PayButton`
 
-> TODO MIG-054: Brak obrazu/diagramu: images/widget-card-example-page-ready.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-card-example-page-ready.png)
 
-**Podpowiedź:** Na środowisku testowym płatności kartowe są oparte o mock 3ds i mock autoryzacyjny. Poszczególnym scenariuszom odpowiadają dedykowane numery kart testowych. Pełna lista przypadków testowych znajduje się w oddzielnym załączniku.
+{% hint style="info" %}
+Na środowisku testowym płatności kartowe są oparte o mock 3ds i mock autoryzacyjny. Poszczególnym scenariuszom odpowiadają dedykowane numery kart testowych. Pełna lista przypadków testowych znajduje się na stronie [Karty testowe](../../pierwsze-kroki/test-cards.md).
+{% endhint %}
 
 **Ekran DCC**
 
 W przypadku gdy dany scenariusz i karta spełnia warunki uzyskania oferty DCC pojawi dodatkowy ekran z propozycją przewalutowania dla Cardholdera
 
-> TODO MIG-055: Brak obrazu/diagramu: images/widget-card-example-page-dcc.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-card-example-page-dcc.png)
 
 Cardholder może zdecydować się na skorzystanie z obciążenia karty w natywnej dla niej walucie lub pozostawić oryginalną walute. Na tym ekranie również występuje walidacja.
 
-> TODO MIG-056: Brak obrazu/diagramu: images/widget-card-example-page-dcc-invalid.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-card-example-page-dcc-invalid.png)
 
 Wybór waluty Cardholdera nie będzie miał wpływu na Merchanta i oryginalna kwotę samej transakcji, ale będzie miał wpływ na kwote jaką zostanie obciążna karta. Jeśli Cardholder nie chce skorzystać z oferty przewalutowania DCC, zaznacza oryginaną walute (czyli w tym przypadku PLN).
 
-> TODO MIG-057: Brak obrazu/diagramu: images/widget-card-example-page-dcc-rejected.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-card-example-page-dcc-rejected.png)
 
 **Uzyskanie tokenu**
 
@@ -62,7 +66,7 @@ Przycisk należy powiązać z Autopay Widget JS SDK tak, aby jego kliknięcie tr
 {status: 'FORM_SUCCESS', message: 'eyJ...n19', id: 'M2Z...ZmU2'}
 ```
 
-> TODO MIG-058: Brak obrazu/diagramu: images/widget-card-example-page-clicked.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-card-example-page-clicked.png)
 
 ## Widget Kartowy - Szczegółowy schemat komunikacji i wymiany danych
 

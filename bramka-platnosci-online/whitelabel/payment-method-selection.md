@@ -1,4 +1,4 @@
-# Zaawansowany model płatności
+# Schemat procesu WhiteLabel
 
 ## Model WhiteLabel
 
@@ -51,7 +51,7 @@ Na podstawie odpowiedzi Merchant buduje widok wyboru metody płatności. Kluczow
 Wynik `gatewayList` warto cache'ować i regularnie odświeżać, aby nie blokować płatnika w przypadku chwilowej niedostępności API.
 {% endhint %}
 
-<a href="https://developers.autopay.pl/online/dokumentacja#odpytywanie-o-list%C4%99-aktualnie-dost%C4%99pnych-kana%C5%82%C3%B3w-p%C5%82atno%C5%9Bci" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
+<a href="../pozostale-operacje-api/gateway-list.md" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
 {% endstep %}
 
 {% step %}
@@ -74,7 +74,7 @@ Odpowiedź wskazuje, jakie treści należy pokazać klientowi i które identyfik
 Dane z `legalData` należy traktować jako część procesu transakcyjnego. Jeśli dla wybranego kanału wymagane są regulaminy lub zgody, ich identyfikatory powinny trafić do późniejszego wywołania `payment`.
 {% endhint %}
 
-<a href="https://developers.autopay.pl/online/dokumentacja#odpytywanie-o-list%C4%99-aktualnie-dost%C4%99pnych-zg%C3%B3d-formalnych" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
+<a href="../pozostale-operacje-api/legal-consents.md" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
 {% endstep %}
 
 {% step %}
@@ -107,7 +107,7 @@ Autopay zwraca odpowiedź na próbę startu transakcji. W zależności od kanał
 Odpowiedź synchroniczna z `payment` nie zastępuje ITN. Logikę biznesową, taką jak wydanie towaru lub uruchomienie usługi, należy oprzeć o poprawnie zweryfikowany komunikat ITN.
 {% endhint %}
 
-<a href="https://developers.autopay.pl/online/dokumentacja#rozpocz%C4%99cie-transakcji" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
+<a href="../podstawowy-proces-platnosci/start-transaction.md" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
 {% endstep %}
 
 {% step %}
@@ -145,6 +145,6 @@ Przykładowa odpowiedź potwierdzająca odebranie ITN:
 Jeśli Autopay nie otrzyma poprawnej odpowiedzi na ITN, będzie ponawiać wysyłkę powiadomienia. Obsługa ITN powinna być idempotentna.
 {% endhint %}
 
-<a href="https://developers.autopay.pl/online/dokumentacja#powiadomienia-natychmiastowe-(itn)" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
+<a href="../powiadomienia/itn.md" class="button primary" data-icon="circle-info">Szczegółowe informacje o tym kroku</a>
 {% endstep %}
 {% endstepper %}

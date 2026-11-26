@@ -1,7 +1,5 @@
 # Regulaminy i zgody
 
-> TODO MIG-030: Opis regulationID używa isCheckboxRequired, tabela i przykład checkboxRequired; w przykładzie JSON brakuje przecinka po inputLabel. Potwierdzić nazwę pola i poprawny JSON.
-
 ## Odpytywanie o listę aktualnie dostępnych zgód formalnych
 
 ### Opis
@@ -12,11 +10,15 @@ Należy wyświetlić odpowiednie treści formalne (a więc klauzule informacyjne
 
 System umożliwia zdalne odpytanie o aktualną listę obowiązków i powiązanych treści formalnych. W tym celu należy wywołać metodę **legalData** (_https://{host\_bramki}/legalData_) z odpowiednimi parametrami (w formacie JSON).
 
-**WSKAZÓWKA:** Wszystkie parametry przekazywane są za pomocą technologii REST. Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach parametrów. Wartości przekazywanych parametrów powinny być kodowane w UTF-8.
+{% hint style="info" %}
+Wszystkie parametry przekazywane są za pomocą technologii REST. Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach parametrów. Wartości przekazywanych parametrów powinny być kodowane w UTF-8.
+{% endhint %}
 
 ### Lista dostępnych parametrów
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                                                            |
 | -------------- | --------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -42,7 +44,9 @@ Przykładowy komunikat
 
 W odpowiedzi na żądanie zwracana jest (w tej samej sesji HTTP) lista, zawierająca kolejne treści formalne w postaci: ID, typ i brzmienie treści, ich umiejscowienie w Serwisie, adres do regulaminu oraz inne informacje dodatkowe.
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa            | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | -------------- | ---------------- | -------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -55,7 +59,7 @@ W odpowiedzi na żądanie zwracana jest (w tej samej sesji HTTP) lista, zawieraj
 | 7              | language         | TAK      | string{2}     | Język, w jakim System zwraca treści (klauzule i regulaminy).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | 8              | serviceModel     | TAK      | string{1,20}  | Pole oznaczające model, w którym pracuje serwis, na potrzeby ew. przyszłych wytycznych w oparciu o te wartości (aktualnie o wartościach: MERCHANT, PAYER). W tym momencie powinno być ignorowane.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | nd.            | regulationList   | TAK      | list          | Lista zawierająca treści formalne dostępne dla kanału płatności.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| 9              | regulationID     | TAK      | integer{1,10} | <p>Identyfikator treści formalnej, który (w przypadku jego akceptacji przez Klienta) powinien być przekazany w parametrze startowym <strong>DefaultRegulationAcceptanceID</strong>, lub <strong>RecurringAcceptanceID</strong> (odpowiednio dla typu <strong>DEFAULT</strong> i <strong>RECURRING</strong>).<br>Sposób akceptacji określają pola <strong>showCheckbox</strong> i <strong>isCheckboxRequired</strong>. <em><strong>UWAGA:</strong> Ta wartość może się powtarzać dla wywołań o różnych <strong>GatewayID</strong>, gdyż regulaminy są przyporządkowane raczej grupie kanałów płatności, a nie pojedynczym kanałom.</em></p>                                       |
+| 9              | regulationID     | TAK      | integer{1,10} | <p>Identyfikator treści formalnej, który (w przypadku jego akceptacji przez Klienta) powinien być przekazany w parametrze startowym <strong>DefaultRegulationAcceptanceID</strong>, lub <strong>RecurringAcceptanceID</strong> (odpowiednio dla typu <strong>DEFAULT</strong> i <strong>RECURRING</strong>).<br>Sposób akceptacji określają pola <strong>showCheckbox</strong> i <strong>checkboxRequired</strong>. <em><strong>UWAGA:</strong> Ta wartość może się powtarzać dla wywołań o różnych <strong>GatewayID</strong>, gdyż regulaminy są przyporządkowane raczej grupie kanałów płatności, a nie pojedynczym kanałom.</em></p>                                       |
 | 10             | type             | TAK      | string{1,64}  | <p>Typ obowiązku formalnego.<br>Przewidziane wartości:<br>- <strong>DEFAULT</strong> – klauzula (lub klauzule) oraz regulamin płatności w modelu usługi świadczonej przez AP na rzecz Klienta<br>- <strong>RECURRING</strong> – klauzule (lub klauzule) oraz regulamin płatności automatycznej. Wartość dostępna tylko, jeśli skonfigurowana jest usługa płatności automatycznej<br>- <strong>PSD2</strong> – klauzula dedykowana kanałom typu PSD2 (w tej chwili wartość nie jest używana)<br>- <strong>RODO</strong> – klauzula informacyjna dotycząca przetwarzania danych osobowych<br>- <strong>PRIVACY</strong> – klauzula informacyjna dotycząca polityki prywatności</p> |
 | 11             | url              | NIE      | string{1,500} | Adres do pliku z regulaminem (do samodzielnego osadzenia w Serwisie). Standardowo, jeśli tak stanowi obowiązek formalny, powinien być częścią jednej z jego klauzul, tj. pola **inputLabel**. _**WSKAZÓWKA:** Pojawia się w przypadku wystąpienia dokumentu powiązanego ze zgodą._                                                                                                                                                                                                                                                                                                                                                                                               |
 | nd.            | labelList        | TAK      | list          | Lista zawierająca klauzule dostępne dla danego obowiązku formalnego. Obowiązek ten może wymagać wyświetlenia jednej lub więcej treści.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
@@ -96,7 +100,7 @@ Przykładowa odpowiedź
 				"labelList": [
 					{
 						"labelID": 1,
-						"inputLabel": "Autopay korzysta z plików cookie. Pozostając na tej stronie, wyrażasz zgodę na korzystanie z plików cookie zgodnie z <a class=\"privacy-policy\" href=\"https://{host_bramki}/polityka-prywatnosci.pdf\" target=\"_blank\">Polityką prywatności Autopay S.A. </a> Możesz samodzielnie zarządzać cookies zmieniając odpowiednio ustawienia swojej przeglądarki lub oprogramowania urządzenia."
+						"inputLabel": "Autopay korzysta z plików cookie. Pozostając na tej stronie, wyrażasz zgodę na korzystanie z plików cookie zgodnie z <a class=\"privacy-policy\" href=\"https://{host_bramki}/polityka-prywatnosci.pdf\" target=\"_blank\">Polityką prywatności Autopay S.A. </a> Możesz samodzielnie zarządzać cookies zmieniając odpowiednio ustawienia swojej przeglądarki lub oprogramowania urządzenia.",
 						"placement": "BOTTOM_OF_PAGE",
 						"showCheckbox": false,
 						"checkboxRequired": false
@@ -137,4 +141,6 @@ W zależności od wartości pola **type** regulaminu:
 >
 > c. do parametru **RecurringAcceptanceTime** powinna trafić wartość odpowiadająca chwili akceptacji zgody poprzez zaznaczenie checkboxa oraz kliknięcie przycisku „Rozpocznij płatność"
 
-**UWAGA:** Pola (np. **serviceModel, url, labelID**) i wartości pól (np. **PSD2, RODO, PRIVACY**) metody **legalData** nie są wymagane do obsługi, ale należy przewidzieć możliwość ich występowania w odpowiedzi na żądanie.
+{% hint style="warning" %}
+Pola (np. **serviceModel, url, labelID**) i wartości pól (np. **PSD2, RODO, PRIVACY**) metody **legalData** nie są wymagane do obsługi, ale należy przewidzieć możliwość ich występowania w odpowiedzi na żądanie.
+{% endhint %}

@@ -1,10 +1,10 @@
 # Zaawansowany proces płatności
 
-Zaawansowana integracja rozszerza [podstawowy proces płatności](../podstawowy-proces-platnosci/) o wybór metody płatności i osadzenie widgetów w serwisie Partnera, aż do pełnego modelu WhiteLabel.
+Zaawansowana integracja (model WhiteLabel) rozszerza [podstawowy proces płatności](../podstawowy-proces-platnosci/): wybór metody płatności i akceptacja regulaminów odbywają się w serwisie Partnera. Dodatkowo Partner może osadzić [Widget Autopay](widget/) (kartowy lub Visa Mobile), aby Klient podawał dane karty lub numer telefonu bez opuszczania serwisu.
 
 W modelu WhiteLabel klient wybiera kanał płatności oraz akceptuje wymagane regulaminy w serwisie Partnera. Start transakcji zawiera wybrany `GatewayID` oraz wymagane w danym wariancie identyfikatory zgód.
 
-* [Wybór metody płatności](payment-method-selection.md).
+* [Schemat procesu WhiteLabel](payment-method-selection.md).
 * [Widget Autopay i WidgetJS SDK](widget/).
 * [Widget kartowy](widget/cards.md) i [Widget Visa Mobile](widget/visa-mobile.md).
 * [Wymagania integracyjne i bezpieczeństwo](requirements.md).

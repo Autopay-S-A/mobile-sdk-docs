@@ -71,7 +71,9 @@ Odpowiedź systemu płatności na start transakcji (XML)
 
 ### Lista zwracanych parametrów dla odpowiedzi
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa           | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                  |
 | -------------- | --------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -86,7 +88,9 @@ Odpowiedź systemu płatności na start transakcji (XML)
 | 10             | bankHref        | TAK      | string{1,100} | Adres logowania w systemie bankowości internetowej, który można wykorzystać do stworzenia przycisku „Przejdź do banku".                                                                                                                                                                                                                                                               |
 | nd.            | hash            | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis**.                                                                                                                                                 |
 
-**UWAGA:** Powyższe informacje należy wykorzystać do wyświetlenia danych przelewowych oraz przekierowania użytkownika do strony logowania banku.
+{% hint style="warning" %}
+Powyższe informacje należy wykorzystać do wyświetlenia danych przelewowych oraz przekierowania użytkownika do strony logowania banku.
+{% endhint %}
 
 ## Przelewy do Urzędu Skarbowego
 

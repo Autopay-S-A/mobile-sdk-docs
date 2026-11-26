@@ -14,6 +14,8 @@
 
 **IPN** **(Instant Product Notification)** – natychmiastowe powiadomienie wysyłane z Systemu płatności online do Serwisu Partnera przekazujące zmianę statusu produktu. Struktura IPN jest podobna do ITN (rozszerzona jedynie o węzeł _product_).
 
+**IPKSeF** – link do płatności umieszczany na fakturze KSeF. Do faktury KSeF nie może trafić standardowy link do Systemu płatności online, dlatego link IPKSeF zamawia się w dedykowanej usłudze (opis w części [Link do płatności z faktury KSeF](../bramka-platnosci-online/zaawansowane-scenariusze-platnosci/ksef-payment-link.md)).
+
 **ITN** **(Instant Transaction Notification)** – natychmiastowe powiadomienie wysyłane z Systemu płatności online do Serwisu Partnera przekazujące zmianę statusu transakcji.
 
 **ISTN (Instant Settlement Transaction Notification)** – natychmiastowe powiadomienia o zmianie statusu transakcji rozliczeniowej. System niezwłocznie przekazuje powiadomienia o fakcie zlecenia transakcji rozliczeniowej (ew. wypłatach/zwrotach) oraz zmianie jej statusu.
@@ -65,6 +67,8 @@
 **Transakcja rozliczeniowa** – część procesu obsługi płatności, dotycząca przelewu wykonywanego przez AP na rachunek Partnera. Aby powstała Transakcja rozliczeniowa, Transakcja wejściowa musi zostać przez Klienta opłacona. Transakcja rozliczeniowa może dotyczyć pojedynczej transakcji wejściowej (wpłaty), bądź agregować ich wiele.
 
 **Ustawa** – ustawa z dn. 19 sierpnia 2011 r. o usługach płatniczych.
+
+**Ważność linku IPKSeF** – parametr określający moment, po przekroczeniu którego link płatności IPKSeF przestaje być aktywny. Powinna być ustawiana przez parametr IPKSeFLinkValidityTime w żądaniu zamówienia linku do faktury KSeF.
 
 **Ważność linku** – parametr określający moment, po przekroczeniu którego Link płatności przestaje być aktywny. Powinna być ustawiana przez parametr LinkValidityTime w Linku płatności.
 

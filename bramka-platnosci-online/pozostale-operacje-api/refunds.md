@@ -1,64 +1,18 @@
 # Zwroty
 
-> TODO MIG-037: Wspólne definicje zwrotów i outDetails zawierają pola lub błędy Punktów Rozliczeń. Opis Amount starszej usługi mówi o wypłacie całego salda, mimo opisu zwrotu transakcji. Potwierdzić semantykę Amount i samodzielny kontrakt ServiceID. Zachowano wspólne pola, błędy oraz przykłady, bez publikowania osobnej usługi Marketplace.
-
 ## Zwroty transakcji
 
 ### Opis
 
-Dla serwisów posiadających saldo w Systemie, możliwe jest wykonanie operacji zwrotu do Klienta całości bądź części kwoty wpłaconej na rzecz wskazanej transakcji. Skuteczny zwrot całości transakcji można wykonać jeden raz (w przypadku ponownej próby zlecenia zwrotu tej samej transakcji, System zwraca odpowiednio opisany błąd). Zwroty części kwoty transakcji można na niej wykonywać wiele razy, o ile ich suma nie przekroczy kwoty wpłaty.
-
-Aby wykonać zwrot transakcji, należy wywołać metodę **transactionRefund** ([https://{host\_bramki}/settlementapi/transactionRefund](https://{host_bramki}/settlementapi/transactionRefund)) z odpowiednimi parametrami. Wszystkie parametry przekazywane są metodą POST (Content-Type: application/x-www-form-urlencoded). Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach parametrów. Wartości przekazywanych parametrów powinny być kodowane w UTF-8.
-
-### Lista dostępnych parametrów
-
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
-
-| kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| -------------- | --------- | -------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1              | ServiceID | TAK      | string{1,10}  | Identyfikator Serwisu Partnera.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| 2              | MessageID | TAK      | string{32}    | Pseudolosowy identyfikator komunikatu o długości 32 znaków alfanumerycznych alfabetu łacińskiego (np. na bazie UID), wartość pola musi być unikalna i wskazywać konkretne zlecenie wypłaty w Serwisie Partnera. Weryfikacja unikalności po stronie Systemu pozwala na ponawianie **MessageID** w przypadku problemów z komunikacją (ponowienie tej wartości skutkować będzie potwierdzeniem zlecenia, bez ponownego wykonania w Systemie).                                                                           |
-| 3              | RemoteID  | TAK      | string{1,20}  | Alfanumeryczny identyfikator zwracanej transakcji wejściowej nadany przez System oraz przekazywany do Partnera w komunikacie ITN transakcji wejściowej.                                                                                                                                                                                                                                                                                                                                                              |
-| 4              | Amount    | NIE      | amount        | <p>Kwota wypłaty z salda (nie może być większa niż aktualne saldo serwisu); niepodanie tego parametru skutkuje wypłatą całości środków zgromadzonych na saldzie; jako separator dziesiętny używana jest kropka - '.' Format: 0.00.<br>W modelu Marketplace, pole musi być puste (zwrot całkowity). W przeciwnym wypadku nie byłoby możliwości wskazania punktu/ów rozliczeń, do obciążenia za taką operację. Przy zwrocie całkowitym saldo jest potrącane zgodnie z sumą kwot produktów danego punktu rozliczeń.</p> |
-| 5              | Currency  | NIE      | string{1,3}   | <p>Waluta wypłaty. Domyślną walutą jest PLN (użycie innej waluty musi być uzgodnione w trakcie integracji). W ramach ServiceID obsługiwana jest jedna waluta.<br>Dopuszczalne jedynie wartości: PLN, EUR, GBP oraz USD.</p>                                                                                                                                                                                                                                                                                          |
-| nd.            | Hash      | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis Partnera**.                                                                                                                                                                                                                                                                       |
-
-W odpowiedzi na żądanie zwracany jest (w tej samej sesji HTTP) tekst w formacie XML, zawierający potwierdzenie wykonania operacji lub opis błędu (opis poniżej).
-
-Struktura potwierdzenia (XML)
-
-```xml
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<transactionRefund>
-		<serviceID>ServiceID</serviceID>
-		<messageID>MessageID</messageID>
-		<hash>Hash</hash>
-	</transactionRefund>
-```
-
-### Opis pól
-
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
-
-| kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                           |
-| -------------- | --------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1              | serviceID | TAK      | string{1,10}  | Identyfikator Serwisu Partnera. Pochodzi z żądania metody.                                                                                                                                                                                     |
-| 2              | messageID | TAK      | string{32}    | Pseudolosowy identyfikator komunikatu o długości 32 znaków alfanumerycznych alfabetu łacińskiego (np. na bazie UID). Pochodzi z żądania metody.                                                                                                |
-| nd.            | hash      | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis Partnera**. |
-
-Opcja wykonywania zwrotów do opłaconych transakcji możliwa jest do 12 miesięcy wstecz, licząc od daty rozpoczęcia transakcji. Wyjątek stanowią płatności BLIK, które ze względu na ograniczenia czasowe po stronie dostawcy Kanału płatności, można zwracać do 6 miesięcy wstecz.
-
-Powyższe terminy dotyczą realizowania zwrotów poprzez panel administracyjny oraz **transactionRefund**, np. za pośrednictwem własnych narzędzi administracyjnych. Po ich przekroczeniu zostanie zwrócony błąd (**TRANSACTION\_TOO\_OLD\_TO\_REFUND**). Schemat działania jest analogiczny jak w przypadku wypłat z salda. To znaczy, że System przyjmuje zlecenie i asynchronicznie przetwarza je w ciągu maksymalnie 30 minut, a w przypadku niepowodzenia informacja o operacjach zakończonych błędem jest wysyłana w raporcie następnego dnia roboczego.
-
-W przypadku problemów z połączeniem, przekroczenia maksymalnego czasu oczekiwania na odpowiedź, żądanie może zostać ponowione z tym samym MessageID bez obawy o zduplikowanie zlecenia. Za błąd uznać można wszystkie odpowiedzi inne niż założona (tj. z niepoprawnymi polami, w szczególności pustym lub niepoprawnym **hash**). W przypadku, gdy System zautoryzuje nadawcę komunikatu zwrotu, jednak nie uda się wykonać operacji, w odpowiedzi zwrócony zostanie komunikat błędu.
-
-### Zwrot transakcji V3
+Dla serwisów posiadających saldo w Systemie, możliwe jest wykonanie operacji zwrotu do Klienta całości bądź części kwoty wpłaconej na rzecz wskazanej transakcji. Skuteczny zwrot całości transakcji można wykonać jeden raz (w przypadku ponownej próby zlecenia zwrotu tej samej transakcji, System zwraca odpowiednio opisany błąd). Zwroty części kwoty transakcji można na niej wykonywać wiele razy, o ile ich suma nie przekroczy kwoty wpłaty. Zwrot może dotyczyć całej transakcji, jej części albo wybranych produktów z koszyka (`productDetails`).
 
 Aby wykonać zwrot transakcji z możliwością zwrotu częściowego, należy wywołać metodę **transactionRefund/v3** ([https://{host\_bramki}/settlementapi/transactionRefund/v3](https://{host_bramki}/settlementapi/transactionRefund/v3)) z odpowiednimi parametrami. Wszystkie parametry przekazywane są metodą POST (Content-Type: application/json). Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach parametrów. Wartości przekazywanych parametrów powinny być kodowane w UTF-8.
 
 ### Lista dostępnych parametrów
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa          | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | -------------- | -------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -114,7 +68,9 @@ Struktura potwierdzenia (JSON) status HTTP 200
 
 ### Opis pól odpowiedzi
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                           |
 | -------------- | --------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -141,7 +97,6 @@ Struktura komunikatu błędu (JSON) status HTTP 200
 | SETTLEMENT\_CONF\_NOT\_FOUND                    | -14             | Nie znaleziono konfiguracji rozliczenia.             |
 | TRANSACTION\_NOT\_FOUND                         | -10             | Nie znaleziono transakcji.                           |
 | SERVICE\_NOT\_FOUND                             | -3              | Nie znaleziono serwisu.                              |
-| BALANCE\_POINT\_NOT\_FOUND                      | -1              | Nie znaleziono punktu rozliczeń.                     |
 | INVALID\_FORMAT                                 | 2               | Nieprawidłowy format danych.                         |
 | INVALID\_HASH                                   | 7               | Nieprawidłowa wartość Hash.                          |
 | VALIDATION\_FAILED                              | 49              | Błąd walidacji parametrów wejściowych.               |
@@ -158,69 +113,26 @@ Struktura komunikatu błędu (JSON) status HTTP 200
 | INCORRECT\_AMOUNT\_OF\_PRODUCT\_DETAILS         | 201             | Suma kwot produktów niezgodna z kwotą amount.        |
 | PRODUCT\_ALREADY\_REFUNDED                      | 202             | Produkt został już zwrócony.                         |
 | BALANCE\_GET\_ERROR                             | 3               | Błąd pobierania salda.                               |
-| INCORRECT\_AMOUNT\_OF\_BALANCE\_POINTS\_DETAILS | 203             | Nieprawidłowa kwota punktów rozliczeń.               |
-| BALANCE\_POINT\_ERROR                           | 204             | Błąd punktu rozliczeń.                               |
 | PARTIAL\_TRANSACTION\_REFUNDS\_FORBIDDEN        | 209             | Częściowe zwroty transakcji zabronione.              |
-| BALANCE\_POINT\_DETAILS\_ERROR                  | 210             | Błąd szczegółów punktu rozliczeń.                    |
 
 Opcja wykonywania zwrotów do opłaconych transakcji możliwa jest do 12 miesięcy wstecz, licząc od daty rozpoczęcia transakcji. Wyjątek stanowią płatności BLIK, które ze względu na ograniczenia czasowe po stronie dostawcy Kanału płatności, można zwracać do 6 miesięcy wstecz.
 
-Powyższe terminy dotyczą realizowania zwrotów poprzez panel administracyjny oraz **transactionRefund/v3**, np. za pośrednictwem własnych narzędzi administracyjnych. Po ich przekroczeniu zostanie zwrócony błąd (**TRANSACTION\_TOO\_OLD\_TO\_REFUND**). Schemat działania jest analogiczny jak w przypadku wypłat z salda. To znaczy, że System przyjmuje zlecenie i asynchronicznie przetwarza je w ciągu maksymalnie 30 minut, a w przypadku niepowodzenia informacja o operacjach zakończonych błędem jest wysyłana w raporcie następnego dnia roboczego.
+Powyższe terminy dotyczą realizowania zwrotów poprzez panel administracyjny oraz **transactionRefund/v3**, np. za pośrednictwem własnych narzędzi administracyjnych. Po ich przekroczeniu zostanie zwrócony błąd (**TRANSACTION\_TOO\_OLD\_TO\_REFUND**).
+
+{% hint style="warning" %}
+{% hint style="warning" %}
+Potwierdzenie przyjęcia zlecenia nie jest równoznaczne z faktycznym jego wykonaniem. Przetwarzanie zwrotu odbywa się asynchronicznie i składa się z kilku etapów. W trakcie obsługi żądania System weryfikuje jedynie poprawność przesłanych pól i ich wartości, a następnie zapisuje zlecenie i przekazuje je do realizacji. Dane do przelewu (np. rachunek, nazwa odbiorcy, tytuł) nie są wyznaczane w momencie przyjmowania żądania – są one ustalane w kolejnym, asynchronicznym kroku. Zwrot może być realizowany do 30 minut od momentu wysyłki żądania zwrotu i nie zawsze może się zakończyć sukcesem.
+{% endhint %}
+
+Oznacza to, że Partner może otrzymać poprawną odpowiedź (HTTP 200 wraz z potwierdzeniem przyjęcia zlecenia), a mimo to zwrot nie zostanie zrealizowany – np. z powodu niewystarczających środków na saldzie lub błędu walidacji na etapie wyznaczania danych do przelewu, gdy nie da się ustalić wszystkich wymaganych danych (brak nazwy odbiorcy, numeru rachunku itp.).
+
+Zalecany sposób weryfikacji realizacji zwrotu:
+
+1. Odebrać powiadomienie ISTN o zmianie statusu zwrotu (patrz [ISTN – status rozliczenia](../powiadomienia/istn.md#natychmiastowe-powiadomienia-o-zmianie-statusu-transakcji-rozliczeniowej-istn)).
+2. W przypadku otrzymania informacji o błędzie odpytać usługę **outDetailsV2** o jego szczegóły (patrz [Odpytanie o status zwrotu lub wypłaty z salda](#odpytanie-o-status-zwrotu-lub-wypłaty-z-salda)).
+{% endhint %}
 
 W przypadku problemów z połączeniem, przekroczenia maksymalnego czasu oczekiwania na odpowiedź, żądanie może zostać ponowione z tym samym MessageID bez obawy o zduplikowanie zlecenia. Za błąd uznać można wszystkie odpowiedzi inne niż założona (tj. z niepoprawnymi polami, w szczególności pustym lub niepoprawnym **hash**). W przypadku, gdy System zautoryzuje nadawcę komunikatu zwrotu, jednak nie uda się wykonać operacji, w odpowiedzi zwrócony zostanie komunikat błędu.
-
-## Zwroty produktu
-
-### Opis
-
-Dla serwisów posiadających saldo w Systemie oraz podających w koszyku produktów parametr **productID**, możliwe jest wykonanie operacji zwrotu do Klienta całości, bądź części kwoty wpłaconej na rzecz wskazanego produktu. Skuteczny zwrot całości kwoty produktu można wykonać jeden raz (w przypadku ponownej próby zlecenia zwrotu tego samego produktu, System zwraca odpowiednio opisany błąd). Zwroty części kwoty produktu można na nim wykonywać wiele razy, o ile ich suma nie przekroczy kwoty wpłaconej na rzecz produktu.
-
-Aby wykonać zwrot produktu, należy wywołać metodę **productRefund** ([https://{host\_bramki}/settlementapi/productRefund](https://{host_bramki}/settlementapi/productRefund)) z odpowiednimi parametrami. Wszystkie parametry przekazywane są metodą POST (Content-Type: application/x-www-form-urlencoded). Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach parametrów. Wartości przekazywanych parametrów powinny być kodowane w UTF-8.
-
-### Lista parametrów
-
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
-
-| kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| -------------- | --------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1              | ServiceID | TAK      | string{1,10}  | Identyfikator Serwisu Partnera.                                                                                                                                                                                                                                                                                                                                                                                                            |
-| 2              | MessageID | TAK      | string{32}    | Pseudolosowy identyfikator komunikatu o długości 32 znaków alfanumerycznych alfabetu łacińskiego (np. na bazie UID), wartość pola musi być unikalna i wskazywać konkretne zlecenie wypłaty w Serwisie Partnera. Weryfikacja unikalności po stronie Systemu pozwala na ponawianie **MessageID** w przypadku problemów z komunikacją (ponowienie tej wartości skutkować będzie potwierdzeniem zlecenia, bez ponownego wykonania w Systemie). |
-| 3              | RemoteID  | TAK      | string{1,20}  | Alfanumeryczny identyfikator zwracanej transakcji wejściowej nadany przez System oraz przekazywany do Partnera w komunikacie ITN transakcji wejściowej.                                                                                                                                                                                                                                                                                    |
-| 4              | ProductID | TAK      | string{1,36}  | Identyfikator zwracanego produktu.                                                                                                                                                                                                                                                                                                                                                                                                         |
-| 5              | Amount    | NIE      | amount        | Kwota zwrotu (nie może być większa niż kwota produktu oraz aktualne saldo serwisu + ew. kwota prowizji za zwrot). Niepodanie tego parametru skutkuje zwrotem do Klienta całości środków wpłaconych na rzecz zwracanego produktu; jako separator dziesiętny używana jest kropka - '.' Format: 0.00.                                                                                                                                         |
-| 6              | Currency  | NIE      | string{1,3}   | <p>Waluta wypłaty. Domyślną walutą jest PLN (użycie innej waluty musi być uzgodnione w trakcie integracji). W ramach ServiceID obsługiwana jest jedna waluta.<br>Dopuszczalne jedynie wartości: PLN, EUR, GBP oraz USD.</p>                                                                                                                                                                                                                |
-| nd.            | Hash      | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis Partnera**.                                                                                                                                                                                             |
-
-### Odpowiedź na żądanie
-
-W odpowiedzi na żądanie zwracany jest (w tej samej sesji HTTP) tekst w formacie XML, zawierający potwierdzenie wykonania operacji lub opis błędu (opis poniżej).
-
-Struktura potwierdzenia (XML)
-
-```xml
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<productRefund>
-		<serviceID>ServiceID</serviceID>
-		<messageID>MessageID</messageID>
-		<hash>Hash</hash>
-	</productRefund>
-```
-
-### Opis pól
-
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
-
-| kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                           |
-| -------------- | --------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1              | serviceID | TAK      | string{1,10}  | Identyfikator Serwisu Partnera. Pochodzi z żądania metody.                                                                                                                                                                                     |
-| 2              | messageID | TAK      | string{32}    | Pseudolosowy identyfikator komunikatu o długości 32 znaków alfanumerycznych alfabetu łacińskiego (np. na bazie UID). Pochodzi z żądania metody.                                                                                                |
-| nd.            | hash      | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis Partnera**. |
-
-Opcja wykonywania zwrotów do opłaconych transakcji możliwa jest do 12 miesięcy wstecz, licząc od daty rozpoczęcia transakcji. Wyjątek stanowią płatności BLIK, które ze względu na ograniczenia czasowe po stronie dostawcy Kanału płatności, można zwracać do 6 miesięcy wstecz.
-
-Powyższe terminy dotyczą realizowania zwrotów poprzez panel administracyjny oraz **productRefund**, np. za pośrednictwem własnych narzędzi administracyjnych. Po ich przekroczeniu zostanie zwrócony błąd (**TRANSACTION\_TOO\_OLD\_TO\_REFUND**). Schemat działania jest analogiczny jak w przypadku wypłat z salda. To znaczy, że System przyjmuje zlecenie i asynchronicznie przetwarza je w ciągu maksymalnie 30 minut, a w przypadku niepowodzenia informacja o operacjach zakończonych błędem jest wysyłana w raporcie następnego dnia roboczego.
-
-W przypadku problemów z połączeniem, przekroczenia maksymalnego czasu oczekiwania na odpowiedź, żądanie może zostać ponowione z tym samym MessageID bez obawy o zduplikowanie zlecenia. Za błąd uznać można wszystkie odpowiedzi inne niż założona (tj. z niepoprawnymi polami, w szczególności pustym lub niepoprawnym **hash**). W przypadku, gdy System zautoryzuje nadawcę komunikatu zwrotu, jednak nie uda się wykonać operacji, w odpowiedzi zwrócony zostanie komunikat błędu (Zob. [Komunikaty błędu](../../informacje-dodatkowe/errors.md#komunikaty-błędu)).
 
 ## Odpytanie o status zwrotu lub wypłaty z salda
 
@@ -232,10 +144,9 @@ Wszystkie parametry przekazywane są metodą POST (Content-Type: application/jso
 
 ### Lista dostępnych parametrów dla wypłat z salda
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
-
-**UWAGA:** Wymagane jedno z pól **serviceId** lub **balancePointId**.\
-Podanie obu spowoduje zatrzymanie przetwarzania żądania oraz błąd http.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 ### Przykład żądania
 
@@ -244,7 +155,6 @@ Struktura żądania (JSON)
 ```javascript
 {
   "serviceId": long,
-  "balancePointId": long,
   "messageId": "string",
   "method": "string", // BALANCE_PAYOFF, TRANSACTION_REFUND, PRODUCT_REFUND
   "hash": "string"
@@ -265,10 +175,9 @@ Przykładowe żądanie (JSON)
 | kolejność Hash | nazwa          | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                             |
 | -------------- | -------------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1              | serviceId      | TAK      | string{1,10}  | Identyfikator Serwisu Partnera.                                                                                                                                                                                                                                                                                                                                  |
-| 1              | balancePointId | TAK      | string{1,10}  | Identyfikator Punktu Rozliczeń.                                                                                                                                                                                                                                                                                                                                  |
 | 2              | messageId      | TAK      | string{32}    | Należy podać ten sam identyfikator komunikatu, który był wysłany poprzednio przy zleceniu zwrotu lub wypłaty z salda.                                                                                                                                                                                                                                            |
-| 3              | method         | TAK      | enum          | <p>Operacja dla której powstała transakcja rozliczeniowa:<br><a href="payouts.md#wypłaty-z-salda"><strong>BALANCE_PAYOFF</strong> - wypłata z salda</a><br><a href="refunds.md#zwroty-transakcji"><strong>TRANSACTION_REFUND</strong> - zwrot transakcji</a><br><a href="refunds.md#zwroty-produktu"><strong>PRODUCT_REFUND</strong> - zwrot produktu</a></p>    |
-| nd.            | hash           | TAK      | string{1,128} | Stosowany jest klucz współdzielony przypisany do zastosowanego identyfikatora konfiguracji (Serwisu lub Punktu Rozliczeń). Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis**. |
+| 3              | method         | TAK      | enum          | <p>Operacja dla której powstała transakcja rozliczeniowa:<br><a href="payouts.md#wypłaty-z-salda"><strong>BALANCE_PAYOFF</strong> - wypłata z salda</a><br><a href="#zwroty-transakcji"><strong>TRANSACTION_REFUND</strong> - zwrot transakcji</a><br><strong>PRODUCT_REFUND</strong> - zwrot produktu</p>    |
+| nd.            | hash           | TAK      | string{1,128} | Stosowany jest klucz współdzielony przypisany do Serwisu Partnera. Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis**. |
 
 ### Odpowiedź na żądanie
 
@@ -277,7 +186,6 @@ Struktura potwierdzenia (JSON)
 ```javascript
 {
   "serviceId": long,
-  "balancePointId":long,
   "messageId": "string",
   "status": "NEW",
   "remoteOutId": "string",
@@ -293,7 +201,6 @@ Przykładowe potwierdzenie (JSON)
 ```json
 {
   "serviceId": 101773,
-  "balancePointId": null,
   "messageId": "817684a6294c43ab8b375bae217a5592",
   "status": "DONE",
   "remoteOutId": "ZWTR_6063048773",
@@ -304,14 +211,15 @@ Przykładowe potwierdzenie (JSON)
 }
 ```
 
-## Opis pól
+### Opis pól
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa           | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | -------------- | --------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1              | serviceId       | TAK      | string{1,10}  | Identyfikator Serwisu Partnera. Pochodzi z żądania metody.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| 1              | balancePointId  | TAK      | string{1,10}  | Identyfikator Punktu Rozliczeń. Pochodzi z żądania metody. _**UWAGA:** Zwrócone zostanie jedno z pól **ServiceID** lub **BalancePointID**._                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | 2              | messageId       | TAK      | string{32}    | Pseudolosowy identyfikator komunikatu o długości 32 znaków alfanumerycznych alfabetu łacińskiego (np. na bazie UID). Pochodzi z żądania metody.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | 3              | status          | TAK      | enum          | <p>Status przetwarzania:<br><strong>NEW</strong> - transakcja zapisana w systemie.<br><strong>WAITING_FOR_TRANSFER_DATA</strong> - transakcja czeka na dane do przelewu (tylko dla niektórych kanałów płatności).<br><strong>COMMISSIONS_CALCULATED</strong> - transakcja w procesie wyliczania prowizji o ile są takie zdefiniowane, według umowy z klientem. Jeśli nie ma konfiguracji ten krok jest pomijany.<br><strong>CANCELED_AMOUNT_EXCEEDS_TRANSACTION</strong> - transakcja anulowana, gdy kwota zwrotów przekracza kwotę transakcji. Może się do wydarzyć w dwóch przypadkach:<br>- dla zwrotów całości transakcji, gdy klient w jednym momencie wykona kilka zwrotów tej samej transakcji z różnymi messageId<br>- dla zwrotów częściowych, gdy klient w jednym momencie wykona wiele zwrotów częściowych i ich suma przekracza kwotę zwracanej transakcji<br>Ze względu na asynchroniczną walidację, ten błąd może wystąpić w wyniku błędnej integracji<br><strong>FAILED_ATTEMPT_OF_BALANCE_CHANGE</strong><br>- brak środków na saldzie, klient próbuje ponowić ściągnięcie środków z salda przez 30 minut.<br><strong>CANCELED_NO_FUNDS_ON_BALANCE</strong><br>- gdy przez 30 minut nie udało się ściągnąć środków z salda transakcja zostaje anulowane ( klienta ma możliwość ponowić wykonanie zwrotu z nowym messageId lub serwisowo po kontakcie z supportem jest możliwość po naszej stronie ręcznego ponowienia takiej transakcji). Jeśli transakcja nie została anulowana, to przy próbuje ponowienie jej z nowym messageId, request zostanie odbity z komunikatem że transakcja została zwrócona.<br><strong>CANCELED_MANUALLY_BY_SERVICES</strong><br>- transakcja anulowane ręcznie przez obsługę - można anulować ręcznie transakcje tylko wtedy gdy jeszcze nie zostały pobrane środki z salda.<br><strong>PROCESSING</strong><br>- transakcja przekazane do wykonania przelewu<br><strong>DONE</strong><br>- potwierdzone dokonanie przelewu (środki fizycznie wyszły)</p> |
 | 4              | remoteOutId     | NIE      | string{1,20}  | <p>Alfanumeryczny identyfikator transakcji rozliczeniowej nadany przez System płatności online.<br>Uzupełniany tylko dla statusu <strong>DONE</strong></p>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |

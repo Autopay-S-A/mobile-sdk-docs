@@ -6,7 +6,9 @@
 
 Płatność automatyczna to wygodny i bezpieczny sposób dokonywania powtarzalnych transakcji. Polega ona na automatycznym pobieraniu należności od Klienta w jej terminach płatności, po wcześniejszej aktywacji usługi. W przypadku kart odbywa się to poprzez przekierowanie klienta do formatki aktywacyjnej usługi. W przypadku BLIK - poprzez akceptację płatności automatycznej w Aplikacji Mobilnej Banku.
 
-**UWAGA:** Przed uruchomieniem płatności automatycznych, Partner zobowiązany jest do zapoznania się ze standardami Autopay oraz wymogami organizacji płatniczych VISA i Mastercard. Wymogi te mają na celu ograniczenie ryzyka wystąpienia chargebacków oraz zapewnienie zgodności z regulacjami branżowymi. Szczegółowe informacje dostępne są w artykule: [Wymogi dla transakcji automatycznych](https://developers.autopay.pl/online/wymogi-dla-platnosci-automatycznych)
+{% hint style="warning" %}
+Przed uruchomieniem płatności automatycznych, Partner zobowiązany jest do zapoznania się ze standardami Autopay oraz wymogami organizacji płatniczych VISA i Mastercard. Wymogi te mają na celu ograniczenie ryzyka wystąpienia chargebacków oraz zapewnienie zgodności z regulacjami branżowymi. Szczegółowe informacje dostępne są w artykule: [Wymogi dla transakcji automatycznych](https://developers.autopay.pl/online/wymogi-dla-platnosci-automatycznych)
+{% endhint %}
 
 Po skutecznym zautoryzowaniu transakcji aktywacyjnej, Autopay przekazuje do Partnera standardowy komunikat o zmianie statusu transakcji (ITN) oraz komunikat o uruchomieniu usługi płatności automatycznej (RPAN). Komunikat RPAN zawiera pole **clientHash**, którym Partner będzie identyfikować konkretną płatność automatyczną podczas późniejszych obciążeń oraz dezaktywacji usługi.
 
@@ -58,7 +60,7 @@ Parametry opcjonalne:
 
 * **BlikPPLabel** - Etykieta płatności powtarzalnej BLIK, wyświetlana w aplikacji mobilnej podczas jej akceptowania. W przypadku braku parametru, zostanie użyta jej wartość domyślna (ustalana w trakcie integracji).
 * **RecurringValidityTime** - Data ważności aktywowanych płatności automatycznych BLIK. Jeżeli jest pusta - ustawiana jest zgodnie z konfiguracją serwisu (może być bezterminowa).
-* **RecurringAcceptanceID** - ID regulaminu płatności (jeśli wynika to z odpowiedzi metody legalData (TODO: odwołanie wymaga potwierdzenia)).
+* **RecurringAcceptanceID** - ID regulaminu płatności (jeśli wynika to z odpowiedzi metody [legalData](../pozostale-operacje-api/legal-consents.md)).
 
 W odpowiedzi na przedtransakcję, System Autopay zwróci link do przekierowania Klienta (dla płatności kartowych) albo informację statusie rejestracji transakcji w systemie Autopay i BLIK (dla płatności BLIK). Dla płatności BLIK, należy przygotować się na następujące komunikaty błędów (**confirmation=NOTCONFIRMED** oraz **reason** o jednej z wartości poniżej):
 
@@ -69,7 +71,9 @@ W odpowiedzi na przedtransakcję, System Autopay zwróci link do przekierowania 
 | **TICKET\_EXPIRED**            | Podany kod BLIK wygasł                                     |
 | **TICKET\_USED**               | Podany kod BLIK został już wykorzystany                    |
 
-**UWAGA:** Niedozwolone jest rozpoczynanie transakcji aktywacyjnych z wybranym kanałem płatności automatycznej, ale bez wybranego RecurringAction.
+{% hint style="warning" %}
+Niedozwolone jest rozpoczynanie transakcji aktywacyjnych z wybranym kanałem płatności automatycznej, ale bez wybranego RecurringAction.
+{% endhint %}
 
 ### Proces aktywacji usługi płatności automatycznych
 
@@ -105,9 +109,13 @@ a) **AUTO** - płatność cykliczna (obciążenie bez udziału Klienta),
 
 b) **MANUAL** - płatność jednym kliknięciem (obciążenie zlecane przez Klienta, zwane OneClick).
 
-**UWAGA:** Udział klienta w opcji MANUAL, zazwyczaj ogranicza się do wywołania komunikatu (wybranie w Serwisie opcji zapłaty zapamiętaną kartą). W zdecydowanej większości przypadków wymagana jest dodatkowa autoryzacja w banku (w postaci 3DS lub kodu CVC). Wtedy zamiast obciążenia (i statusu zlecenia w odpowiedzi na przedtranksację), System zwróci link do kontynuacji – takie jest domyślne zachowanie systemu na środowisku testowym. Aby przetestować scenariusz obciążenia bez potrzeby dodatkowej autoryzacji należy zgłosić potrzebę zmiany konfiguracji Systemu na czas testu.
+{% hint style="warning" %}
+Udział klienta w opcji MANUAL, zazwyczaj ogranicza się do wywołania komunikatu (wybranie w Serwisie opcji zapłaty zapamiętaną kartą). W zdecydowanej większości przypadków wymagana jest dodatkowa autoryzacja w banku (w postaci 3DS lub kodu CVC). Wtedy zamiast obciążenia (i statusu zlecenia w odpowiedzi na przedtranksację), System zwróci link do kontynuacji – takie jest domyślne zachowanie systemu na środowisku testowym. Aby przetestować scenariusz obciążenia bez potrzeby dodatkowej autoryzacji należy zgłosić potrzebę zmiany konfiguracji Systemu na czas testu.
+{% endhint %}
 
-**UWAGA:** Opcja niedostępna dla płatności automatycznych BLIK (BLIK OneClick).
+{% hint style="warning" %}
+Opcja niedostępna dla płatności automatycznych BLIK (BLIK OneClick).
+{% endhint %}
 
 ## Dezaktywacja usługi
 
@@ -124,7 +132,7 @@ sequenceDiagram
     A-)P: RPDN
 ```
 
-Może się również zdarzyć, że rezygnacja z usługi zostanie zainicjowana ze strony AP (np. na wniosek Klienta, banku lub organizacji kartowej). W takiej sytuacji System również dostarczy komunikat RPDN.
+Może się również zdarzyć, że rezygnacja z usługi zostanie zainicjowana ze strony AP (np. na wniosek Klienta, banku lub organizacji kartowej albo po otrzymaniu z banku informacji o wygaśnięciu karty użytej w płatności automatycznej). W takiej sytuacji System również dostarczy komunikat RPDN.
 
 ## Komunikat dezaktywacji płatności automatycznej
 
@@ -132,7 +140,9 @@ Serwis może wyłączyć usługę poprzez dedykowany komunikat. Wszystkie parame
 
 ## Lista parametrów dezaktywacji płatności automatycznej
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa      | wymagany | typ           | opis                                                                                                                                                                                                                                  |
 | -------------- | ---------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -141,7 +151,9 @@ Serwis może wyłączyć usługę poprzez dedykowany komunikat. Wszystkie parame
 | 3              | ClientHash | TAK      | string{1,64}  | Identyfikator płatności automatycznej.                                                                                                                                                                                                |
 | nd.            | Hash       | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis**. |
 
-**UWAGA:** Element Hash (komunikatu) służy do autentykacji dokumentu. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu oraz dołączonego klucza współdzielonego.
+{% hint style="warning" %}
+Element Hash (komunikatu) służy do autentykacji dokumentu. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu oraz dołączonego klucza współdzielonego.
+{% endhint %}
 
 ## Odpowiedź
 
@@ -175,8 +187,9 @@ a) **CONFIRMED** – wartości parametrów są poprawne oraz parametr Hash są z
 
 b) **NOTCONFIRMED** – wartości w obu komunikatach są niepoprawne lub niezgodność Hash – operacja nieautentyczna;
 
-**UWAGA:** Element hash (w odpowiedzi na komunikat) służy do autentykacji odpowiedzi i liczony jest z wartości parametrów odpowiedzi. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu (bez znaczników) oraz dołączonego klucza współdzielonego. Opis w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji).
+{% hint style="warning" %}
+Element hash (w odpowiedzi na komunikat) służy do autentykacji odpowiedzi i liczony jest z wartości parametrów odpowiedzi. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu (bez znaczników) oraz dołączonego klucza współdzielonego. Opis w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji).
+{% endhint %}
 
 [Specyfikacja RPAN i RPDN](../powiadomienia/rpan-rpdn.md)
 
-> TODO MIG-068: Odwołania źródłowe nie mają jednoznacznego celu w zakresie migracji. Potwierdzić zależność techniczną i właściwy cel; nie zastąpiono jej domyślnie inną usługą.

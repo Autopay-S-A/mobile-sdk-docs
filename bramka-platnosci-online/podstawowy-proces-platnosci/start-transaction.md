@@ -14,7 +14,9 @@ Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach pa
 
 Rozpoczęcie transakcji następuje przez przesłanie wywołaniem HTTPS kombinacji powyższych parametrów na ustalony w trakcie rejestracji usługi adres Systemu płatności online.
 
-**UWAGA:** Liczba transakcji wystartowanych przez Partnera w ciągu jednej minuty może wynieść maksymalnie 100, chyba że Partner i AP ustalą wyższy limit w ramach zawartej umowy.
+{% hint style="warning" %}
+Liczba transakcji wystartowanych przez Partnera w ciągu jednej minuty może wynieść maksymalnie 100, chyba że Partner i AP ustalą wyższy limit w ramach zawartej umowy.
+{% endhint %}
 
 Przykład rozpoczęcia transakcji:
 
@@ -34,7 +36,13 @@ Parametry:
 
 Przesłanie komunikatu bez wszystkich **wymaganych** parametrów (**ServiceID, OrderID, Amount i Hash**) lub zawierającego błędne ich wartości, spowoduje zatrzymanie procesu płatności wraz z podaniem kodu błędu transakcji i krótką informacją o błędzie (brak powrotu na stronę Serwisu Partnera).
 
-**WAŻNE!** "Para parametrów **ServiceID** i **OrderID** jednoznacznie identyfikuje transakcję. Niedopuszczalne jest powtórzenie się wartości parametru **OrderID** przez cały okres świadczenia usług przez System na rzecz jednego Serwisu Partnera (**ServiceID**)."
+{% hint style="info" %}
+Zdecydowanie zalecamy przekazywanie również parametru **CustomerEmail** (adres email Klienta).
+{% endhint %}
+
+{% hint style="warning" %}
+Para parametrów **ServiceID** i **OrderID** identyfikuje transakcję. Zalecamy, aby wartość **OrderID** nie powtarzała się przez cały okres świadczenia usług przez System na rzecz jednego Serwisu Partnera (**ServiceID**). Domyślnie System nie weryfikuje unikalności **OrderID** przy starcie transakcji; blokowanie startów z powtórzonym **OrderID** można uzgodnić w trakcie integracji.
+{% endhint %}
 
 Opcjonalny parametr **GatewayID** służy do określenia Kanału Płatności, za pomocą którego ma zostać zrealizowana płatność. Pozwala to przenieść ekran wyboru Kanałów Płatności do Serwisu. Aktualna lista identyfikatorów Kanałów Płatności, wraz z logotypami, dostępna jest poprzez metodę **gatewayList**.
 

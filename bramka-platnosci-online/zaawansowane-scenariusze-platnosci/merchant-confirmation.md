@@ -1,14 +1,14 @@
 # Płatność z potwierdzeniem merchanta
 
-> TODO MIG-027: Opis wskazuje końcowy paymentStatus=CONFIRMED, tabela odpowiedzi wskazuje SUCCESS. Zachowano oba opisy. Potwierdzić końcowy status ITN i pełną listę statusów dla tego modelu.
-
 ## Płatność z potwierdzeniem merchanta
 
-**WAŻNE!** Jeżeli interesuje Cię usługa - zgłoś się do swojego opiekuna biznesowego.
+{% hint style="warning" %}
+Jeżeli interesuje Cię usługa - zgłoś się do swojego opiekuna biznesowego.
+{% endhint %}
 
 ### Opis ogólny działania usługi płatności z potwierdzeniem merchanta
 
-Proces płatności z potwierdzeniem merchanta to model płatniczy, w którym środki klienta są wstępnie przyjmowane, a następnie – dopiero po decyzji merchanta – przekazywane Merchantowi do rozliczenia (/transactionConfirm (TODO: odwołanie wymaga potwierdzenia)) lub zwracana na rachunek Klienta ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieoplaconej-transakcji)) na żądanie Merchanta albo na skutek upływu czasu. Umożliwia to weryfikację zamówienia, sprawdzenie dostępności towaru lub wykonanie dodatkowych procesów decyzyjnych, zanim środki faktycznie zostaną przekazane na rachunek bankowy Merchanta. Poniżej przedstawiono przebieg procesu zgodnie z diagramem sekwencji.
+Proces płatności z potwierdzeniem merchanta to model płatniczy, w którym środki klienta są wstępnie przyjmowane, a następnie – dopiero po decyzji merchanta – przekazywane Merchantowi do rozliczenia ([/transactionConfirm](#opis-metody-potwierdzającej-transakcję)) lub zwracana na rachunek Klienta ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieopłaconej-transakcji)) na żądanie Merchanta albo na skutek upływu czasu. Umożliwia to weryfikację zamówienia, sprawdzenie dostępności towaru lub wykonanie dodatkowych procesów decyzyjnych, zanim środki faktycznie zostaną przekazane na rachunek bankowy Merchanta. Poniżej przedstawiono przebieg procesu zgodnie z diagramem sekwencji.
 
 ```mermaid
 sequenceDiagram
@@ -63,17 +63,17 @@ Po zautoryzowaniu transakcji przez Klienta i otrzymaniu informacji o pobraniu ś
 
 W późniejszym momencie (asynchronicznie), po wykonaniu swoich procesów biznesowych, merchant podejmuje decyzję co do dalszego losu transakcji.
 
-### Decyzja pozytywna – pobranie środków (/transactionConfirm (TODO: odwołanie wymaga potwierdzenia))
+### Decyzja pozytywna – pobranie środków (/transactionConfirm)
 
-Jeżeli transakcja jest poprawna i zamówienie może zostać zrealizowane Merchant powinien wywołać endpoint /transactionConfirm (TODO: odwołanie wymaga potwierdzenia) co oznacza chęć przekazania środków do ostatecznego rozliczenia.. Na potwierdzenie transakcji ma maksymalnie 120 minut (liczone od momentu otrzymania przez Autopay potwierdzenia autoryzacji). Potwierdzeniem ostatecznej akceptacji transakcji jest asynchroniczny komunikat ITN ze statusem **paymentStatus = CONFIRMED**.
+Jeżeli transakcja jest poprawna i zamówienie może zostać zrealizowane Merchant powinien wywołać endpoint [/transactionConfirm](#opis-metody-potwierdzającej-transakcję) co oznacza chęć przekazania środków do ostatecznego rozliczenia. Na potwierdzenie transakcji ma maksymalnie 120 minut (liczone od momentu otrzymania przez Autopay potwierdzenia autoryzacji). Potwierdzeniem ostatecznej akceptacji transakcji jest asynchroniczny komunikat ITN ze statusem **paymentStatus = SUCCESS**.
 
-### Decyzja negatywna – anulowanie transakcji ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieoplaconej-transakcji)) lub timeout
+### Decyzja negatywna – anulowanie transakcji ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieopłaconej-transakcji)) lub timeout
 
-Jeśli transakcja nie może zostać zrealizowana (np. brak towaru, błąd zamówienia, negatywna weryfikacja), Merchant powinien wywołać metodę [/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieoplaconej-transakcji). Ostatecznie, jeśli merchant nie podejmie decyzji w odpowiednim czasie, może wystąpić **timeout**, co jest równoznaczne z automatycznym żądaniem anulowania transakcji przez Merchanta. Potwierdzenie anulowania transakcji jest wysyłka komunikatu ITN ze statusem **paymentStatus = FAILURE** - oznaczający zwrot środków do Klienta.
+Jeśli transakcja nie może zostać zrealizowana (np. brak towaru, błąd zamówienia, negatywna weryfikacja), Merchant powinien wywołać metodę [/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieopłaconej-transakcji). Ostatecznie, jeśli merchant nie podejmie decyzji w odpowiednim czasie, może wystąpić **timeout**, co jest równoznaczne z automatycznym żądaniem anulowania transakcji przez Merchanta. Potwierdzenie anulowania transakcji jest wysyłka komunikatu ITN ze statusem **paymentStatus = FAILURE** - oznaczający zwrot środków do Klienta.
 
 ### Opis metody potwierdzającej transakcję
 
-Metoda **https://{host\_bramki}/webapi/transactionConfirm** służy do **finalizacji transakcji** w modelu płatności z potwierdzeniem merchanta poprzez pobranie wcześniej zablokowanych środków (zakomunikowanych statusem ITN **paymentStatus = ON\_HOLD**). Wywołanie tej operacji jest wykonywane przez Merchanta, po zakończeniu weryfikacji zamówienia (np. potwierdzeniu dostępności, poprawności danych, decyzji antyfraudowej). Po poprawnym potwierdzeniu transakcji Autopay przekaże wynik w komunikacie ITN ze statusem **paymentStatus = CONFIRMED**.
+Metoda **https://{host\_bramki}/webapi/transactionConfirm** służy do **finalizacji transakcji** w modelu płatności z potwierdzeniem merchanta poprzez pobranie wcześniej zablokowanych środków (zakomunikowanych statusem ITN **paymentStatus = ON\_HOLD**). Wywołanie tej operacji jest wykonywane przez Merchanta, po zakończeniu weryfikacji zamówienia (np. potwierdzeniu dostępności, poprawności danych, decyzji antyfraudowej). Po poprawnym potwierdzeniu transakcji Autopay przekaże wynik w komunikacie ITN ze statusem **paymentStatus = SUCCESS**.
 
 ### Lista parametrów żądania metody potwierdzającej transakcję
 
@@ -81,7 +81,9 @@ Wszystkie parametry przekazywane są metodą POST (Content-Type: application/x-w
 
 Dodatkowo podczas wywołania należy przesłać nagłówek HTTP BmHeader o wartości pay-bm (**BmHeader: pay-bm**).
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa     | wymagany | typ            | opis                                                                                                                                                                                                                                                                                |
 | -------------- | --------- | -------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -112,4 +114,3 @@ Przykładowa odpowiedź (XML):
 </transaction>
 ```
 
-> TODO MIG-043: Odwołania źródłowe nie mają jednoznacznego celu w zakresie migracji. Potwierdzić zależność techniczną i właściwy cel; nie zastąpiono jej domyślnie inną usługą.
