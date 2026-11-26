@@ -39,6 +39,8 @@
   * [Preautoryzacja kartowa](bramka-platnosci-online/zaawansowane-scenariusze-platnosci/card-preauthorization.md)
   * [Płatność z potwierdzeniem merchanta](bramka-platnosci-online/zaawansowane-scenariusze-platnosci/merchant-confirmation.md)
   * [BLIK OneClick](bramka-platnosci-online/zaawansowane-scenariusze-platnosci/blik-oneclick.md)
+  * [Transakcje leasingowe B2B (VAS Payer Paywall)](bramka-platnosci-online/zaawansowane-scenariusze-platnosci/vas-payer-paywall.md)
+  * [Link do płatności z faktury KSeF](bramka-platnosci-online/zaawansowane-scenariusze-platnosci/ksef-payment-link.md)
 * [Dane transakcji](bramka-platnosci-online/dane-transakcji/README.md)
   * [Parametry transakcji](bramka-platnosci-online/dane-transakcji/parameters.md)
   * [Koszyk produktów](bramka-platnosci-online/dane-transakcji/product-basket.md)

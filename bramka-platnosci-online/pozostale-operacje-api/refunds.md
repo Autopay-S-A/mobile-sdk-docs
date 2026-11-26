@@ -117,7 +117,20 @@ Struktura komunikatu błędu (JSON) status HTTP 200
 
 Opcja wykonywania zwrotów do opłaconych transakcji możliwa jest do 12 miesięcy wstecz, licząc od daty rozpoczęcia transakcji. Wyjątek stanowią płatności BLIK, które ze względu na ograniczenia czasowe po stronie dostawcy Kanału płatności, można zwracać do 6 miesięcy wstecz.
 
-Powyższe terminy dotyczą realizowania zwrotów poprzez panel administracyjny oraz **transactionRefund/v3**, np. za pośrednictwem własnych narzędzi administracyjnych. Po ich przekroczeniu zostanie zwrócony błąd (**TRANSACTION\_TOO\_OLD\_TO\_REFUND**). Schemat działania jest analogiczny jak w przypadku wypłat z salda. To znaczy, że System przyjmuje zlecenie i asynchronicznie przetwarza je w ciągu maksymalnie 30 minut, a w przypadku niepowodzenia informacja o operacjach zakończonych błędem jest wysyłana w raporcie następnego dnia roboczego.
+Powyższe terminy dotyczą realizowania zwrotów poprzez panel administracyjny oraz **transactionRefund/v3**, np. za pośrednictwem własnych narzędzi administracyjnych. Po ich przekroczeniu zostanie zwrócony błąd (**TRANSACTION\_TOO\_OLD\_TO\_REFUND**).
+
+{% hint style="warning" %}
+{% hint style="warning" %}
+Potwierdzenie przyjęcia zlecenia nie jest równoznaczne z faktycznym jego wykonaniem. Przetwarzanie zwrotu odbywa się asynchronicznie i składa się z kilku etapów. W trakcie obsługi żądania System weryfikuje jedynie poprawność przesłanych pól i ich wartości, a następnie zapisuje zlecenie i przekazuje je do realizacji. Dane do przelewu (np. rachunek, nazwa odbiorcy, tytuł) nie są wyznaczane w momencie przyjmowania żądania – są one ustalane w kolejnym, asynchronicznym kroku. Zwrot może być realizowany do 30 minut od momentu wysyłki żądania zwrotu i nie zawsze może się zakończyć sukcesem.
+{% endhint %}
+
+Oznacza to, że Partner może otrzymać poprawną odpowiedź (HTTP 200 wraz z potwierdzeniem przyjęcia zlecenia), a mimo to zwrot nie zostanie zrealizowany – np. z powodu niewystarczających środków na saldzie lub błędu walidacji na etapie wyznaczania danych do przelewu, gdy nie da się ustalić wszystkich wymaganych danych (brak nazwy odbiorcy, numeru rachunku itp.).
+
+Zalecany sposób weryfikacji realizacji zwrotu:
+
+1. Odebrać powiadomienie ISTN o zmianie statusu zwrotu (patrz [ISTN – status rozliczenia](../powiadomienia/istn.md#natychmiastowe-powiadomienia-o-zmianie-statusu-transakcji-rozliczeniowej-istn)).
+2. W przypadku otrzymania informacji o błędzie odpytać usługę **outDetailsV2** o jego szczegóły (patrz [Odpytanie o status zwrotu lub wypłaty z salda](#odpytanie-o-status-zwrotu-lub-wypłaty-z-salda)).
+{% endhint %}
 
 W przypadku problemów z połączeniem, przekroczenia maksymalnego czasu oczekiwania na odpowiedź, żądanie może zostać ponowione z tym samym MessageID bez obawy o zduplikowanie zlecenia. Za błąd uznać można wszystkie odpowiedzi inne niż założona (tj. z niepoprawnymi polami, w szczególności pustym lub niepoprawnym **hash**). W przypadku, gdy System zautoryzuje nadawcę komunikatu zwrotu, jednak nie uda się wykonać operacji, w odpowiedzi zwrócony zostanie komunikat błędu.
 

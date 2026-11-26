@@ -8,7 +8,7 @@ Jeżeli interesuje Cię usługa - zgłoś się do swojego opiekuna biznesowego.
 
 ### Opis ogólny działania usługi płatności z potwierdzeniem merchanta
 
-Proces płatności z potwierdzeniem merchanta to model płatniczy, w którym środki klienta są wstępnie przyjmowane, a następnie – dopiero po decyzji merchanta – przekazywane Merchantowi do rozliczenia ([/transactionConfirm](#opis-metody-potwierdzającej-transakcję)) lub zwracana na rachunek Klienta ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieoplaconej-transakcji)) na żądanie Merchanta albo na skutek upływu czasu. Umożliwia to weryfikację zamówienia, sprawdzenie dostępności towaru lub wykonanie dodatkowych procesów decyzyjnych, zanim środki faktycznie zostaną przekazane na rachunek bankowy Merchanta. Poniżej przedstawiono przebieg procesu zgodnie z diagramem sekwencji.
+Proces płatności z potwierdzeniem merchanta to model płatniczy, w którym środki klienta są wstępnie przyjmowane, a następnie – dopiero po decyzji merchanta – przekazywane Merchantowi do rozliczenia ([/transactionConfirm](#opis-metody-potwierdzającej-transakcję)) lub zwracana na rachunek Klienta ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieopłaconej-transakcji)) na żądanie Merchanta albo na skutek upływu czasu. Umożliwia to weryfikację zamówienia, sprawdzenie dostępności towaru lub wykonanie dodatkowych procesów decyzyjnych, zanim środki faktycznie zostaną przekazane na rachunek bankowy Merchanta. Poniżej przedstawiono przebieg procesu zgodnie z diagramem sekwencji.
 
 ```mermaid
 sequenceDiagram
@@ -67,9 +67,9 @@ W późniejszym momencie (asynchronicznie), po wykonaniu swoich procesów biznes
 
 Jeżeli transakcja jest poprawna i zamówienie może zostać zrealizowane Merchant powinien wywołać endpoint [/transactionConfirm](#opis-metody-potwierdzającej-transakcję) co oznacza chęć przekazania środków do ostatecznego rozliczenia. Na potwierdzenie transakcji ma maksymalnie 120 minut (liczone od momentu otrzymania przez Autopay potwierdzenia autoryzacji). Potwierdzeniem ostatecznej akceptacji transakcji jest asynchroniczny komunikat ITN ze statusem **paymentStatus = SUCCESS**.
 
-### Decyzja negatywna – anulowanie transakcji ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieoplaconej-transakcji)) lub timeout
+### Decyzja negatywna – anulowanie transakcji ([/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieopłaconej-transakcji)) lub timeout
 
-Jeśli transakcja nie może zostać zrealizowana (np. brak towaru, błąd zamówienia, negatywna weryfikacja), Merchant powinien wywołać metodę [/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieoplaconej-transakcji). Ostatecznie, jeśli merchant nie podejmie decyzji w odpowiednim czasie, może wystąpić **timeout**, co jest równoznaczne z automatycznym żądaniem anulowania transakcji przez Merchanta. Potwierdzenie anulowania transakcji jest wysyłka komunikatu ITN ze statusem **paymentStatus = FAILURE** - oznaczający zwrot środków do Klienta.
+Jeśli transakcja nie może zostać zrealizowana (np. brak towaru, błąd zamówienia, negatywna weryfikacja), Merchant powinien wywołać metodę [/transactionCancel](../pozostale-operacje-api/cancel-transaction.md#anulowanie-nieopłaconej-transakcji). Ostatecznie, jeśli merchant nie podejmie decyzji w odpowiednim czasie, może wystąpić **timeout**, co jest równoznaczne z automatycznym żądaniem anulowania transakcji przez Merchanta. Potwierdzenie anulowania transakcji jest wysyłka komunikatu ITN ze statusem **paymentStatus = FAILURE** - oznaczający zwrot środków do Klienta.
 
 ### Opis metody potwierdzającej transakcję
 
