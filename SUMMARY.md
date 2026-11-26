@@ -12,6 +12,7 @@
 
 * [Pierwsze kroki](bramka-platnosci-online/pierwsze-kroki/README.md)
   * [Jak działa płatność](bramka-platnosci-online/pierwsze-kroki/payment-overview.md)
+  * [Modele rozliczeń](bramka-platnosci-online/pierwsze-kroki/settlement-models.md)
   * [Dane potrzebne do integracji](bramka-platnosci-online/pierwsze-kroki/integration-credentials.md)
   * [Uruchomienie i testy](bramka-platnosci-online/pierwsze-kroki/testing-and-go-live.md)
 * [Podstawowy proces płatności](bramka-platnosci-online/podstawowy-proces-platnosci/README.md)

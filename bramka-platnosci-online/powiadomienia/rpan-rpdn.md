@@ -1,7 +1,5 @@
 # RPAN i RPDN – płatności automatyczne
 
-> TODO MIG-028: Przykład RPDN zawiera otwarcie recurringData zamiast jego zamknięcia. Zachowano oryginalny XML. Potwierdzić poprawny XML przed użyciem przykładu.
-
 ### Komunikat RPAN
 
 Komunikat RPAN, informujacy o uruchomieniu usługi płatności automatycznej wysyłany jest jest protokołem HTTPS (domyślnie port 443), metodą POST, jako parametr HTTP o nazwie `recurring`. Parametr ten jest zapisany mechanizmem kodowania transportowego `Base64`.
@@ -132,7 +130,7 @@ Format dokumentu (XML)
 			<clientHash>ClientHash</clientHash>
 			<deactivationSource>DeactivationSource</deactivationSource>
 			<deactivationDate>DeactivationDate</deactivationDate>
-		<recurringData>
+		</recurringData>
 		<hash>Hash</hash>
 	</recurringDeactivation>
 ```
