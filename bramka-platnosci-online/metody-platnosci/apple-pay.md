@@ -7,17 +7,12 @@ Implementacja Apple Pay na stronie sklepu.
 Prośba o kontakt z produktem infrastruktury płatniczej - potrzebne wsparcie IT.
 
 1. Utworzenie konta przez Partnera i uzyskanie certyfikatu przetwarzania płatności zgodnie z [dokumentem **Configure Apple Pay (iOS, watchOS)**](https://help.apple.com/developer-account/#/devb2e62b839?sub=devf31990e3f)
-
-&#x20;\- **certyfikat komunikacyjny** – do tzw. przedstawienia się – _merchant identifier_
-
-&#x20;\- **certyfikat obciążający** – _payment processing certificate_
-
+   - **certyfikat komunikacyjny** – do tzw. przedstawienia się – _merchant identifier_
+   - **certyfikat obciążający** – _payment processing certificate_
 2. Implementacja Web zgodnie z [dokumentem **Apple Pay on the Web**](https://developer.apple.com/documentation/apple_pay_on_the_web/)
 3. Przygotowanie 2 endpointów po stronie Partnera, w domenie zgłoszonej w Apple (z wykorzystaniem 2 certyfikatów od Apple):
-
-&#x20;\- do rozpoczęcia sesji
-
-&#x20;\- do obciążenia Klienta na podstawie tokena od Apple
+   - do rozpoczęcia sesji
+   - do obciążenia Klienta na podstawie tokena od Apple
 
 WSKAZÓWKA: safari (przeglądarka Klienta) komunikuje się z endpointem zwracającym sesję (o którym mowa powyżej), po czym Apple odpytuje się o sesję Autopay.
 

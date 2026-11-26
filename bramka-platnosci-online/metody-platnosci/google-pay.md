@@ -36,9 +36,28 @@ Na swojej stronie sklep musi wywołać skrypt udostępniony przez Google z podmi
 
 **WSKAZÓWKA:** Szczegóły w [dokumentacji deweloperskiej Google](https://developers.google.com/pay/api/web/guides/tutorial).
 
-> TODO MIG-050: Brak obrazu/diagramu: images/szczegółowy\_schemat\_komunikacji\_i\_wymiany\_danych.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
-
 _Szczegółowy schemat komunikacji i wymiany danych_
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant G as Google
+    participant K as Klient (przeglądarka)
+    participant M as Merchant
+    participant A as Autopay
+    participant AQ as Acquirer
+
+    K->>M: Wybranie Google Pay
+    M->>G: Wywołanie skryptu z nazwą procesora Autopay i pozyskanie danych
+    G->>M: Zwrócenie zaszyfrowanych danych karty
+    M->>A: Rejestracja przedtransakcji z parametrem PaymentToken (Base64)
+    A->>A: Odszyfrowanie danych z Google
+    A->>AQ: Obciążenie karty Klienta (Charge)
+    AQ-->>A: Transakcja poprawna
+    A-->>M: Odpowiedź XML ze statusem finalnym transakcji
+    M-->>K: Informacja o statusie finalnym transakcji
+    A-)M: Komunikat ITN potwierdzający realizację transakcji
+```
 
 ### Rejestracja Transakcji Google Pay
 

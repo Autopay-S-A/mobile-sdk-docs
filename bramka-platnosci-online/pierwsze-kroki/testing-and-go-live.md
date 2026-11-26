@@ -2,9 +2,9 @@
 
 ## Implementacja interfejsów i procesów po stronie Partnera
 
-W minimalnej wersji integracji należy zaimplementować obsługę rozpoczęcia transakcji, powrotu z niej oraz obsługę komunikacji ITN.
+W minimalnej wersji integracji należy zaimplementować [rozpoczęcie transakcji](../podstawowy-proces-platnosci/start-transaction.md), [powrót z płatności](../podstawowy-proces-platnosci/customer-redirect.md) oraz [odbiór komunikatów ITN](../podstawowy-proces-platnosci/transaction-status-and-itn.md).
 
-**WSKAZÓWKA:** Zaleca się zapoznanie ze schematem działania. W razie potrzeby warto zapoznać się także z dodatkowymi parametrami lub usługami.
+**WSKAZÓWKA:** Zaleca się zapoznanie ze [schematem działania](payment-overview.md). W razie potrzeby warto zapoznać się także z [dodatkowymi parametrami](../dane-transakcji/additional-parameters.md) lub [pozostałymi operacjami API](../pozostale-operacje-api/README.md).
 
 ## Testy integracyjne i migracja na środowisko produkcyjne
 

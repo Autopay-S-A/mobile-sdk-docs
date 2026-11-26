@@ -10,9 +10,12 @@ Decyzje podjęte podczas przeglądu komentarzy analityka i otwartych punktów TO
 
 | Data | Punkt | Decyzja |
 | --- | --- | --- |
-| 2026-11-20 | MIG-040–042, 044–049, 059, 064–067 | Brakujące schematy utrzymujemy jako diagramy Mermaid (lub tabele Markdown), odtworzone z obrazków starej dokumentacji, zamiast plików graficznych. |
+| 2026-11-20 | MIG-040–042, 044–050, 059, 064–067 | Brakujące schematy utrzymujemy jako diagramy Mermaid (lub tabele Markdown), odtworzone z obrazków starej dokumentacji, zamiast plików graficznych. |
 | 2026-11-20 | MIG-032 | Unikalność `OrderID` jest zalecana, nie wymagana; System domyślnie jej nie weryfikuje. `CustomerEmail` dokumentujemy jako parametr wymagany (bez opisywania wyjątków). |
 | 2026-11-20 | MIG-025 | Rozliczenia **MASS_TRANSFER** na poziomie produktu (`customerNRB`, `title`, `receiverName` itd.) oraz `idBalancePoint` w koszyku nie wchodzą do nowej dokumentacji. |
+| 2026-11-26 | Komentarz: indeks „Metody płatności” | Treść strony „Dostępne metody płatności” stanowi treść strony nadrzędnej „Metody płatności”; osobna podstrona usunięta. Adresy URL (angielskie nazwy plików) na razie bez zmian — temat odłożony. |
+| 2026-11-26 | Komentarz: „Karty płatnicze” | Strona opisuje trzy warianty płatności kartą: Paywall, WhiteLabel bez widgetu (`GatewayID` 1500/1503) i WhiteLabel z Widgetem Kartowym. Autopay nie oferuje integracji, w której Partner sam zbiera dane karty. |
+| 2026-11-26 | Komentarz: „Powrót klienta do serwisu” | Strona nosi tytuł „Powrót z płatności”. Po płatności System sam wyświetla podsumowanie i automatycznie przekierowuje do Serwisu Partnera; aktywacji wymaga tylko wyświetlanie podsumowania na żądanie (metoda confirmation). |
 
 ## Źródła i konfiguracja
 
@@ -142,7 +145,7 @@ Katalogu images/ źródła nie dostarczono. Żadnego brakującego diagramu nie z
 | bramka-platnosci-online/zaawansowane-scenariusze-platnosci/card-preauthorization.md | `images/SchematD.png` | Zastąpiono diagramem Mermaid |
 | bramka-platnosci-online/zaawansowane-scenariusze-platnosci/card-preauthorization.md | `images/SchematE.png` | Zastąpiono diagramem Mermaid |
 | bramka-platnosci-online/zaawansowane-scenariusze-platnosci/card-preauthorization.md | `images/SchematF.png` | Zastąpiono diagramem Mermaid |
-| bramka-platnosci-online/metody-platnosci/google-pay.md | `images/szczegółowy_schemat_komunikacji_i_wymiany_danych.png` | Brak pliku; TODO |
+| bramka-platnosci-online/metody-platnosci/google-pay.md | `images/szczegółowy_schemat_komunikacji_i_wymiany_danych.png` | Zastąpiono diagramem Mermaid |
 | bramka-platnosci-online/whitelabel/widget/cards.md | `images/widget-empty-example-page-start.png` | Brak pliku; TODO |
 | bramka-platnosci-online/whitelabel/widget/cards.md | `images/widget-card-example-page-loaded.png` | Brak pliku; TODO |
 | bramka-platnosci-online/whitelabel/widget/cards.md | `images/widget-card-example-page-invalid.png` | Brak pliku; TODO |
@@ -218,7 +221,7 @@ Katalogu images/ źródła nie dostarczono. Żadnego brakującego diagramu nie z
 | MIG-047 | bramka-platnosci-online/zaawansowane-scenariusze-platnosci/card-preauthorization.md | README-2.md: images/SchematD.png | Brak obrazu/diagramu: images/SchematD.png. | Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. | Rozwiązane 2026-11-20: odtworzono jako diagram Mermaid na podstawie ~/documentation/images |
 | MIG-048 | bramka-platnosci-online/zaawansowane-scenariusze-platnosci/card-preauthorization.md | README-2.md: images/SchematE.png | Brak obrazu/diagramu: images/SchematE.png. | Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. | Rozwiązane 2026-11-20: odtworzono jako diagram Mermaid na podstawie ~/documentation/images |
 | MIG-049 | bramka-platnosci-online/zaawansowane-scenariusze-platnosci/card-preauthorization.md | README-2.md: images/SchematF.png | Brak obrazu/diagramu: images/SchematF.png. | Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. | Rozwiązane 2026-11-20: odtworzono jako diagram Mermaid na podstawie ~/documentation/images |
-| MIG-050 | bramka-platnosci-online/metody-platnosci/google-pay.md | README-2.md: images/szczegółowy_schemat_komunikacji_i_wymiany_danych.png | Brak obrazu/diagramu: images/szczegółowy_schemat_komunikacji_i_wymiany_danych.png. | Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. | Otwarte |
+| MIG-050 | bramka-platnosci-online/metody-platnosci/google-pay.md | README-2.md: images/szczegółowy_schemat_komunikacji_i_wymiany_danych.png | Brak obrazu/diagramu: images/szczegółowy_schemat_komunikacji_i_wymiany_danych.png. | Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. | Rozwiązane 2026-11-26: odtworzono jako diagram Mermaid na podstawie ~/documentation/images |
 | MIG-051 | bramka-platnosci-online/whitelabel/widget/cards.md | README-2.md: images/widget-empty-example-page-start.png | Brak obrazu/diagramu: images/widget-empty-example-page-start.png. | Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. | Otwarte |
 | MIG-052 | bramka-platnosci-online/whitelabel/widget/cards.md | README-2.md: images/widget-card-example-page-loaded.png | Brak obrazu/diagramu: images/widget-card-example-page-loaded.png. | Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. | Otwarte |
 | MIG-053 | bramka-platnosci-online/whitelabel/widget/cards.md | README-2.md: images/widget-card-example-page-invalid.png | Brak obrazu/diagramu: images/widget-card-example-page-invalid.png. | Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem. | Otwarte |
