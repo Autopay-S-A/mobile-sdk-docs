@@ -28,7 +28,7 @@ a) Założenie blokady podczas autoryzacji płatności jednorazowej (Patrz [Sche
 
 * kartowy kanał płatności (**GatewayID=1500 / 1512 / 1513 / 1523**) oraz
 * chęć zabezpieczenia środków, zamiast obciążenia (**Hold=true**)
-* opcjonalny wybór typu zakładanej blokady (**HoldType**); parametr wymagany warunkowo – tylko gdy **Hold=true**. Dopuszczalne wartości:
+* opcjonalny wybór typu zakładanej blokady (**HoldType**); parametr wymagany warunkowo – tylko gdy **Hold=true** (oba parametry opisano w [dodatkowych parametrach transakcji](../dane-transakcji/additional-parameters.md)). Dopuszczalne wartości:
   * **FINAL\_AUTHORIZATION** – autoryzowana kwota jest ostateczna i pozostanie niezmieniona do momentu rozliczenia (obciążenia) transakcji,
   * **PREAUTHORIZATION** – w momencie autoryzacji ostateczna kwota nie jest znana; autoryzowana kwota jest szacunkowa i może ulec zmianie.
 
