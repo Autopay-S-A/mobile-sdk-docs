@@ -10,7 +10,9 @@ Wszystkie parametry przekazywane są metodą POST (Content-Type: application/x-w
 
 ### Lista parametrów dostępnych dla statusu transakcji
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                           |
 | -------------- | --------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -22,9 +24,13 @@ Wszystkie parametry przekazywane są metodą POST (Content-Type: application/x-w
 
 Do poprawnego odpytania należy, wraz z przekazywanymi parametrami, przesłać zdefiniowany nagłówek HTTP o odpowiedniej treści. Dołączony nagłówek powinien nosić nazwę _'BmHeader'_ i posiadać następującą wartość _'pay-bm'_, w całości powinien prezentować się następująco _'BmHeader: pay-bm'_. W przypadku poprawnego komunikatu zwracany jest (w tej samej sesji HTTP) tekst w formacie XML, zawierający wszystkie transakcje o wskazanym OrderID wraz z podstawowymi o nich informacjami.
 
-**WSKAZÓWKA:** Sytuacja taka może mieć miejsce np. w przypadku, gdy Klient zmieni Kanał Płatności, wywoła ponownie ten sam start transakcji z historii przeglądarki itp. System umożliwia blokowanie takich przypadków, jednak opcja nie jest zalecana (nie byłoby możliwe opłacenie porzuconej transakcji).
+{% hint style="info" %}
+Sytuacja taka może mieć miejsce np. w przypadku, gdy Klient zmieni Kanał Płatności, wywoła ponownie ten sam start transakcji z historii przeglądarki itp. System umożliwia blokowanie takich przypadków, jednak opcja nie jest zalecana (nie byłoby możliwe opłacenie porzuconej transakcji).
+{% endhint %}
 
-**WAŻNE!** W przypadku gdy odpytanie dotyczy orderID, które występuje w ponad 50 transakcjach danego serwisu, zwracana jest odpowiedź (XML) z kodem błędu 403.
+{% hint style="warning" %}
+W przypadku gdy odpytanie dotyczy orderID, które występuje w ponad 50 transakcjach danego serwisu, zwracana jest odpowiedź (XML) z kodem błędu 403.
+{% endhint %}
 
 Struktura odpowiedzi w przypadku osiągniętego limitu transakcji z tym samym orderId:
 
@@ -39,7 +45,9 @@ Struktura odpowiedzi w przypadku osiągniętego limitu transakcji z tym samym or
 
 ### Lista pól dla zapytania o status transakcji
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa                | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                          |
 | -------------- | -------------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -54,7 +62,9 @@ Struktura odpowiedzi w przypadku osiągniętego limitu transakcji z tym samym or
 | 10             | paymentStatusDetails | NIE      | string{64}    | Szczegółowy status transakcji, wartość może być ignorowana przez Serwis Partnera. _**WSKAZÓWKA:** Szczegółowy opis w części_ [_Szczegółowe statusy transakcji_](../dane-transakcji/statuses.md#szczegółowe-statusy-transakcji)_._                                                                                                                             |
 | nd.            | hash                 | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis**.                                                                                                                         |
 
-**UWAGA:** Ponieważ metoda może zwrócić wiele transakcji, do Hash pobierane są kolejne transakcje (zgodnie z kolejnością występowania transakcji w odpowiedzi). W ramach danej transakcji zastosowanie ma kolejność zgodna z numerem obok pola (z wyłączeniem parametru ServiceID, poziom wyżej).
+{% hint style="warning" %}
+Ponieważ metoda może zwrócić wiele transakcji, do Hash pobierane są kolejne transakcje (zgodnie z kolejnością występowania transakcji w odpowiedzi). W ramach danej transakcji zastosowanie ma kolejność zgodna z numerem obok pola (z wyłączeniem parametru ServiceID, poziom wyżej).
+{% endhint %}
 
 Przykład łańcucha funkcji skrótu
 

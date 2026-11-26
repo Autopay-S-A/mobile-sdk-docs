@@ -14,7 +14,9 @@ Po stronie Systemu następuje walidacja przekazanych parametrów i zapisanie tra
 
 Po zakończeniu autoryzacji transakcji (na stronie Kanału Płatności) klient powraca z niego do Systemu, gdzie następuje automatyczne przekierowanie Klienta do Serwisu Partnera.
 
-**WSKAZÓWKA:** Szczegółowy opis struktury linku powrotu znajduje się w części [Przekierowanie do serwisu Partnera](../podstawowy-proces-platnosci/customer-redirect.md#przekierowanie-do-serwisu-partnera).
+{% hint style="info" %}
+Szczegółowy opis struktury linku powrotu znajduje się w części [Przekierowanie do serwisu Partnera](../podstawowy-proces-platnosci/customer-redirect.md#przekierowanie-do-serwisu-partnera).
+{% endhint %}
 
 Otrzymany z Kanału Płatności status autoryzacji (płatności) przekazywany jest z Systemu do Serwisu Partnera za pomocą komunikatu ITN. System będzie ponawiać wysyłanie komunikatów, aż do potwierdzenia odbioru przez Serwis Partnera lub upłynięcia czasu ważności powiadomienia. Transakcje, które zostaną zapłacone po opływie okresu ważności transakcji – zostaną zwrócone do Klienta (nadawcy przelewu).
 

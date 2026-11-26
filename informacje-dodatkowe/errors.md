@@ -1,12 +1,10 @@
 # Kody i komunikaty błędów
 
-> TODO MIG-038: Ogólny opis mówi o wszystkich błędach w XML, podczas gdy V3 opisuje błędy JSON. Potwierdzić zakres ogólnego opisu; stosować specyfikację właściwej operacji.
-
 ## Komunikaty błędu
 
 ### Opis komunikatów błędu
 
-Wszystkie komunikaty błędów będą zwracane w postaci dokumentu XML, zawierającego kod błędu, jego nazwę oraz opis. Ze względu na dużą zmienność możliwych błędów, nie jest utrzymywana pełna dokumentacja błędów.
+Metody przyjmujące dane w formacie `application/x-www-form-urlencoded` zwracają błędy w postaci dokumentu XML, zawierającego kod błędu, jego nazwę oraz opis (przykład poniżej). Metody JSON (np. `transactionRefund/v3`, `outDetails/v2`) zwracają błędy w formacie JSON — ich strukturę opisano przy danej metodzie. Ze względu na dużą zmienność możliwych błędów, nie jest utrzymywana pełna dokumentacja błędów.
 
 **WSKAZÓWKA:** Pole **description**, dokładnie opisuje każdy z błędów (pola **statusCode** i **name** mogą być ignorowane).
 

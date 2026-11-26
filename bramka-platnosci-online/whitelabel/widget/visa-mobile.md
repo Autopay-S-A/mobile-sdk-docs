@@ -18,11 +18,11 @@ W przeglądarce poniższa, przykładowa strona składa się z trzech sekcji:
 * sekcja środkowa zawiera miejsce, w którym znajduje się HTML IFRAME, do którego, w razie potrzeby, umieszczany będzie adres widget'u (visamobile lub standardowego kartowego wedle potrzeby)
 * sekcja dolna zawiera (domyślnie nieaktywny) przycisk `PayButon` spięty z SDK JS sterujący uruchomieniem procesu w widget'cie (w tym przykładzie przycisk uaktywnia się dopiero, gdy otrzymuje komunikat o poprawnej walidacji i uzyskaniu kompletu danych potrzebnych do wystartowania procesu)
 
-> TODO MIG-060: Brak obrazu/diagramu: images/widget-empty-example-page-start.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-empty-example-page-start.png)
 
 Kiedy zostanie wybrany kanał przeznaczony dla VisaMobile, wyświetla się dedykowany widok (oparty o HTML IFRAME), w którym podanie pełnego numeru telefonu (dzięki komunikatom walidacji) skutkuje uaktywnieniem przycisku "Zapłać".
 
-> TODO MIG-061: Brak obrazu/diagramu: images/widget-visa-mobile-example-page-loaded.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-visa-mobile-example-page-loaded.png)
 
 **Walidacja i skompletowanie danych**
 
@@ -34,7 +34,7 @@ W momencie wpisywania numeru telefonu Autopay Widget JS SDK otrzymuje od widget'
 
 O ten event można oprzeć uaktywnianie przycisku `PayButton`
 
-> TODO MIG-062: Brak obrazu/diagramu: images/widget-visa-mobile-example-page-ready.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-visa-mobile-example-page-ready.png)
 
 **Uzyskanie tokenu**
 
@@ -44,7 +44,7 @@ Przycisk należy powiązać z Autopay Widget JS SDK tak, aby jego kliknięcie tr
 {status: 'FORM_SUCCESS', message: 'eyJ...n19', prefix: '48', phoneNumber: '666666666', id: 'M2Z...ZmU2'}
 ```
 
-> TODO MIG-063: Brak obrazu/diagramu: images/widget-visa-mobile-example-page-clicked.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+![](../../../.gitbook/assets/widget-visa-mobile-example-page-clicked.png)
 
 ## Widget Visa Mobile - Szczegółowy schemat komunikacji i wymiany danych
 

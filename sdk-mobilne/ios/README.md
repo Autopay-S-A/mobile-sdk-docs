@@ -1164,7 +1164,7 @@ Istnieje kilka kluczowych metod, które aktualizują parametry obiektu, niektór
 * `func setCustomerPhone(_ customerPhone: String)` - numer telefonu klienta
 * `func setGatewayId(_ gatewayId: String)` - id kanału płatności (domyślnie 0)
 * `func setProductList(_ products: APProductList)` - lista produktów
-* `func setRegulations(regulations: [APRegulations])` - przekazywanie listy regulaminów ze stanami akceptacji \[TODO: zaktualizowąć pod obj-c]
+* `func setRegulations(regulations: [APRegulations])` - przekazywanie listy regulaminów ze stanami akceptacji <!-- TODO (zespół SDK): zaktualizować pod Objective-C -->
 * `func addParam(value: String, key: String)` - dodwanie parametrów reqestu na podstawie dostępnych w `APRequestDataParamKey` lub customowych
 
 **Apple Pay**

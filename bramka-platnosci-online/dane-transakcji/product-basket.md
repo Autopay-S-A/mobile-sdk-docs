@@ -1,9 +1,5 @@
 # Koszyk produktów
 
-<!-- TODO MIG-025: Źródło: README-2.md:3272–3312. Problem: Opis MASS_TRANSFER wiąże rozliczenia produktów z Punktami Rozliczeń; nie przeniesiono niejednoznacznego wariantu. Wymagana decyzja/materiał: Potwierdzić niezależny od Punktów Rozliczeń zakres parametrów rozliczania produktów. -->
-
-> TODO MIG-025: Opis MASS_TRANSFER wiąże rozliczenia produktów z Punktami Rozliczeń; nie przeniesiono niejednoznacznego wariantu. Potwierdzić niezależny od Punktów Rozliczeń zakres parametrów rozliczania produktów.
-
 ## Koszyk produktów
 
 ### Opis koszyka produktów

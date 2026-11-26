@@ -10,7 +10,9 @@ Google Pay to produkt umożliwiający uzyskanie zaszyfrowanych danych karty pła
 
 W celu dokonania płatności przez Google Pay należy zapisać kartę płatniczą na swoim koncie Google, używając jakiejkolwiek platformy Google (np. kupując aplikacje w Google Play) lub bezpośrednio na stronie [Google Pay](https://pay.google.com/payments/home#paymentMethods).
 
-**UWAGA:** Usługa wymaga wcześniejszego podpisania umowy z operatorem kartowym. Po szczegółowe informacje należy zwrócić się do Działu Biznesu Autopay.
+{% hint style="warning" %}
+Usługa wymaga wcześniejszego podpisania umowy z operatorem kartowym. Po szczegółowe informacje należy zwrócić się do Działu Biznesu Autopay.
+{% endhint %}
 
 ### Różne sposoby integracji
 
@@ -24,9 +26,13 @@ _Nie ma konieczności_ rejestrowania się indywidualnie jako Merchant w GooglePa
 
 Jeśli jednak merchant decyduje się samodzielnie zarejestrować w Konsoli GooglePay i zweryfikować domenę sklepu (pod którą osadzony będzie przycisk gPay) może wówczas w konfiguracji gPay na www, w sekcji `merchantInfo` użyć własnego `merchantId` oraz domeny w polu `merchantOrigin` _pomijając_ wartość `authJwt`.
 
-**UWAGA:** Niezależnie od sposobu integracji, we wszystkich przypadkach procesorem płatności pozostaje Autopay, dlatego w sekcji `tokenizationSpecification` zawsze typem integracji powinno być `PAYMENT_GATEWAY` ze wskazaniem Autopay (dawna nazwa BlueMedia) `'gateway': 'bluemedia'`
+{% hint style="warning" %}
+Niezależnie od sposobu integracji, we wszystkich przypadkach procesorem płatności pozostaje Autopay, dlatego w sekcji `tokenizationSpecification` zawsze typem integracji powinno być `PAYMENT_GATEWAY` ze wskazaniem Autopay (dawna nazwa BlueMedia) `'gateway': 'bluemedia'`
+{% endhint %}
 
-**UWAGA:** W przypadku integracji gPay w aplikacji mobilnej konieczne jest zarejstrowanie sie jako Merchant w Konsoli GooglePay, więcej o tym w ostatniej sekcji.
+{% hint style="warning" %}
+W przypadku integracji gPay w aplikacji mobilnej konieczne jest zarejstrowanie sie jako Merchant w Konsoli GooglePay, więcej o tym w ostatniej sekcji.
+{% endhint %}
 
 ### Integracja na www - schemat komunikacji
 
@@ -34,17 +40,40 @@ Po kliknięciu „Zapłać przez Google Pay" na stronie sklepu pojawia się form
 
 Na swojej stronie sklep musi wywołać skrypt udostępniony przez Google z podmienionymi danymi Procesora płatności.
 
-**WSKAZÓWKA:** Szczegóły w [dokumentacji deweloperskiej Google](https://developers.google.com/pay/api/web/guides/tutorial).
-
-> TODO MIG-050: Brak obrazu/diagramu: images/szczegółowy\_schemat\_komunikacji\_i\_wymiany\_danych.png. Dostarczyć oryginalny plik; nie zastępować wygenerowanym diagramem.
+{% hint style="info" %}
+Szczegóły w [dokumentacji deweloperskiej Google](https://developers.google.com/pay/api/web/guides/tutorial).
+{% endhint %}
 
 _Szczegółowy schemat komunikacji i wymiany danych_
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant G as Google
+    participant K as Klient (przeglądarka)
+    participant M as Merchant
+    participant A as Autopay
+    participant AQ as Acquirer
+
+    K->>M: Wybranie Google Pay
+    M->>G: Wywołanie skryptu z nazwą procesora Autopay i pozyskanie danych
+    G->>M: Zwrócenie zaszyfrowanych danych karty
+    M->>A: Rejestracja przedtransakcji z parametrem PaymentToken (Base64)
+    A->>A: Odszyfrowanie danych z Google
+    A->>AQ: Obciążenie karty Klienta (Charge)
+    AQ-->>A: Transakcja poprawna
+    A-->>M: Odpowiedź XML ze statusem finalnym transakcji
+    M-->>K: Informacja o statusie finalnym transakcji
+    A-)M: Komunikat ITN potwierdzający realizację transakcji
+```
 
 ### Rejestracja Transakcji Google Pay
 
 1. Sklep na swojej stronie musi wysłać zapytanie do Systemu Płatności Online AP, aby pobrać dane potrzebne do realizacji płatności Google Pay (**paybmApiResponse**).
 
-**WSKAZÓWKA:** Przykład wysłania zapytania dostępny jest na [GitHubie Autopay](https://github.com/bluepayment-plugin/google-pay-integration-sample/blob/master/sample_pre_transaction.php#L73).
+{% hint style="info" %}
+Przykład wysłania zapytania dostępny jest na [GitHubie Autopay](https://github.com/bluepayment-plugin/google-pay-integration-sample/blob/master/sample_pre_transaction.php#L73).
+{% endhint %}
 
 2. Następnie, sklep musi wywołać skrypt udostępniony w [części Samouczek dokumentacji deweloperskiej Google](https://developers.google.com/pay/api/web/guides/tutorial), zawierający:
 
@@ -73,7 +102,9 @@ PaymentDataRequest.merchantInfo = {
 
 3. Po kliknięciu „Zapłać przez Google Pay" na stronie sklepu pojawia się formularz Google Pay. Klient potwierdza w nim swoje konto Google i kartę, którą ma zamiar zapłacić (na tym etapie może też zmienić kartę na inną lub dodać nową). Skrypt w tle przekazuje zakodowane dane karty, które sklep musi przyjąć, a następnie zakodować funkcją Base64 i wysłać w parametrze **PaymentToken** wraz z pozostałymi parametrami startowymi transakcji (tj. danymi transakcji Systemu Płatności Online AP - szczegóły opisane są w części [Rozpoczęcie transakcji z dodatkowymi parametrami](../dane-transakcji/additional-parameters.md#rozpoczęcie-transakcji-z-dodatkowymi-parametrami)).
 
-**WSKAZÓWKA:** Kompletny przykład integracji z Google Pay dostępny jest na [GitHubie Autopay](https://github.com/bluepayment-plugin/google-pay-integration-sample/blob/master/sample_pre_transaction.php#L118).
+{% hint style="info" %}
+Kompletny przykład integracji z Google Pay dostępny jest na [GitHubie Autopay](https://github.com/bluepayment-plugin/google-pay-integration-sample/blob/master/sample_pre_transaction.php#L118).
+{% endhint %}
 
 ### Informację dodatkowe
 

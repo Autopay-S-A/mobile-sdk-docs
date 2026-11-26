@@ -1,7 +1,5 @@
 # Lista metod płatności – gatewayList
 
-> TODO MIG-031: Tabela używa gatewayID i iconUrl; przykład ma także id i iconURL. Opisy currencies wspominają Hash odpowiedzi, choć przykład go nie zawiera. Potwierdzić nazwy pól i zakres podpisywania odpowiedzi v3.
-
 ## Odpytywanie o listę aktualnie dostępnych Kanałów Płatności
 
 ### Opis
@@ -10,7 +8,9 @@ Aby zbudować w Serwisie widok wyboru metody płatności, System umożliwia zdal
 
 ### Lista dostępnych parametrów
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa      | wymagany | typ            | opis                                                                                                                                                                                                                     |
 | -------------- | ---------- | -------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -76,9 +76,9 @@ Poniżej szczegółowy opis zwracanego komunikatu:
 | 7.15   | minValidityTime  | NIE      | integer        | Minimalny czas ważności transakcji w minutach. Pojawia się dla kanałów gdzie ustalenie statusu płatności trwa dłużej niż zwykle.                                                                                                                                                                                                                                                                                                                                                            |
 | 7.16   | order            | TAK      | integer        | Rekomendowana kolejność wyświetlania metody płatności.                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | 7.17   | currencies       | TAK      | lista          | Lista zawierająca waluty dostępne dla kanału płatności, wraz z ograniczeniami kwot.                                                                                                                                                                                                                                                                                                                                                                                                         |
-| 7.17.1 | currency         | TAK      | string{3}      | <p>Waluta, którą można opłacić tym kanałem. W przypadku dostępności dla danego kanału płatności w wielu walutach, lista będzie zawierać więcej niż jeden element.<br>Dopuszczalne jedynie wartości: PLN, EUR, GBP oraz USD.<br>Do liczenia wartości Hash pobierane są wartości kolejnych węzłów <strong>currencies</strong>.</p>                                                                                                                                                            |
-| 7.17.2 | minAmount        | NIE      | amount         | <p>Minimalna kwota transakcji, którą można opłacić tym kanałem. Jako separator dziesiętny używana jest kropka - '.' Format: 0.00; maksymalna długość: 14 cyfr przed kropką i 2 po kropce. Pole występuje tylko dla niektórych kanałów, wartość jest wyrażona w walucie pola <strong>currency</strong>.<br>Do liczenia wartości Hash pobierane są wartości kolejnych węzłów <strong>currencies</strong>.</p>                                                                                 |
-| 7.17.3 | maxAmount        | NIE      | amount         | <p>Maksymalna kwota transakcji, którą można opłacić tym kanałem. Jako separator dziesiętny używana jest kropka - '.' Format: 0.00; maksymalna długość: 14 cyfr przed kropką i 2 po kropce. Pole występuje tylko dla niektórych kanałów, wartość jest wyrażona w walucie pola <strong>currency</strong>.<br>Do liczenia wartości Hash pobierane są wartości kolejnych węzłów <strong>currencies</strong>.</p>                                                                                |
+| 7.17.1 | currency         | TAK      | string{3}      | <p>Waluta, którą można opłacić tym kanałem. W przypadku dostępności dla danego kanału płatności w wielu walutach, lista będzie zawierać więcej niż jeden element.<br>Dopuszczalne jedynie wartości: PLN, EUR, GBP oraz USD.</p>                                                                                                                                                            |
+| 7.17.2 | minAmount        | NIE      | amount         | <p>Minimalna kwota transakcji, którą można opłacić tym kanałem. Jako separator dziesiętny używana jest kropka - '.' Format: 0.00; maksymalna długość: 14 cyfr przed kropką i 2 po kropce. Pole występuje tylko dla niektórych kanałów, wartość jest wyrażona w walucie pola <strong>currency</strong>.</p>                                                                                 |
+| 7.17.3 | maxAmount        | NIE      | amount         | <p>Maksymalna kwota transakcji, którą można opłacić tym kanałem. Jako separator dziesiętny używana jest kropka - '.' Format: 0.00; maksymalna długość: 14 cyfr przed kropką i 2 po kropce. Pole występuje tylko dla niektórych kanałów, wartość jest wyrażona w walucie pola <strong>currency</strong>.</p>                                                                                |
 | 7.18   | buttonTitle      | TAK      | string         | Sugerowany komunikat jaki powinien zaprezentować na przycisku "zapłać" po wyborze kanału płatności.                                                                                                                                                                                                                                                                                                                                                                                         |
 
 Przykładowa odpowiedź
@@ -122,7 +122,7 @@ Przykładowa odpowiedź
             "name": "Płatność testowa PBL",
             "groupType": "PBL",
             "bankName": "NONE",
-            "iconURL": "https://testimages.autopay.eu/pomoc/grafika/106.gif",
+            "iconUrl": "https://testimages.autopay.eu/pomoc/grafika/106.gif",
             "state": "OK",
             "stateDate": "2023-10-03 14:35:01",
             "description": "Płatność testowa",
@@ -151,7 +151,7 @@ Przykładowa odpowiedź
             "name": "Przelew z innego banku",
             "groupType": "FR",
             "bankName": "BANK TEST",
-            "iconURL": "https://testimages.autopay.eu/pomoc/grafika/9.gif",
+            "iconUrl": "https://testimages.autopay.eu/pomoc/grafika/9.gif",
             "state": "OK",
             "stateDate": "2023-10-03 14:35:02",
             "description": "<b>Szybki przelew</b>",
@@ -171,7 +171,7 @@ Przykładowa odpowiedź
             "buttonTitle": "Wygeneruj dane do przelewu"
         },
 		{
-            "id": 701,
+            "gatewayID": 701,
             "name": "Zapłać później z Payka",
             "groupType": "BNPL",
             "bankName": "NONE",
@@ -200,4 +200,6 @@ Przykładowa odpowiedź
 }
 ```
 
-**UWAGA:** Wynik odpytania metody powinno się zapisywać i odświeżać co minutę celem zbadania dostępności kanału. W przypadku braku lub nieprawidłowej odpowiedzi, należy wyświetlić ostatnią znaną i poprawną konfigurację Kanałów Płatności. Jest to drugi powód do przechowywania tymczasowej kopii **gatewayList** w Serwisie Partnera. Jako nieprawidłową odpowiedź należy traktować pustą odpowiedź, timeout, bądź pustą listę węzłów **gatewayGroups** czy **gatewayList**.
+{% hint style="warning" %}
+Wynik odpytania metody powinno się zapisywać i odświeżać co minutę celem zbadania dostępności kanału. W przypadku braku lub nieprawidłowej odpowiedzi, należy wyświetlić ostatnią znaną i poprawną konfigurację Kanałów Płatności. Jest to drugi powód do przechowywania tymczasowej kopii **gatewayList** w Serwisie Partnera. Jako nieprawidłową odpowiedź należy traktować pustą odpowiedź, timeout, bądź pustą listę węzłów **gatewayGroups** czy **gatewayList**.
+{% endhint %}
