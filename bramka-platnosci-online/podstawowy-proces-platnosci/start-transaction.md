@@ -34,7 +34,11 @@ Parametry:
   	Hash=2ab52e6918c6ad3b69a8228a2ab815f11ad58533eeed963dd990df8d8c3709d1
 ```
 
-Przesłanie komunikatu bez wszystkich **wymaganych** parametrów (**ServiceID, OrderID, Amount, CustomerEmail i Hash**) lub zawierającego błędne ich wartości, spowoduje zatrzymanie procesu płatności wraz z podaniem kodu błędu transakcji i krótką informacją o błędzie (brak powrotu na stronę Serwisu Partnera).
+Przesłanie komunikatu bez wszystkich **wymaganych** parametrów (**ServiceID, OrderID, Amount i Hash**) lub zawierającego błędne ich wartości, spowoduje zatrzymanie procesu płatności wraz z podaniem kodu błędu transakcji i krótką informacją o błędzie (brak powrotu na stronę Serwisu Partnera).
+
+{% hint style="info" %}
+Zdecydowanie zalecamy przekazywanie również parametru **CustomerEmail** (adres email Klienta).
+{% endhint %}
 
 {% hint style="warning" %}
 Para parametrów **ServiceID** i **OrderID** identyfikuje transakcję. Zalecamy, aby wartość **OrderID** nie powtarzała się przez cały okres świadczenia usług przez System na rzecz jednego Serwisu Partnera (**ServiceID**). Domyślnie System nie weryfikuje unikalności **OrderID** przy starcie transakcji; blokowanie startów z powtórzonym **OrderID** można uzgodnić w trakcie integracji.
