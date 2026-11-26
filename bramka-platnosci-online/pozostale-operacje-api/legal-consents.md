@@ -10,11 +10,15 @@ Należy wyświetlić odpowiednie treści formalne (a więc klauzule informacyjne
 
 System umożliwia zdalne odpytanie o aktualną listę obowiązków i powiązanych treści formalnych. W tym celu należy wywołać metodę **legalData** (_https://{host\_bramki}/legalData_) z odpowiednimi parametrami (w formacie JSON).
 
-**WSKAZÓWKA:** Wszystkie parametry przekazywane są za pomocą technologii REST. Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach parametrów. Wartości przekazywanych parametrów powinny być kodowane w UTF-8.
+{% hint style="info" %}
+Wszystkie parametry przekazywane są za pomocą technologii REST. Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach parametrów. Wartości przekazywanych parametrów powinny być kodowane w UTF-8.
+{% endhint %}
 
 ### Lista dostępnych parametrów
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                                                            |
 | -------------- | --------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -40,7 +44,9 @@ Przykładowy komunikat
 
 W odpowiedzi na żądanie zwracana jest (w tej samej sesji HTTP) lista, zawierająca kolejne treści formalne w postaci: ID, typ i brzmienie treści, ich umiejscowienie w Serwisie, adres do regulaminu oraz inne informacje dodatkowe.
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa            | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | -------------- | ---------------- | -------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -135,4 +141,6 @@ W zależności od wartości pola **type** regulaminu:
 >
 > c. do parametru **RecurringAcceptanceTime** powinna trafić wartość odpowiadająca chwili akceptacji zgody poprzez zaznaczenie checkboxa oraz kliknięcie przycisku „Rozpocznij płatność"
 
-**UWAGA:** Pola (np. **serviceModel, url, labelID**) i wartości pól (np. **PSD2, RODO, PRIVACY**) metody **legalData** nie są wymagane do obsługi, ale należy przewidzieć możliwość ich występowania w odpowiedzi na żądanie.
+{% hint style="warning" %}
+Pola (np. **serviceModel, url, labelID**) i wartości pól (np. **PSD2, RODO, PRIVACY**) metody **legalData** nie są wymagane do obsługi, ale należy przewidzieć możliwość ich występowania w odpowiedzi na żądanie.
+{% endhint %}

@@ -10,7 +10,9 @@ Przekierowanie realizowane jest poprzez wysłanie żądania HTTPS (metodą GET) 
 
 ### Lista parametrów przekierowania do Serwisu Partnera
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                  |
 | -------------- | --------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -34,7 +36,9 @@ System wyświetla stronę podsumowania transakcji automatycznie po zakończeniu 
 
 Przekierowanie Klienta z poprawnymi parametrami spowoduje wyświetlenie podsumowania transakcji (o treści zależnej od jej stanu) lub informacji o jej braku (jeśli System nie jej nie odnajdzie).
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                  |
 | -------------- | --------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -42,4 +46,6 @@ Przekierowanie Klienta z poprawnymi parametrami spowoduje wyświetlenie podsumow
 | 2              | OrderID   | TAK      | string{32}    | Identyfikator transakcji nadany w Serwisie Partnera i przekazany w starcie transakcji.                                                                                                                                                |
 | nd.            | Hash      | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis**. |
 
-**UWAGA:** Wyświetlanie podsumowania na żądanie (metoda **confirmation**) musi zostać aktywowane po uzgodnieniu z opiekunem biznesowym; automatyczne podsumowanie po płatności nie wymaga aktywacji. Istnieje możliwość zmiany treści komunikatów lub dostosowanie szaty graficznej (podlegają one każdorazowo ustaleniom w formie roboczej podczas integracji).
+{% hint style="warning" %}
+Wyświetlanie podsumowania na żądanie (metoda **confirmation**) musi zostać aktywowane po uzgodnieniu z opiekunem biznesowym; automatyczne podsumowanie po płatności nie wymaga aktywacji. Istnieje możliwość zmiany treści komunikatów lub dostosowanie szaty graficznej (podlegają one każdorazowo ustaleniom w formie roboczej podczas integracji).
+{% endhint %}

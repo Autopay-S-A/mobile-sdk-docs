@@ -65,7 +65,9 @@ Rozliczenia mogą być zlecane przez Partnera poprzez wywołanie metody: **trans
 
 <!-- TODO MIG-026: Brak kontraktu metody transactionSettlement (parametry, odpowiedź, Hash). Do ustalenia na spotkaniu z analitykami. -->
 
-**UWAGA:** Szczegóły wywołania metody **transactionSettlement** ustala się z opiekunem biznesowym w trakcie integracji.
+{% hint style="warning" %}
+Szczegóły wywołania metody **transactionSettlement** ustala się z opiekunem biznesowym w trakcie integracji.
+{% endhint %}
 
 ```mermaid
 sequenceDiagram

@@ -23,6 +23,7 @@ Ten wariant wymaga spełnienia [wymagań integracyjnych i bezpieczeństwa](../wh
 
 ## Powiązane scenariusze
 
+* [Karty testowe](../pierwsze-kroki/test-cards.md) – numery kart i scenariusze dla środowiska testowego.
 * [Preautoryzacja kartowa](../zaawansowane-scenariusze-platnosci/card-preauthorization.md) – blokada środków na karcie i późniejsze obciążenie.
 * [Płatności automatyczne](../zaawansowane-scenariusze-platnosci/recurring-payments.md) – zapisanie karty i kolejne obciążenia bez udziału Klienta.
 

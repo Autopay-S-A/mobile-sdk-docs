@@ -1,6 +1,6 @@
 # Preautoryzacja kartowa
 
-> TODO MIG-033: Products zawiera idBalancePoint we wspólnej definicji. Przykład odpowiedzi balancePayoff nie odpowiada tabeli confirmation/reason. Potwierdzić kontrakt transactionClear i zakres koszyka; zachowano wspólną definicję bez usuwania pól.
+<!-- TODO MIG-033: (1) Przykład odpowiedzi transactionClear ma <balancePayoff> i remoteOutID, a tabela opisuje confirmation/reason — potwierdzić prawdziwą odpowiedź. (2) Products: TAK czy warunkowo (wymagane dla wielu produktów)? Do ustalenia na spotkaniu z analitykami. -->
 
 ## Preautoryzacja kartowa
 
@@ -33,7 +33,9 @@ a) Założenie blokady podczas autoryzacji płatności jednorazowej (Patrz [Sche
 
 b) Założenie blokady podczas inicjowania płatności automatycznej (zapisywania karty w Serwisie lub Aplikacji Mobilnej) (Patrz [Schemat B dla Preautoryzacji](card-preauthorization.md#schemat-b-dla-preautoryzacji-zakładanie-blokady-podczas-inicjowania-płatności-automatycznej-zapisywania-karty)).
 
-> **UWAGA:** Dla preautoryzacji wysyłka komunikatu RPAN wraz z ClientHash jest uruchamiana dopiero wraz z wywołaniem usługi transactionClear. Jeżeli dla transakcji inicjującej (Hold=true) nie zostanie wywołane obciążenie (usługa transactionClear) lub preautoryzacja zostanie anulowana (usługa transactionCancel) - karta nie zostanie zapamiętana, gdyż transakcja nie doszła do skutku (nie przyjdzie komunikat RPAN z polem clientHash).
+{% hint style="warning" %}
+Dla preautoryzacji wysyłka komunikatu RPAN wraz z ClientHash jest uruchamiana dopiero wraz z wywołaniem usługi transactionClear. Jeżeli dla transakcji inicjującej (Hold=true) nie zostanie wywołane obciążenie (usługa transactionClear) lub preautoryzacja zostanie anulowana (usługa transactionCancel) - karta nie zostanie zapamiętana, gdyż transakcja nie doszła do skutku (nie przyjdzie komunikat RPAN z polem clientHash).
+{% endhint %}
 
 Podstawowe parametry startowe:
 
@@ -61,7 +63,9 @@ Obciążenie lub zwolnienie blokady musi nastąpić w terminach zdefiniowanych p
 * Karta VISA, transakcje cykliczne typu Merchant Initiated Transactions (kanał 1503 oraz recurringAction: AUTO) nie dłużej niż 5 dni
 * Karta Mastercard (wszystkie typy transakcji) nie dłużej niż 30 dni
 
-> **UWAGA:** Autopay automatycznie wykonuje zdjęcie blokady (transactionCancel), jeżeli Partner nie wywoła obciążenia (transactionClear) w wyżej zdefiniowanych terminach (Patrz [Zwolnienie blokady po przeterminowaniu transakcji](card-preauthorization.md#zwolnienie-blokady-po-przeterminowaniu-transakcji)).
+{% hint style="warning" %}
+Autopay automatycznie wykonuje zdjęcie blokady (transactionCancel), jeżeli Partner nie wywoła obciążenia (transactionClear) w wyżej zdefiniowanych terminach (Patrz [Zwolnienie blokady po przeterminowaniu transakcji](card-preauthorization.md#zwolnienie-blokady-po-przeterminowaniu-transakcji)).
+{% endhint %}
 
 ### Obciążenie karty na wniosek Partnera
 
@@ -77,7 +81,7 @@ W celu obciążenia karty po zrealizowanej preautoryzacji należy wywołać dedy
 | 2              | MessageID | TAK      | string{32}      | Pseudolosowy identyfikator komunikatu o długości 32 znaków alfanumerycznych alfabetu łacińskiego (np. na bazie UID), wartość pola musi być unikalna i wskazywać konkretne zlecenie wypłaty w Serwisie Partnera.                                                                                                                                                                                                                                                                                   |
 | 3              | RemoteID  | TAK      | string{1,20}    | Alfanumeryczny identyfikator transakcji nadany przez System oraz przekazywany do Partnera w komunikacie ITN transakcji wejściowej. Jego podanie spowoduje obciążenie karty zautoryzowanej w transakcji o wskazanym **RemoteID**, jeśli jest w stanie blokady (**status ON\_HOLD**).                                                                                                                                                                                                               |
 | 4              | Amount    | TAK      | amount          | Kwota obciążenia (nie może być większa niż kwota blokady); jako separator dziesiętny używana jest kropka - '.' Format: 0.00.                                                                                                                                                                                                                                                                                                                                                                      |
-| 5              | Products  | TAK      | string{1,10000} | <p>Informacje o produktach wchodzących w skład transakcji, przekazywany w postaci zakodowanego protokołem transportowym Base64 XMLa.<br>Struktura musi zawierać wszystkie podane w preautoryzacji produkty, jednak może być uproszczona (w celu identyfikacji produktu, którego kwota ma być zaktualizowana, brane będą pod uwagę jedynie productID oraz idBalancePoint, a nową kwotę należy podać w subAmount).<br>/<strong>Wymagane dla wielu produktów podanych w preautoryzacji.</strong></p> |
+| 5              | Products  | TAK      | string{1,10000} | <p>Informacje o produktach wchodzących w skład transakcji, przekazywany w postaci zakodowanego protokołem transportowym Base64 XMLa.<br>Struktura musi zawierać wszystkie podane w preautoryzacji produkty, jednak może być uproszczona (w celu identyfikacji produktu, którego kwota ma być zaktualizowana, brany będzie pod uwagę jedynie productID, a nową kwotę należy podać w subAmount).<br>/<strong>Wymagane dla wielu produktów podanych w preautoryzacji.</strong></p> |
 | nd.            | Hash      | TAK      | string{1,128}   | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis Partnera**.                                                                                                                                                                                                                                                    |
 
 ### Potwierdzenie wykonania operacji dla obciążenia karty na wniosek Partnera

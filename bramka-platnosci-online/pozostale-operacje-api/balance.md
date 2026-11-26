@@ -8,7 +8,9 @@ Dla wszystkich serwisów możliwe jest odpytanie o aktualny stan salda. W tym ce
 
 ### Lista dostępnych parametrów dla aktualnego stanu salda
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa             | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                               |
 | -------------- | ----------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -36,7 +38,9 @@ Struktura potwierdzenia (XML)
 
 ### Lista pól odpowiedzi
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa          | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                        |
 | -------------- | -------------- | -------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -54,4 +58,6 @@ Dla serwisów posiadających saldo w Systemie, możliwe jest wykonanie operacji 
 
 Skorzystanie z **Przedtransakcji** pozwoli na proste dostarczenie gotowej transakcji do płatnika (np. podając w CustomerEmail adres księgowości Partnera).
 
-**UWAGA:** Usługa musi zostać uzgodnienia z opiekunem biznesowym.
+{% hint style="warning" %}
+Usługa musi zostać uzgodnienia z opiekunem biznesowym.
+{% endhint %}

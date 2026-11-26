@@ -10,7 +10,9 @@ Aby zbudować w Serwisie widok wyboru metody płatności, System umożliwia zdal
 
 ### Lista dostępnych parametrów
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa      | wymagany | typ            | opis                                                                                                                                                                                                                     |
 | -------------- | ---------- | -------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -200,4 +202,6 @@ Przykładowa odpowiedź
 }
 ```
 
-**UWAGA:** Wynik odpytania metody powinno się zapisywać i odświeżać co minutę celem zbadania dostępności kanału. W przypadku braku lub nieprawidłowej odpowiedzi, należy wyświetlić ostatnią znaną i poprawną konfigurację Kanałów Płatności. Jest to drugi powód do przechowywania tymczasowej kopii **gatewayList** w Serwisie Partnera. Jako nieprawidłową odpowiedź należy traktować pustą odpowiedź, timeout, bądź pustą listę węzłów **gatewayGroups** czy **gatewayList**.
+{% hint style="warning" %}
+Wynik odpytania metody powinno się zapisywać i odświeżać co minutę celem zbadania dostępności kanału. W przypadku braku lub nieprawidłowej odpowiedzi, należy wyświetlić ostatnią znaną i poprawną konfigurację Kanałów Płatności. Jest to drugi powód do przechowywania tymczasowej kopii **gatewayList** w Serwisie Partnera. Jako nieprawidłową odpowiedź należy traktować pustą odpowiedź, timeout, bądź pustą listę węzłów **gatewayGroups** czy **gatewayList**.
+{% endhint %}

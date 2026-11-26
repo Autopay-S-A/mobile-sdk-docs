@@ -49,7 +49,9 @@ Wartości elementów: **orderID, serviceID, amount** dotyczące każdej z aktywo
 
 ### Opis zwracanych parametrów dla uruchomienia płatności automatycznej
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa                               | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | -------------- | ----------------------------------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -79,7 +81,9 @@ Wartości elementów: **orderID, serviceID, amount** dotyczące każdej z aktywo
 | 25.            | blikData -> appLabel                | NIE      | string{1,20}  | Etykieta konta mobilnego nadawana przez Bank. Można prezentować użytkownikowi celem weryfikacji aplikacji bankowej.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | nd.            | hash                                | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis**.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
-**WSKAZÓWKA:** Element **hash** (komunikatu) służy do autentykacji dokumentu. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu oraz dołączonego klucza współdzielonego. Opis sposobu obliczania skrótu znajduje się w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji).
+{% hint style="info" %}
+Element **hash** (komunikatu) służy do autentykacji dokumentu. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu oraz dołączonego klucza współdzielonego. Opis sposobu obliczania skrótu znajduje się w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji).
+{% endhint %}
 
 _Odpowiedź na powiadomienie_
 
@@ -111,7 +115,9 @@ a) **CONFIRMED** – wartości parametrów w obu komunikatach oraz parametr hash
 
 b) **NOTCONFIRMED** – wartości w obu komunikatach są różne lub niezgodność hash – transakcja nieautentyczna;
 
-**WSKAZÓWKA:** Element **hash** (w odpowiedzi na komunikat) służy do autentykacji odpowiedzi i liczony jest z wartości parametrów odpowiedzi. Opis sposobu obliczania skrótu znajduje się w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji).
+{% hint style="info" %}
+Element **hash** (w odpowiedzi na komunikat) służy do autentykacji odpowiedzi i liczony jest z wartości parametrów odpowiedzi. Opis sposobu obliczania skrótu znajduje się w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji).
+{% endhint %}
 
 W wypadku braku poprawnej odpowiedzi na wysłane powiadomienia, System płatności online podejmie kolejne próby jego przekazania po upływie określonego czasu. Serwis Partnera powinien wykonywać własną logikę biznesową (np. uruchomienie usługi płatności automatycznej, mailingu itp.) jedynie po pierwszym komunikacie o danym **ClientHash**.
 
@@ -139,7 +145,9 @@ Wartości elementów: serviceID, clientHash dotyczące każdej z deaktywowanych 
 
 ## Opis zwracanych parametrów
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa                               | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | -------------- | ----------------------------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -150,7 +158,9 @@ Wartości elementów: serviceID, clientHash dotyczące każdej z deaktywowanych 
 | 5              | recurringData -> deactivationDate   | TAK      | string{14}    | Moment wyłączenia płatności automatycznej, przekazywany w formacie YYYYMMDDhhmmss. (Czas CET)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | nd.            | hash                                | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis**.                                                                                                                                                                                                                                                                                                                                                             |
 
-**UWAGA:** Element hash (komunikatu) służy do autentykacji dokumentu. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu oraz dołączonego klucza współdzielonego.
+{% hint style="warning" %}
+Element hash (komunikatu) służy do autentykacji dokumentu. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu oraz dołączonego klucza współdzielonego.
+{% endhint %}
 
 ## Potwierdzenie otrzymania komunikatu
 
@@ -182,10 +192,14 @@ a) **CONFIRMED** – wartości parametrów są poprawne oraz parametr hash są z
 
 b) **NOTCONFIRMED** – wartości w obu komunikatach są niepoprawne lub niezgodność hash – operacja nieautentyczna
 
-**UWAGA:** Element hash (w odpowiedzi na komunikat) służy do autentykacji odpowiedzi i liczony jest z wartości parametrów odpowiedzi. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu (bez znaczników) oraz dołączonego klucza współdzielonego. Opis sposobu obliczania skrótu znajduje się w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji).
+{% hint style="warning" %}
+Element hash (w odpowiedzi na komunikat) służy do autentykacji odpowiedzi i liczony jest z wartości parametrów odpowiedzi. Wartość tego elementu obliczana jest jako wartość funkcji skrótu z łańcucha zawierającego sklejone wartości wszystkich pól dokumentu (bez znaczników) oraz dołączonego klucza współdzielonego. Opis sposobu obliczania skrótu znajduje się w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji).
+{% endhint %}
 
 W wypadku braku poprawnej odpowiedzi na wysłane powiadomienia, System podejmie kolejne próby jego przekazania po upływie określonego czasu. Serwis powinien wykonywać własną logikę biznesową (np. zatrzymanie płatności automatycznej, mailing itp.), jedynie po pierwszym komunikacie RPDN o danym ClientHash.
 
-**WSKAZÓWKA:** Zalecamy zapoznanie się również z częściami _Monitoring komunikacji ITN/ISTN/IPN/RPAN/RPDN_ i _Schemat ponawiania komunikatów_ _ITN/ISTN/IPN/RPAN/RPDN_.
+{% hint style="info" %}
+Zalecamy zapoznanie się również z częściami _Monitoring komunikacji ITN/ISTN/IPN/RPAN/RPDN_ i _Schemat ponawiania komunikatów_ _ITN/ISTN/IPN/RPAN/RPDN_.
+{% endhint %}
 
 [Schemat ponawiania powiadomień](retry-policy.md).

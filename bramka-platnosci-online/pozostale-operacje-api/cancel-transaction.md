@@ -10,7 +10,9 @@ Protokół rozróżnia wielkość liter zarówno w nazwach jak i wartościach pa
 
 ### Lista parametrów dostępnych dla anulowania nieopłaconej transakcji
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa     | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                 |
 | -------------- | --------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -45,7 +47,9 @@ Struktura potwierdzenia (XML)
 
 #### Lista parametrów dla anulowania nieopłaconej transakcji
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa        | wymagany | typ            | opis                                                                                                                                                                                                                                                                                                        |
 | -------------- | ------------ | -------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

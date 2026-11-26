@@ -46,7 +46,9 @@ Format dokumentu (XML)
 
 ### Zwracane parametry
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa                 | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | -------------- | --------------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -101,7 +103,9 @@ b) **NOTCONFIRMED** – parametr hash jest niezgodny– transakcja nieautentyczn
 
 W wypadku braku poprawnej odpowiedzi na wysłane powiadomienia, System podejmie kolejne próby przekazania nowego statusu po upływie określonego czasu. Serwis Partnera powinien wykonywać własną logikę biznesową, jedynie po pierwszym komunikacie o danym statusie płatności.
 
-**WSKAZÓWKA:** Warto zapoznać się ze [Schematem ponawiania komunikatów ITN/ISTN/IPN/RPAN/RPDN](retry-policy.md#schemat-ponawiania-komunikatów-itnistnipnrpanrpdn).
+{% hint style="info" %}
+Warto zapoznać się ze [Schematem ponawiania komunikatów ITN/ISTN/IPN/RPAN/RPDN](retry-policy.md#schemat-ponawiania-komunikatów-itnistnipnrpanrpdn).
+{% endhint %}
 
 ### Szczegółowy opis zachowania i zmiany statusów rozliczenia (transferStatus)
 

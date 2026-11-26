@@ -16,6 +16,8 @@ jednak możliwość ponowienia każdego z nich w dowolnym momencie).
 | 205-209 | 1 dzień |
 
 
-**UWAGA:** Ciągłe ponawianie przez System identycznego komunikatu
+{% hint style="warning" %}
+Ciągłe ponawianie przez System identycznego komunikatu
 oznacza brak lub nieprawidłową na niego odpowiedź z Serwisu, oraz wymaga
 od Partnera pilnej diagnozy przyczyny.
+{% endhint %}

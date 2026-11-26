@@ -8,9 +8,11 @@ Wybór przez Klienta metody płatności każdorazowo spowoduje wysłanie
 statusu **PENDING**. W kolejnym komunikacie ITN system dostarczy status
 **SUCCESS** lub **FAILURE**.
 
-**UWAGA** Status **PENDING** nie zostanie wysłany, jeśli:
+{% hint style="warning" %}
+Status **PENDING** nie zostanie wysłany, jeśli:
 - klient zrezygnuje lub powróci z ekranu listy metod płatności bez wybrania konkretnej metody. W tym wypadku od razu zostanie wysłany status **FAILURE**. Nie pojawi się status PENDING, ponieważ klient nie rozpoczął procesu płatności.
 - status finalny (**SUCCESS** lub **FAILURE**) zostanie dostarczony przed wysłaniem ITN ze statusem **PENDING**.
+{% endhint %}
 
 
 Dla pojedynczej transakcji (o unikatowych parametrach **OrderID** oraz

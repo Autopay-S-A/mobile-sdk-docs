@@ -14,13 +14,17 @@ Jako funkcja skrótu wykorzystywany jest algorytm SHA256 lub SHA512 (metoda usta
 
 Opis sposobu obliczania wartości funkcji skrótu oraz przykłady obliczeń dla podstawowych komunikatów.
 
-**UWAGA:** Przykłady nie uwzględniają wszystkich możliwych pól opcjonalnych, dlatego w razie występowania takich pól w konkretnym komunikacie, należy uwzględnić je w funkcji skrótu w kolejności zgodnej z numerem obok pola.
+{% hint style="warning" %}
+Przykłady nie uwzględniają wszystkich możliwych pól opcjonalnych, dlatego w razie występowania takich pól w konkretnym komunikacie, należy uwzględnić je w funkcji skrótu w kolejności zgodnej z numerem obok pola.
+{% endhint %}
 
 ### Sposób obliczania wartości funkcji skrótu – pole Hash
 
 Wartość funkcji skrótu, służąca do autentykacji komunikatu, obliczana jest od łańcucha zawierającego sklejone pola komunikatu (konkatenacja pól). Sklejane są wartości pól, bez nazw parametrów, a pomiędzy kolejnymi (niepustymi) wartościami wstawiany jest separator (w postaci znaku |). Kolejność sklejania pól jest zgodna z kolejnością ich występowania na liście parametrów w dokumentacji.
 
-**WAŻNE!** W przypadku braku opcjonalnego parametru w komunikacie lub w przypadku pustej wartości parametru, nie należy używać separatora!
+{% hint style="warning" %}
+W przypadku braku opcjonalnego parametru w komunikacie lub w przypadku pustej wartości parametru, nie należy używać separatora!
+{% endhint %}
 
 Do powstałego w powyższy sposób łańcucha doklejany jest na jego końcu klucz, współdzielony między Serwis Partnera i System płatności online. Z tak powstałego łańcucha obliczana jest wartość funkcji skrótu i stanowi ona wartość pola Hash komunikatu.
 
@@ -55,7 +59,9 @@ gdzie
 
 b. Rozpoczęcie transakcji. Wywołanie POST z koszykiem.
 
-**WSKAZÓWKA:** Opcja szczegółowo omówiona w części [Koszyk produktów](../dane-transakcji/product-basket.md#koszyk-produktów).
+{% hint style="info" %}
+Opcja szczegółowo omówiona w części [Koszyk produktów](../dane-transakcji/product-basket.md#koszyk-produktów).
+{% endhint %}
 
 > ServiceID = 2
 >

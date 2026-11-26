@@ -1,7 +1,5 @@
 # Przedtransakcja
 
-> TODO MIG-029: Przykład PHP zawiera typograficzne cudzysłowy OrderID i Hash bez cudzysłowów. Potwierdzić poprawny kod; nie uruchamiać przykładu bez korekty uzgodnionej z właścicielem API.
-
 ## Przedtransakcja
 
 ### Opis Przedtransakcji
@@ -15,7 +13,9 @@ Przedtransakcja rozszerza standardowy model rozpoczęcia transakcji o obsługę 
 * ukrycia danych wrażliwych parametrów linku transakcji – przedtransakcja odbywa się backendowo, a link do kontynuacji transakcji nie zawiera danych wrażliwych, a jedynie identyfikatory kontynuacji
 * użycia SDK mobilnego w wariancie mieszanym – start transakcji wykonuje backend aplikacji mobilnej, a nie samo SDK z użyciem tokena transakcyjnego
 
-**WSKAZÓWKA:** Szczegóły na temat wariantów SDK w [Dokumentacji SDK](../../sdk-mobilne/mobile-sdk.md).
+{% hint style="info" %}
+Szczegóły na temat wariantów SDK w [Dokumentacji SDK](../../sdk-mobilne/mobile-sdk.md).
+{% endhint %}
 
 Szczególne przypadki użycia Przedtransakcji, to obciążenia:
 
@@ -28,7 +28,9 @@ Szczególne przypadki użycia Przedtransakcji, to obciążenia:
   Aby użyć tej usługi należy podać **GatewayID=1511** oraz przekazać zakodowany token w parametrze **PaymentToken**. W przypadku braku tokena, autoryzacja odbędzie się na stronie Systemu.
 * Autoryzacje poprzez portfele Google Pay
 
-**UWAGA:** Usługa umożliwia obciążenie karty zapisanej w portfelu Klienta bez przekierowania do Systemu. Często następuje wymuszenie dodatkowej autoryzacji w postaci 3DS (domyślne zachowanie środowiska testowego, które można przekonfigurować).
+{% hint style="warning" %}
+Usługa umożliwia obciążenie karty zapisanej w portfelu Klienta bez przekierowania do Systemu. Często następuje wymuszenie dodatkowej autoryzacji w postaci 3DS (domyślne zachowanie środowiska testowego, które można przekonfigurować).
+{% endhint %}
 
 W modelu **Whitelabel** należy zintegrować się zgodnie z opisem, a następnie podać **GatewayID=1512** oraz zakodowany token w parametrze **PaymentToken**. W przypadku braku tokena (lub model inny, niż **Whitelabel**) wystarczy podać **GatewayID=1512** - autoryzacja odbędzie się na stronie Systemu.
 
@@ -36,7 +38,9 @@ W modelu **Whitelabel** należy zintegrować się zgodnie z opisem, a następnie
   Aby użyć tej usługi należy podać **GatewayID=1513**. Autoryzacja odbędzie się na stronie Systemu.
 * Autoryzacja poprzez natywną formatkę SDK mobilnego
 
-**UWAGA:** Usługa umożliwia obciążenie karty, której szczegóły podano na bezpiecznej formatce kartowej SDK, a sam start transakcji wykonuje backend aplikacji mobilnej.
+{% hint style="warning" %}
+Usługa umożliwia obciążenie karty, której szczegóły podano na bezpiecznej formatce kartowej SDK, a sam start transakcji wykonuje backend aplikacji mobilnej.
+{% endhint %}
 
 Oprócz odpowiedniego GatewayID - 1500 dla płatności jednorazowej lub 1503 dla aktywacji płatności automatycznej (oraz innych parametrów) – należy podać uzyskany z SDK PaymentToken oraz parametr WalletType=SDK\_NATIVE (opis w części [Rozpoczęcie transakcji z dodatkowymi parametrami](../dane-transakcji/additional-parameters.md#rozpoczęcie-transakcji-z-dodatkowymi-parametrami))
 
@@ -55,7 +59,7 @@ Przykład startu Przedtransakcji (PHP)
 ```php
 	$data = array(
 	 'ServiceID' => '100047',
-	 'OrderID' => ‘20161017143213’,
+	 'OrderID' => '20161017143213',
 	 'Amount' => '1.00',
 	 'Description' => 'test bramki',
 	 'GatewayID' => '0',
@@ -63,7 +67,7 @@ Przykład startu Przedtransakcji (PHP)
 	 'CustomerEmail' => 'test@bramka.pl',
 	 'CustomerIP' => '127.0.0.0',
 	 'Title' => 'Test title',
-	'Hash' => 0c5ca136e8833e40efbf42a4da7c148c50bf99f8af26f5c9400681702bd72056
+	 'Hash' => '0c5ca136e8833e40efbf42a4da7c148c50bf99f8af26f5c9400681702bd72056'
 	);
 
 	$fields = (is_array($data)) ? http_build_query($data) : $data;
@@ -109,7 +113,9 @@ Obiekt **transaction** reprezentuje wpływ lub wypłatę środków z konta AP, n
 
 ### Atrybuty obiektu transaction dla Przedtransakcji
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa       | wymagany | typ           | opis                                                                                                                                                                                                                                  |
 | -------------- | ----------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -151,7 +157,9 @@ Przykład statusu przetwarzania żądania (XML)
 
 Parametry zwracane dla wyniku Przedtransakcji.
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa         | wymagany | typ             | opis                                                                                                                                                                                                                                                                                                                          |
 | -------------- | ------------- | -------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -197,7 +205,9 @@ confirmation=NOTCONFIRMED
 
 Błąd może być również zwrócony w przypadku synchronicznej odpowiedzi z Kanału Płatności (np. błąd specyficzny dla próby inicjalizacji płatności automatycznej BLIK, tj. reason= RECURRENCY\_NOT\_SUPPORTED).
 
-**UWAGA:** Błąd może być również zwrócony w przypadku synchronicznej odpowiedzi z Kanału Płatności (np. błąd specyficzny dla próby inicjalizacji płatności automatycznej BLIK, tj. _reason=RECURRENCY\_NOT\_SUPPORTED_). Innym znanym przypadkiem jest też błąd walidacji adresu podanego w parametrze startowym CustomerEmail (INVALID\_EMAIL).
+{% hint style="warning" %}
+Błąd może być również zwrócony w przypadku synchronicznej odpowiedzi z Kanału Płatności (np. błąd specyficzny dla próby inicjalizacji płatności automatycznej BLIK, tj. _reason=RECURRENCY\_NOT\_SUPPORTED_). Innym znanym przypadkiem jest też błąd walidacji adresu podanego w parametrze startowym CustomerEmail (INVALID\_EMAIL).
+{% endhint %}
 
 ### Obsługa odpowiedzi dla Przetransakcji
 

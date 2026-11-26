@@ -10,7 +10,9 @@ Wszystkie parametry przekazywane są metodą POST (Content-Type: application/x-w
 
 ### Lista dostępnych parametrów dla wypłat z salda
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa               | wymagany | typ           | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | -------------- | ------------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -32,7 +34,9 @@ Wszystkie parametry przekazywane są metodą POST (Content-Type: application/x-w
 
 Po otrzymaniu żądania wypłaty z salda System wykonuje wstępną weryfikację pod kątem przesłanych w komunikacie pól i ich wartości oraz zapisuje zlecenie do wykonania. W odpowiedzi na żądanie zwracany jest (w tej samej sesji HTTP) tekst w formacie XML, zawierający potwierdzenie zapisania zlecenia w kolejce do wykonania lub opis błędu(struktura komunikatu błędu opisana w części [Komunikaty błędu](../../informacje-dodatkowe/errors.md#komunikaty-błędu).
 
-**UWAGA:** Potwierdzenie przyjęcia zlecania nie jest równoznaczne z faktycznym jego wykonaniem. Wypłata z salda może być realizowana do 30 minut od momentu wysyłki żądania wypłaty i nie zawsze może się zakończyć sukcesem. W przypadku problemów napotkanych podczas procesowania wypłaty z salda (np. niewystarczające środki na saldzie) następnego dnia roboczego wysyłany jest raport zawierający informację o wypłatach z salda, które nie doszły do skutku.
+{% hint style="warning" %}
+Potwierdzenie przyjęcia zlecania nie jest równoznaczne z faktycznym jego wykonaniem. Wypłata z salda może być realizowana do 30 minut od momentu wysyłki żądania wypłaty i nie zawsze może się zakończyć sukcesem. W przypadku problemów napotkanych podczas procesowania wypłaty z salda (np. niewystarczające środki na saldzie) następnego dnia roboczego wysyłany jest raport zawierający informację o wypłatach z salda, które nie doszły do skutku.
+{% endhint %}
 
 Struktura potwierdzenia (XML)
 
@@ -47,7 +51,9 @@ Struktura potwierdzenia (XML)
 
 ## Opis pól
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa          | wymagany | typ           | opis                                                                                                                                                                                                                                           |
 | -------------- | -------------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -55,9 +61,13 @@ Struktura potwierdzenia (XML)
 | 2              | messageID      | TAK      | string{32}    | Pseudolosowy identyfikator komunikatu o długości 32 znaków alfanumerycznych alfabetu łacińskiego (np. na bazie UID). Pochodzi z żądania metody.                                                                                                |
 | nd.            | hash           | TAK      | string{1,128} | Wartość funkcji skrótu dla komunikatu obliczona zgodnie z opisem w części [Bezpieczeństwo transakcji](../bezpieczenstwo/hashing.md#bezpieczeństwo-transakcji). **Obowiązkowa weryfikacja zgodności wyliczonego skrótu przez Serwis Partnera**. |
 
-**UWAGA:** Za błąd uznać można wszystkie odpowiedzi inne niż założona (tj. z niepoprawnymi polami, w szczególności pustym lub niepoprawnym **hash**). W przypadku, gdy System zautoryzuje nadawcę komunikatu zwrotu, jednak nie uda się wykonać operacji, odpowiedź będzie zgodna ze schematem opisanym w części [Komunikaty błędu](../../informacje-dodatkowe/errors.md#komunikaty-błędu). W przypadku błędu komunikacji lub braku wystarczającego salda (np. ON\_DEMAND\_ERROR) można ponowić zlecenie. W przypadku blokady salda (BALANCE\_DISABLED) lub nieaktywnej konfiguracji (PARTNER\_DISABLED) nie należy ponawiać zlecenia.
+{% hint style="warning" %}
+Za błąd uznać można wszystkie odpowiedzi inne niż założona (tj. z niepoprawnymi polami, w szczególności pustym lub niepoprawnym **hash**). W przypadku, gdy System zautoryzuje nadawcę komunikatu zwrotu, jednak nie uda się wykonać operacji, odpowiedź będzie zgodna ze schematem opisanym w części [Komunikaty błędu](../../informacje-dodatkowe/errors.md#komunikaty-błędu). W przypadku błędu komunikacji lub braku wystarczającego salda (np. ON\_DEMAND\_ERROR) można ponowić zlecenie. W przypadku blokady salda (BALANCE\_DISABLED) lub nieaktywnej konfiguracji (PARTNER\_DISABLED) nie należy ponawiać zlecenia.
+{% endhint %}
 
-**WAŻNE!** W przypadku błędu zwróconego w odpowiedzi na żądanie wypłaty z salda można ponowić zlecenie, należy jednak pamiętać o tym, że każde zlecenie wypłaty nie kończące się błędem może zostać wykonane. W przypadku problemów z połączeniem, przekroczenia maksymalnego czasu oczekiwania na odpowiedź, żądanie może zostać ponowione z tym samym MessageID bez obawy o zduplikowanie zlecenia.\
+{% hint style="warning" %}
+W przypadku błędu zwróconego w odpowiedzi na żądanie wypłaty z salda można ponowić zlecenie, należy jednak pamiętać o tym, że każde zlecenie wypłaty nie kończące się błędem może zostać wykonane. W przypadku problemów z połączeniem, przekroczenia maksymalnego czasu oczekiwania na odpowiedź, żądanie może zostać ponowione z tym samym MessageID bez obawy o zduplikowanie zlecenia.
 W przypadku blokady salda (BALANCE\_DISABLED) lub nieaktywnej konfiguracji (PARTNER\_DISABLED) nie należy ponawiać zlecenia. 3 błędy pod rząd (bez względu na przyczynę) powodują blokadę usługi wypłat na żądanie dla określonego IP nadawcy komunikatu na 10 minut – wywołania w tym czasie dla tego IP będą kończyć się błędem TEMPORARY\_DISABLED.
+{% endhint %}
 
 [Status zwrotu lub wypłaty z salda – outDetails/v2](refunds.md#odpytanie-o-status-zwrotu-lub-wypłaty-z-salda)

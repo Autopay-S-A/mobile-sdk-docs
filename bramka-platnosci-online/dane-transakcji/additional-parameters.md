@@ -26,13 +26,17 @@ Pola w komunikacie ITN powiązane z usługą (opisane w części [Dodatkowe pola
 * **verificationStatus**
 * węzeł **verificationStatusReasons**
 
-**WSKAZÓWKA:** Szczegółowe instrukcje, jak interpretować statusy płatności i weryfikacji w tym procesie zawiera część [Dodatkowe pola w komunikacie ITN/IPN transakcji wejściowej](../powiadomienia/itn.md#dodatkowe-pola-w-komunikacie-itnipn-transakcji-wejściowej).
+{% hint style="info" %}
+Szczegółowe instrukcje, jak interpretować statusy płatności i weryfikacji w tym procesie zawiera część [Dodatkowe pola w komunikacie ITN/IPN transakcji wejściowej](../powiadomienia/itn.md#dodatkowe-pola-w-komunikacie-itnipn-transakcji-wejściowej).
+{% endhint %}
 
 ## Rozpoczęcie transakcji z dodatkowymi parametrami
 
 Starty transakcji mogą zostać przeprowadzone z dodatkowymi parametrami rozpisanymi w poniższych punktach.
 
-**WAŻNE!** Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% hint style="warning" %}
+Kolejność atrybutów do wyliczenia Hash musi być zgodna z ich numeracją.
+{% endhint %}
 
 | kolejność Hash | nazwa                            | typ              | opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | -------------- | -------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
