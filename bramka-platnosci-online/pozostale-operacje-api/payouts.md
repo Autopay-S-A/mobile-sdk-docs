@@ -38,7 +38,16 @@ Podanie obu spowoduje zatrzymanie przetwarzania żądania oraz błąd http.
 
 Po otrzymaniu żądania wypłaty z salda System wykonuje wstępną weryfikację pod kątem przesłanych w komunikacie pól i ich wartości oraz zapisuje zlecenie do wykonania. W odpowiedzi na żądanie zwracany jest (w tej samej sesji HTTP) tekst w formacie XML, zawierający potwierdzenie zapisania zlecenia w kolejce do wykonania lub opis błędu(struktura komunikatu błędu opisana w części [Komunikaty błędu](../../informacje-dodatkowe/errors.md#komunikaty-błędu).
 
-**UWAGA:** Potwierdzenie przyjęcia zlecania nie jest równoznaczne z faktycznym jego wykonaniem. Wypłata z salda może być realizowana do 30 minut od momentu wysyłki żądania wypłaty i nie zawsze może się zakończyć sukcesem. W przypadku problemów napotkanych podczas procesowania wypłaty z salda (np. niewystarczające środki na saldzie) następnego dnia roboczego wysyłany jest raport zawierający informację o wypłatach z salda, które nie doszły do skutku.
+{% hint style="warning" %}
+**UWAGA:** Potwierdzenie przyjęcia zlecenia nie jest równoznaczne z faktycznym jego wykonaniem. Przetwarzanie wypłaty z salda odbywa się asynchronicznie i składa się z kilku etapów. W trakcie obsługi żądania System weryfikuje jedynie poprawność przesłanych pól i ich wartości, a następnie zapisuje zlecenie i przekazuje je do realizacji. Dane do przelewu (np. rachunek, nazwa odbiorcy, tytuł) nie są wyznaczane w momencie przyjmowania żądania – są one ustalane w kolejnym, asynchronicznym kroku, na podstawie parametrów żądania oraz konfiguracji wypłat Serwisu. Wypłata z salda może być realizowana do 30 minut od momentu wysyłki żądania wypłaty i nie zawsze może się zakończyć sukcesem.
+
+Oznacza to, że Partner może otrzymać poprawną odpowiedź (HTTP 200 wraz z potwierdzeniem przyjęcia zlecenia), a mimo to wypłata nie zostanie zrealizowana – np. z powodu niewystarczających środków na saldzie lub błędu walidacji na etapie wyznaczania danych do przelewu, gdy nie da się ustalić wszystkich wymaganych danych (brak nazwy odbiorcy, numeru rachunku itp.).
+
+Zalecany sposób weryfikacji realizacji wypłaty z salda:
+
+1. Odebrać powiadomienie ISTN o zmianie statusu wypłaty (patrz [ISTN – status rozliczenia](../powiadomienia/istn.md#natychmiastowe-powiadomienia-o-zmianie-statusu-transakcji-rozliczeniowej-istn)).
+2. W przypadku otrzymania informacji o błędzie odpytać usługę **outDetailsV2** o jego szczegóły (patrz [Odpytanie o status zwrotu lub wypłaty z salda](refunds.md#odpytanie-o-status-zwrotu-lub-wypłaty-z-salda)).
+{% endhint %}
 
 Struktura potwierdzenia (XML)
 
